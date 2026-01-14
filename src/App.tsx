@@ -1,6 +1,7 @@
 import { Alert, Button, Container, Stack, Text, Title } from "@mantine/core";
 import { useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { SurveyContainer } from "./components/SurveyContainer";
 import { supabase } from "./lib/supabase";
 
 export default function App() {
@@ -57,6 +58,7 @@ export default function App() {
           </Alert>
         )}
       </Stack>
+      <SurveyContainer />
     </Container>
   );
 }
