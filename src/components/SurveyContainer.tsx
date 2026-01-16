@@ -51,6 +51,7 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
         : "deceptive";
 
     // Skip sending results if survey already taken
+    // TODO: add some kind of flash or animation between trials when skipping for consistency
     if (!hasTaken) {
       const { error } = await supabase.from("responses").insert([
         {
