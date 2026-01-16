@@ -19,7 +19,7 @@ interface SurveyContainerProps {
 }
 
 /**
- * Main Visual Honesty Survey survey component.
+ * Main Visual Honesty survey component.
  * Handles trial progression, user selections, and data submission to Supabase.
  * @component
  */

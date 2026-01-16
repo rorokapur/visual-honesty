@@ -1,11 +1,28 @@
 import { Card, Center, Image, SimpleGrid, Space, Text } from "@mantine/core";
 import type { Stimulus } from "../data/stimuli";
+
 interface TrialProps {
+  /**
+   * The pair of images to display for this trial.
+   */
   stimulus: Stimulus;
+
+  /**
+   * Callback to handle user answer selection.
+   * @param choice - the stimulus side selected by the user
+   */
   onSelect: (choice: "left" | "right") => void;
+
+  /**
+   * Whether or not to flip the left/right order of the images from the default.
+   */
   isFlipped: boolean;
 }
 
+/**
+ * A component containing an individual trial of the Visual Honesty survey
+ * @component
+ */
 export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
   return (
     <>
