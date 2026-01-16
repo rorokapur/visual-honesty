@@ -5,19 +5,42 @@ import { supabase } from "../lib/supabase";
 import { Trial } from "./Trial";
 
 interface SurveyContainerProps {
+  /**
+   * Unique session identifier for the participant.
+   * Prevents duplicate submissions and helps group responses together in the db.
+   */
   session: string;
+
+  /**
+   * Whether the participant has already taken the survey or not.
+   * Prevents duplicate submissions to the database to save resources.
+   */
   hasTaken?: boolean;
 }
 
+/**
+ * Main Visual Honesty Survey survey component.
+ * Handles trial progression, user selections, and data submission to Supabase.
+ * @component
+ */
 export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
+  // Current index in the set of images/trials
   const [stimulusIndex, setStimulusIndex] = useState<number>(0);
+  // Whether the right/left order of images is flipped
   const [isFlipped, setIsFlipped] = useState(() => Math.random() < 0.5);
+  // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
 
   const isFinished = stimulusIndex >= STIMULI_SET.length;
 
+  /**
+   * Processes user selection for the current trial and sends results to Supabase.
+   * @param {'left' | 'right'} choice - the graph the user selected (as being deceptive)
+   */
   const handleSelect = async (choice: "left" | "right") => {
     setLoading(true);
+
+    // Determine whether selected image was honest or deceptive
     const selection =
       choice === "left"
         ? isFlipped
@@ -27,6 +50,7 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
         ? "honest"
         : "deceptive";
 
+    // Skip sending results if survey already taken
     if (!hasTaken) {
       const { error } = await supabase.from("responses").insert([
         {
@@ -42,11 +66,13 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
       }
     }
 
+    // Advance to next trial
     setStimulusIndex(stimulusIndex + 1);
     setIsFlipped(Math.random() < 0.5);
     setLoading(false);
   };
 
+  // Show loader while submitting (prevents multiple API calls)
   if (loading) {
     return (
       <Loader
@@ -60,7 +86,10 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
       />
     );
   }
+
+  // Show completion message if finished
   if (isFinished) {
+    // Set flag in storage to prevent submissions on retakes
     localStorage.setItem("vh_taken", "true");
     return (
       <Center>
@@ -68,6 +97,7 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
       </Center>
     );
   }
+
   return (
     <Trial
       stimulus={STIMULI_SET[stimulusIndex]}
