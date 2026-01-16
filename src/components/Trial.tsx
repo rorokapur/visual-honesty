@@ -42,6 +42,7 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
             src={isFlipped ? stimulus.deceptiveImage : stimulus.honestImage}
             alt="Stimulus A"
             draggable={false}
+            //TODO: Images are still selectable on Safari - need to investigate
             style={{ userSelect: "none" }}
           />
         </Card>
