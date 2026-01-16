@@ -8,4 +8,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error("Missing Supabase URL or Anon Key in .env.local");
 }
 
+/**
+ * Supabase client for sending and retrieving data.
+ */
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
