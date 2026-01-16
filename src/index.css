@@ -1,6 +1,0 @@
-// Prevent dragging of images
-img {
-  user-select: none;
-  -webkit-user-drag: none;
-  pointer-events: auto; /* Ensures clicks still work while drag is disabled */
-}

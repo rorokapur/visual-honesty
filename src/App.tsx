@@ -1,64 +1,36 @@
-import { Alert, Button, Container, Stack, Text, Title } from "@mantine/core";
-import { useMemo, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { Center, Container, Title } from "@mantine/core";
+import { useState } from "react";
 import { SurveyContainer } from "./components/SurveyContainer";
-import { supabase } from "./lib/supabase";
 
 export default function App() {
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [session] = useState(() => {
+    const KEY = "vh_session_id";
+    const existing = localStorage.getItem(KEY);
+    if (existing) return existing;
 
-  // Generate session ID once per page load
-  const sessionId = useMemo(() => uuidv4(), []);
+    const newId = window.crypto.randomUUID();
+    localStorage.setItem(KEY, newId);
+    return newId;
+  });
 
-  const sendTestData = async () => {
-    setStatus("loading");
-
-    // Attempt to insert a row into the 'responses' table we made earlier
-    const { error } = await supabase.from("responses").insert({
-      session_id: sessionId,
-      pair_id: "setup_test",
-      selected_choice: 0,
-    });
-
-    if (error) {
-      console.error("Supabase Error:", error.message);
-      setStatus("error");
-    } else {
-      setStatus("success");
-    }
-  };
+  const [hasTaken] = useState(() => {
+    const KEY = "vh_taken";
+    const existing = localStorage.getItem(KEY);
+    return existing === "true";
+  });
 
   return (
-    <Container py="xl">
-      <Stack align="center">
-        <Title>Supabase Connection Setup</Title>
-        <Text size="sm" c="dimmed">
-          Session ID: {sessionId}
-        </Text>
-
-        <Button
-          onClick={sendTestData}
-          loading={status === "loading"}
-          color={status === "success" ? "green" : "blue"}
-        >
-          {status === "success" ? "Connection Verified!" : "Send Test Data"}
-        </Button>
-
-        {status === "success" && (
-          <Alert color="green" title="It Works!">
-            Check your Supabase Dashboard "Table Editor" to see the new row.
-          </Alert>
-        )}
-
-        {status === "error" && (
-          <Alert color="red" title="Connection Failed">
-            Check your .env.local keys and ensure RLS is disabled on the table.
-          </Alert>
-        )}
-      </Stack>
-      <SurveyContainer />
-    </Container>
+    <>
+      <header style={{ background: "white" }}>
+        <Container px="md">
+          <Center style={{ padding: "16px 0" }}>
+            <Title ta="center">Can you spot the deceptive visualization?</Title>
+          </Center>
+        </Container>
+      </header>
+      <main style={{ padding: "16px" }}>
+        <SurveyContainer session={session} hasTaken={hasTaken} />
+      </main>
+    </>
   );
 }

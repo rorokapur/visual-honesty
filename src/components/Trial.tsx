@@ -24,6 +24,8 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
           <Image
             src={isFlipped ? stimulus.deceptiveImage : stimulus.honestImage}
             alt="Stimulus A"
+            draggable={false}
+            style={{ userSelect: "none" }}
           />
         </Card>
         <Card
@@ -36,6 +38,8 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
           <Image
             src={isFlipped ? stimulus.honestImage : stimulus.deceptiveImage}
             alt="Stimulus B"
+            draggable={false}
+            style={{ userSelect: "none" }}
           />
         </Card>
       </SimpleGrid>
