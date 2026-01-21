@@ -1,11 +1,12 @@
-import { Center, Loader, Title } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import { useState } from "react";
 import { STIMULI_SET } from "../data/stimuli";
 import { supabase } from "../lib/supabase";
 import { Landing } from "./Landing";
+import { Results } from "./Results";
 import { Trial } from "./Trial";
 
-interface SurveyContainerProps {
+interface StudyControllerProps {
   /**
    * Unique session identifier for the participant.
    * Prevents duplicate submissions and helps group responses together in the db.
@@ -24,7 +25,7 @@ interface SurveyContainerProps {
  * Handles trial progression, user selections, and data submission to Supabase.
  * @component
  */
-export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
+export function StudyController({ session, hasTaken }: StudyControllerProps) {
   // Current index in the set of images/trials
   const [stimulusIndex, setStimulusIndex] = useState<number>(0);
   // Whether the right/left order of images is flipped
@@ -97,14 +98,7 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
 
   // Show completion message if finished
   if (stage === "complete") {
-    // Set flag in storage to prevent submissions on retakes
-    localStorage.setItem("vh_taken", "true");
-    // TODO: make this a component
-    return (
-      <Center>
-        <Title>Survey Complete! Thank you for your participation.</Title>
-      </Center>
-    );
+    return <Results></Results>;
   }
 
   if (stage === "landing") {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SurveyContainer } from "./components/SurveyContainer";
+import { StudyController } from "./components/StudyController";
 
 /**
  *Main application component for the project.
@@ -26,5 +26,5 @@ export default function App() {
     return existing === "true";
   });
 
-  return <SurveyContainer session={session} hasTaken={hasTaken} />;
+  return <StudyController session={session} hasTaken={hasTaken} />;
 }

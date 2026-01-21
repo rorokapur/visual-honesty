@@ -7,6 +7,9 @@ interface LandingProps {
   handleStart: () => void;
 }
 
+/**
+ * Landing page displayed before starting the survey
+ */
 export function Landing({ handleStart }: LandingProps) {
   return (
     <>
