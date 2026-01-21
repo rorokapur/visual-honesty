@@ -1,10 +1,12 @@
-import { Center, Loader, Title } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import { useState } from "react";
 import { STIMULI_SET } from "../data/stimuli";
 import { supabase } from "../lib/supabase";
+import { Landing } from "./Landing";
+import { Results } from "./Results";
 import { Trial } from "./Trial";
 
-interface SurveyContainerProps {
+interface StudyControllerProps {
   /**
    * Unique session identifier for the participant.
    * Prevents duplicate submissions and helps group responses together in the db.
@@ -23,15 +25,17 @@ interface SurveyContainerProps {
  * Handles trial progression, user selections, and data submission to Supabase.
  * @component
  */
-export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
+export function StudyController({ session, hasTaken }: StudyControllerProps) {
   // Current index in the set of images/trials
   const [stimulusIndex, setStimulusIndex] = useState<number>(0);
   // Whether the right/left order of images is flipped
   const [isFlipped, setIsFlipped] = useState(() => Math.random() < 0.5);
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
-
-  const isFinished = stimulusIndex >= STIMULI_SET.length;
+  // Current stage in study flow
+  const [stage, setStage] = useState<"landing" | "survey" | "complete">(
+    "landing",
+  );
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
@@ -47,8 +51,8 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
           ? "deceptive"
           : "honest"
         : isFlipped
-        ? "honest"
-        : "deceptive";
+          ? "honest"
+          : "deceptive";
 
     // Skip sending results if survey already taken
     // TODO: add some kind of flash or animation between trials when skipping for consistency
@@ -66,10 +70,14 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
         console.error("Submission failed:", error.message);
       }
     }
-
-    // Advance to next trial
-    setStimulusIndex(stimulusIndex + 1);
-    setIsFlipped(Math.random() < 0.5);
+    // Check if this was the last trial
+    if (stimulusIndex + 1 >= STIMULI_SET.length) {
+      setStage("complete");
+    } else {
+      // Advance to next trial
+      setStimulusIndex(stimulusIndex + 1);
+      setIsFlipped(Math.random() < 0.5);
+    }
     setLoading(false);
   };
 
@@ -88,17 +96,17 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
     );
   }
 
-  // Show completion message if finished
-  if (isFinished) {
-    // Set flag in storage to prevent submissions on retakes
-    localStorage.setItem("vh_taken", "true");
-    return (
-      <Center>
-        <Title>Survey Complete! Thank you for your participation.</Title>
-      </Center>
-    );
+  // Show landing page initially
+  if (stage === "landing") {
+    return <Landing handleStart={() => setStage("survey")} />;
   }
 
+  // Show completion message if finished
+  if (stage === "complete") {
+    return <Results></Results>;
+  }
+
+  // Otherwise, show current trial
   return (
     <Trial
       stimulus={STIMULI_SET[stimulusIndex]}

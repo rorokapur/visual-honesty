@@ -1,6 +1,5 @@
-import { Center, Container, Title } from "@mantine/core";
 import { useState } from "react";
-import { SurveyContainer } from "./components/SurveyContainer";
+import { StudyController } from "./components/StudyController";
 
 /**
  *Main application component for the project.
@@ -27,18 +26,5 @@ export default function App() {
     return existing === "true";
   });
 
-  return (
-    <>
-      <header style={{ background: "white" }}>
-        <Container px="md">
-          <Center style={{ padding: "16px 0" }}>
-            <Title ta="center">Can you spot the deceptive visualization?</Title>
-          </Center>
-        </Container>
-      </header>
-      <main style={{ padding: "16px" }}>
-        <SurveyContainer session={session} hasTaken={hasTaken} />
-      </main>
-    </>
-  );
+  return <StudyController session={session} hasTaken={hasTaken} />;
 }
