@@ -2,6 +2,7 @@ import { Center, Loader, Title } from "@mantine/core";
 import { useState } from "react";
 import { STIMULI_SET } from "../data/stimuli";
 import { supabase } from "../lib/supabase";
+import { Landing } from "./Landing";
 import { Trial } from "./Trial";
 
 interface SurveyContainerProps {
@@ -30,8 +31,10 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
   const [isFlipped, setIsFlipped] = useState(() => Math.random() < 0.5);
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
-
-  const isFinished = stimulusIndex >= STIMULI_SET.length;
+  // Current stage in study flow
+  const [stage, setStage] = useState<"landing" | "survey" | "complete">(
+    "landing",
+  );
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
@@ -47,8 +50,8 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
           ? "deceptive"
           : "honest"
         : isFlipped
-        ? "honest"
-        : "deceptive";
+          ? "honest"
+          : "deceptive";
 
     // Skip sending results if survey already taken
     // TODO: add some kind of flash or animation between trials when skipping for consistency
@@ -66,10 +69,14 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
         console.error("Submission failed:", error.message);
       }
     }
-
-    // Advance to next trial
-    setStimulusIndex(stimulusIndex + 1);
-    setIsFlipped(Math.random() < 0.5);
+    // Check if this was the last trial
+    if (stimulusIndex + 1 >= STIMULI_SET.length) {
+      setStage("complete");
+    } else {
+      // Advance to next trial
+      setStimulusIndex(stimulusIndex + 1);
+      setIsFlipped(Math.random() < 0.5);
+    }
     setLoading(false);
   };
 
@@ -89,14 +96,19 @@ export function SurveyContainer({ session, hasTaken }: SurveyContainerProps) {
   }
 
   // Show completion message if finished
-  if (isFinished) {
+  if (stage === "complete") {
     // Set flag in storage to prevent submissions on retakes
     localStorage.setItem("vh_taken", "true");
+    // TODO: make this a component
     return (
       <Center>
         <Title>Survey Complete! Thank you for your participation.</Title>
       </Center>
     );
+  }
+
+  if (stage === "landing") {
+    return <Landing handleStart={() => setStage("survey")} />;
   }
 
   return (
