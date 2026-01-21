@@ -1,7 +1,7 @@
 import { Loader } from "@mantine/core";
 import { useState } from "react";
-import { STIMULI_SET } from "../data/stimuli";
-import { supabase } from "../lib/supabase";
+import { STIMULI_SET } from "../../data/stimuli";
+import { supabase } from "../../lib/supabase";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
 import { Trial } from "./Trial";

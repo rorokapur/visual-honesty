@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StudyController } from "./components/StudyController";
+import { StudyController } from "./features/study/StudyController";
 
 /**
  *Main application component for the project.
