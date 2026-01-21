@@ -37,6 +37,7 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
           withBorder
           radius="lg"
           onClick={() => onSelect("left")}
+          className="panels"
         >
           <Image
             src={isFlipped ? stimulus.deceptiveImage : stimulus.honestImage}
@@ -52,6 +53,7 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
           withBorder
           radius="lg"
           onClick={() => onSelect("right")}
+          className="panels"
         >
           <Image
             src={isFlipped ? stimulus.honestImage : stimulus.deceptiveImage}
