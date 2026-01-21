@@ -96,15 +96,17 @@ export function StudyController({ session, hasTaken }: StudyControllerProps) {
     );
   }
 
+  // Show landing page initially
+  if (stage === "landing") {
+    return <Landing handleStart={() => setStage("survey")} />;
+  }
+
   // Show completion message if finished
   if (stage === "complete") {
     return <Results></Results>;
   }
 
-  if (stage === "landing") {
-    return <Landing handleStart={() => setStage("survey")} />;
-  }
-
+  // Otherwise, show current trial
   return (
     <Trial
       stimulus={STIMULI_SET[stimulusIndex]}
