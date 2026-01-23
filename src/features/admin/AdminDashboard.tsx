@@ -1,3 +1,5 @@
+import { AppShell } from "@mantine/core";
+
 export function AdminDashboard() {
-  return <></>;
+  return <AppShell></AppShell>;
 }

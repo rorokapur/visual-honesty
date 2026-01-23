@@ -11,7 +11,7 @@ import { getSupabaseAdmin } from "./lib/supabase";
  * * Manages session and survey completion info
  * @component
  */
-export default function App() {
+export default function Study() {
   // Generate session ID or retrieve existing one
   const [participantSession] = useState(() => {
     const KEY = "vh_session_id";
