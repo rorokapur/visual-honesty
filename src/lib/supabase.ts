@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 // Vite requires 'import.meta.env' to access .env variables
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -12,3 +12,19 @@ if (!supabaseUrl || !supabaseAnonKey) {
  * Supabase client for sending and retrieving data.
  */
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+let adminClient: SupabaseClient | null = null;
+
+export const getSupabaseAdmin = () => {
+  if (adminClient) return adminClient;
+
+  adminClient = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      storageKey: "sb-admin",
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+  });
+
+  return adminClient;
+};
