@@ -15,7 +15,6 @@ import { getSupabaseAdmin } from "../../lib/supabase";
 
 /**
  * Login screen for admin users to access the admin dashboard.
- *
  */
 export function AdminLogin() {
   const [errorMessage, setErrorMessage] = useState<string>("");
