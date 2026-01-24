@@ -1,7 +1,7 @@
-// Based on mantine AppShell example: https://mantine.dev/app-shell/?e=BasicAppShell
 import { AppShell, Burger, Group, NavLink, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { StudyData } from "./StudyData";
 
 /**
  * Admin dashboard component to oversee and manage study.
@@ -12,7 +12,7 @@ export function AdminDashboard() {
 
   const mainContent = (): React.ReactNode => {
     if (tab == "data") {
-      return <Text>data</Text>;
+      return <StudyData></StudyData>;
     } else if (tab == "stimuli") {
       return <Text>stimuli</Text>;
     }
