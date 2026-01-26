@@ -17,6 +17,7 @@ export function AdminDashboard() {
     } else if (tab == "stimuli") {
       return <StimuliManager />;
     }
+    // Fallback
     return <Text>Select a tab to get started</Text>;
   };
 

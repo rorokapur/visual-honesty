@@ -10,6 +10,10 @@ import {
 import { useEffect, useState } from "react";
 import { getSupabaseAdmin } from "../../lib/supabase";
 
+/**
+ * Displays all response data (latest first) and allows downloads in csv format
+ * @component
+ */
 export function StudyData() {
   const [loading, setLoading] = useState<boolean>(false);
   // TODO: Change this once we have a solidified set of collected info
@@ -19,6 +23,7 @@ export function StudyData() {
   const [pageCount, setPageCount] = useState<number>(0);
   const [refresh, setRefresh] = useState(0);
 
+  // Fetches CSV data and triggers a download
   const downloadCsv = async () => {
     const { data } = await getSupabaseAdmin().from("responses").select().csv();
     if (data) {
@@ -34,6 +39,7 @@ export function StudyData() {
     }
   };
 
+  // Load data on page change or refresh button
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -64,6 +70,7 @@ export function StudyData() {
     loadData();
   }, [page, refresh]);
 
+  // Map JSON response to table entry
   const rows = data?.map((row) => (
     <Table.Tr key={row.created_at + row.pair_id}>
       <Table.Td>{row.created_at}</Table.Td>

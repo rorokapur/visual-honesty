@@ -1,5 +1,11 @@
 import { getSupabaseAdmin } from "./supabase";
 
+/**
+ * Add an image to a stimuli set in the backend
+ * @param file - image file to upload
+ * @param setName - stimuli set name to add to
+ * @param isDeceptive - whether or not the image is deceptive
+ */
 export async function uploadStimulus(
   file: File,
   setName: string,
@@ -30,6 +36,10 @@ export async function uploadStimulus(
   if (dbError) throw dbError;
 }
 
+/**
+ * Removes a specified image from the backend (db + storage)
+ * @param image_id - uuid of image to delete
+ */
 export async function deleteStimulus(image_id: string) {
   const supabase = getSupabaseAdmin();
 
@@ -55,7 +65,7 @@ export async function deleteStimulus(image_id: string) {
 
   if (storageError) throw storageError;
 
-  // Delete from database
+  // Delete database entry
   const { error: dbError } = await supabase
     .from("stimuli")
     .delete()

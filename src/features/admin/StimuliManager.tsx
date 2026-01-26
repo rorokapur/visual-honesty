@@ -30,6 +30,10 @@ interface StimuliSet {
   rows: StimulusRow[];
 }
 
+/**
+ * Interface for viewing, uploading and deleting stimuli and stimuli sets
+ * @component
+ */
 export function StimuliManager() {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<StimuliSet[]>([]);

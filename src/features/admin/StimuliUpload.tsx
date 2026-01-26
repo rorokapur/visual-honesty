@@ -1,6 +1,7 @@
 import {
   Button,
   FileInput,
+  NativeSelect,
   Notification,
   Stack,
   TextInput,
@@ -9,12 +10,19 @@ import { useState } from "react";
 import { uploadStimulus } from "../../lib/storage";
 
 interface StimuliUploadProps {
+  /**
+   * callback for upload success (i.e. close upload window if using a modal)
+   */
   onSuccess?: () => void;
 }
 
+/**
+ * Uploads images into a stimuli set in supabase
+ * @component
+ */
 export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
-  const [honestFile, setHonestFile] = useState<File | null>(null);
-  const [deceptiveFile, setDeceptiveFile] = useState<File | null>(null);
+  const [file, setfile] = useState<File | null>(null);
+  const [isDeceptive, setIsDeceptive] = useState<1 | 0>(0);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
@@ -23,21 +31,19 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
   } | null>(null);
 
   const handleUpload = async () => {
-    if (!honestFile || !deceptiveFile || !name) return;
+    if (!file || !name) return;
     setLoading(true);
     setStatus(null);
 
     try {
-      uploadStimulus(honestFile, name, 0);
-      uploadStimulus(deceptiveFile, name, 1);
+      uploadStimulus(file, name, 0);
       setStatus({
         type: "success",
         message: "Stimuli set uploaded successfully!",
       });
 
       // Reset form
-      setHonestFile(null);
-      setDeceptiveFile(null);
+      setfile(null);
       setName("");
     } catch (error: unknown) {
       console.error("Upload failed:", error);
@@ -68,27 +74,28 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
       />
 
       <FileInput
-        label="Honest Visualization"
+        label="Image"
         placeholder="Click to select file"
-        value={honestFile}
-        onChange={setHonestFile}
+        value={file}
+        onChange={setfile}
         accept="image/png,image/jpeg"
         required
       />
 
-      <FileInput
-        label="Deceptive Visualization"
-        placeholder="Click to select file"
-        value={deceptiveFile}
-        onChange={setDeceptiveFile}
-        accept="image/png,image/jpeg"
-        required
+      <NativeSelect
+        label="Type"
+        description="Input description"
+        data={["Honest", "Deceptive"]}
+        value={isDeceptive === 1 ? "Deceptive" : "Honest"}
+        onChange={(e) =>
+          setIsDeceptive(e.currentTarget.value === "Honest" ? 0 : 1)
+        }
       />
 
       <Button
         onClick={handleUpload}
         loading={loading}
-        disabled={!honestFile || !deceptiveFile || !name}
+        disabled={!file || !name}
       >
         Upload
       </Button>
