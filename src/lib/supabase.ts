@@ -9,12 +9,16 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 /**
- * Supabase client for sending and retrieving data.
+ * Supabase client for sending and retrieving participant data.
  */
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Admin singleton
 let adminClient: SupabaseClient | null = null;
 
+/**
+ * Supabase client for sending and retrieving admin data.
+ */
 export const getSupabaseAdmin = () => {
   if (adminClient) return adminClient;
 
