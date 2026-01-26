@@ -1,10 +1,9 @@
 import {
   Button,
-  Center,
   Container,
   Flex,
   Group,
-  Loader,
+  LoadingOverlay,
   Pagination,
   Table,
 } from "@mantine/core";
@@ -65,14 +64,6 @@ export function StudyData() {
     loadData();
   }, [page, refresh]);
 
-  if (loading) {
-    return (
-      <Center>
-        <Loader></Loader>
-      </Center>
-    );
-  }
-
   const rows = data?.map((row) => (
     <Table.Tr key={row.created_at + row.pair_id}>
       <Table.Td>{row.created_at}</Table.Td>
@@ -107,6 +98,7 @@ export function StudyData() {
       </Flex>
 
       <Table>
+        <LoadingOverlay visible={loading} />
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Created At</Table.Th>

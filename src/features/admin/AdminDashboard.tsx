@@ -1,6 +1,7 @@
 import { AppShell, Burger, Group, NavLink, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { StimuliManager } from "./StimuliManager";
 import { StudyData } from "./StudyData";
 
 /**
@@ -14,7 +15,7 @@ export function AdminDashboard() {
     if (tab == "data") {
       return <StudyData></StudyData>;
     } else if (tab == "stimuli") {
-      return <Text>stimuli</Text>;
+      return <StimuliManager />;
     }
     return <Text>Select a tab to get started</Text>;
   };
