@@ -1,5 +1,5 @@
 import { Card, Center, Image, SimpleGrid, Space, Text } from "@mantine/core";
-import type { Stimulus } from "../data/stimuli";
+import type { Stimulus } from "../../data/stimuli";
 
 interface TrialProps {
   /**
