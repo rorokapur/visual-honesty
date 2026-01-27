@@ -1,7 +1,10 @@
 import { Loader } from "@mantine/core";
 import { useState } from "react";
-import { STIMULI_SET } from "../../data/stimuli";
-import { supabase } from "../../lib/supabase";
+import {
+  fetchNextPair,
+  submitResponse,
+  type StimulusPair,
+} from "../../lib/stimulus";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
 import { Trial } from "./Trial";
@@ -25,17 +28,14 @@ interface StudyControllerProps {
  * Handles trial progression, user selections, and data submission to Supabase.
  * @component
  */
-export function StudyController({ session, hasTaken }: StudyControllerProps) {
-  // Current index in the set of images/trials
-  const [stimulusIndex, setStimulusIndex] = useState<number>(0);
-  // Whether the right/left order of images is flipped
-  const [isFlipped, setIsFlipped] = useState(() => Math.random() < 0.5);
+export function StudyController({ session }: StudyControllerProps) {
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
   // Current stage in study flow
   const [stage, setStage] = useState<"landing" | "survey" | "complete">(
     "landing",
   );
+  const [stimulus, setStimulus] = useState<StimulusPair | "DONE" | null>(null);
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
@@ -43,40 +43,22 @@ export function StudyController({ session, hasTaken }: StudyControllerProps) {
    */
   const handleSelect = async (choice: "left" | "right") => {
     setLoading(true);
-
-    // Determine whether selected image was honest or deceptive
-    const selection =
-      choice === "left"
-        ? isFlipped
-          ? "deceptive"
-          : "honest"
-        : isFlipped
-          ? "honest"
-          : "deceptive";
-
-    // Skip sending results if survey already taken
-    // TODO: add some kind of flash or animation between trials when skipping for consistency
-    if (!hasTaken) {
-      const { error } = await supabase.from("responses").insert([
-        {
-          session_id: session, // Unique UUID for this participant
-          pair_id: STIMULI_SET[stimulusIndex].id, // e.g., 'pair_01'
-          selected_answer: selection, // 'honest' or 'deceptive'
-          selected_side: choice, // Did they physically click left or right?
-        },
-      ]);
-
-      if (error) {
-        console.error("Submission failed:", error.message);
-      }
+    if (!stimulus || stimulus === "DONE") {
+      throw new Error("cannot submit answer for invalid stimulus");
     }
-    // Check if this was the last trial
-    if (stimulusIndex + 1 >= STIMULI_SET.length) {
-      setStage("complete");
+    await submitResponse(session, stimulus, choice);
+    setStimulus(await fetchNextPair(session));
+    setLoading(false);
+  };
+
+  const handleStart = async () => {
+    setLoading(true);
+    const nextPair = await fetchNextPair(session);
+    setStimulus(nextPair);
+    if (nextPair && nextPair !== "DONE") {
+      setStage("survey");
     } else {
-      // Advance to next trial
-      setStimulusIndex(stimulusIndex + 1);
-      setIsFlipped(Math.random() < 0.5);
+      setStage("complete");
     }
     setLoading(false);
   };
@@ -98,20 +80,13 @@ export function StudyController({ session, hasTaken }: StudyControllerProps) {
 
   // Show landing page initially
   if (stage === "landing") {
-    return <Landing handleStart={() => setStage("survey")} />;
+    return <Landing handleStart={() => handleStart()} />;
   }
 
   // Show completion message if finished
-  if (stage === "complete") {
-    return <Results></Results>;
+  if (stage === "survey" && stimulus && stimulus != "DONE") {
+    return <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
   }
 
-  // Otherwise, show current trial
-  return (
-    <Trial
-      stimulus={STIMULI_SET[stimulusIndex]}
-      onSelect={handleSelect}
-      isFlipped={isFlipped}
-    ></Trial>
-  );
+  return <Results></Results>;
 }
