@@ -19,14 +19,16 @@ import { getSupabaseAdmin } from "../../lib/supabase";
 import { StimuliUpload } from "./StimuliUpload";
 
 interface StimulusRow {
-  image_id: string;
+  id: string;
   set_id: string;
   image_url: string;
-  is_deceptive: number;
+  is_deceptive: boolean;
+  name: string;
 }
 
 interface StimuliSet {
   set_id: string;
+  set_name: string;
   rows: StimulusRow[];
 }
 
@@ -57,14 +59,20 @@ export function StimuliManager() {
       setLoading(true);
       const supabase = getSupabaseAdmin();
 
-      const { data: stimuli } = await supabase.from("stimuli").select("*");
+      const { data: stimuli } = await supabase
+        .from("stimuli")
+        .select("*, sets!inner(name)");
 
       if (stimuli) {
-        const grouped = (stimuli as StimulusRow[]).reduce<
-          Record<string, StimuliSet>
-        >((acc, row) => {
+        const grouped = (
+          stimuli as (StimulusRow & { sets: { name: string } })[]
+        ).reduce<Record<string, StimuliSet>>((acc, row) => {
           if (!acc[row.set_id]) {
-            acc[row.set_id] = { set_id: row.set_id, rows: [] };
+            acc[row.set_id] = {
+              set_id: row.set_id,
+              set_name: row.sets.name,
+              rows: [],
+            };
           }
           acc[row.set_id].rows.push(row);
           return acc;
@@ -81,12 +89,12 @@ export function StimuliManager() {
   const tables = data.map((set) => (
     <Box key={set.set_id} mb="xl">
       <Title order={4} mb="xs">
-        {set.set_id}
+        {set.set_name}
       </Title>
       <Table striped highlightOnHover withTableBorder>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Image ID</Table.Th>
+            <Table.Th>Name</Table.Th>
             <Table.Th>Type</Table.Th>
             <Table.Th>Image</Table.Th>
             <Table.Th></Table.Th>
@@ -94,11 +102,9 @@ export function StimuliManager() {
         </Table.Thead>
         <Table.Tbody>
           {set.rows.map((row) => (
-            <Table.Tr key={row.image_id}>
-              <Table.Td>{row.image_id}</Table.Td>
-              <Table.Td>
-                {row.is_deceptive === 1 ? "Deceptive" : "Honest"}
-              </Table.Td>
+            <Table.Tr key={row.id}>
+              <Table.Td>{row.name}</Table.Td>
+              <Table.Td>{row.is_deceptive ? "Deceptive" : "Honest"}</Table.Td>
               <Table.Td>
                 <Anchor
                   href={row.image_url}
@@ -107,16 +113,14 @@ export function StimuliManager() {
                 >
                   <Image
                     src={row.image_url}
-                    alt={row.image_id}
+                    alt={row.name}
                     w={100}
                     fit="contain"
                   />
                 </Anchor>
               </Table.Td>
               <Table.Td>
-                <Anchor onClick={() => handleDelete(row.image_id)}>
-                  Delete
-                </Anchor>
+                <Anchor onClick={() => handleDelete(row.id)}>Delete</Anchor>
               </Table.Td>
             </Table.Tr>
           ))}

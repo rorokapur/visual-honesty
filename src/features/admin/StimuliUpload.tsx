@@ -22,7 +22,7 @@ interface StimuliUploadProps {
  */
 export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
   const [file, setfile] = useState<File | null>(null);
-  const [isDeceptive, setIsDeceptive] = useState<1 | 0>(0);
+  const [isDeceptive, setIsDeceptive] = useState<boolean>(false);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
@@ -36,7 +36,7 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
     setStatus(null);
 
     try {
-      uploadStimulus(file, name, 0);
+      uploadStimulus(file, name, isDeceptive);
       setStatus({
         type: "success",
         message: "Stimuli set uploaded successfully!",
@@ -86,10 +86,8 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
         label="Type"
         description="Input description"
         data={["Honest", "Deceptive"]}
-        value={isDeceptive === 1 ? "Deceptive" : "Honest"}
-        onChange={(e) =>
-          setIsDeceptive(e.currentTarget.value === "Honest" ? 0 : 1)
-        }
+        value={isDeceptive ? "Deceptive" : "Honest"}
+        onChange={(e) => setIsDeceptive(e.currentTarget.value === "Deceptive")}
       />
 
       <Button

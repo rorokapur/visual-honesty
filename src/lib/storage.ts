@@ -9,7 +9,8 @@ import { getSupabaseAdmin } from "./supabase";
 export async function uploadStimulus(
   file: File,
   setName: string,
-  isDeceptive: 1 | 0,
+  isDeceptive: boolean,
+  name?: string,
 ) {
   const supabase = getSupabaseAdmin();
   const fileExt = file.name.split(".").pop();
@@ -26,28 +27,28 @@ export async function uploadStimulus(
     data: { publicUrl },
   } = supabase.storage.from("stimuli").getPublicUrl(fileName);
 
-  const { error: dbError } = await supabase.from("stimuli").insert({
-    image_id: uuid,
-    set_id: setName,
-    image_url: publicUrl,
-    is_deceptive: isDeceptive,
+  const { error } = await supabase.rpc("add_stimulus", {
+    p_image_url: publicUrl,
+    p_name: name ? name : file.name.split(".")[0],
+    p_is_deceptive: isDeceptive,
+    p_set_name: setName,
   });
 
-  if (dbError) throw dbError;
+  if (error) throw error;
 }
 
 /**
  * Removes a specified image from the backend (db + storage)
  * @param image_id - uuid of image to delete
  */
-export async function deleteStimulus(image_id: string) {
+export async function deleteStimulus(id: string) {
   const supabase = getSupabaseAdmin();
 
   // Get the image_url for this image_id
   const { data: stimulus, error: selectError } = await supabase
     .from("stimuli")
     .select("image_url")
-    .eq("image_id", image_id)
+    .eq("id", id)
     .single();
 
   if (selectError) throw selectError;
@@ -69,7 +70,7 @@ export async function deleteStimulus(image_id: string) {
   const { error: dbError } = await supabase
     .from("stimuli")
     .delete()
-    .eq("image_id", image_id);
+    .eq("id", id);
 
   if (dbError) throw dbError;
 }
