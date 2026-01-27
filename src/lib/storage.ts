@@ -5,6 +5,7 @@ import { getSupabaseAdmin } from "./supabase";
  * @param file - image file to upload
  * @param setName - stimuli set name to add to
  * @param isDeceptive - whether or not the image is deceptive
+ * @param name - (optional) name of stimulus. will use file name without extension as default
  */
 export async function uploadStimulus(
   file: File,
