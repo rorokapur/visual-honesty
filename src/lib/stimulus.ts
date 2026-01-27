@@ -49,7 +49,8 @@ export const submitResponse = async (
     set_id: stimulus.set_id,
     selected_stimulus:
       selectedSide === "right" ? stimulus.right.id : stimulus.left.id,
-    selected_side: selectedSide,
+    left_stimulus: stimulus.left.id,
+    right_stimulus: stimulus.right.id,
   });
 
   if (error) {

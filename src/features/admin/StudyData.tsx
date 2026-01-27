@@ -51,7 +51,9 @@ export function StudyData() {
 
       const { data: results } = await supabase
         .from("responses")
-        .select("*")
+        .select(
+          "*, sets(name), left_stim:stimuli!responses_left_stimulus_fkey(name), right_stim:stimuli!responses_right_stimulus_fkey(name), selected_stim:stimuli!responses_selected_stimulus_fkey(name)",
+        )
         .order("created_at", { ascending: false })
         .range(
           (page - 1) * 50,
@@ -75,8 +77,10 @@ export function StudyData() {
     <Table.Tr key={row.created_at + row.pair_id}>
       <Table.Td>{row.created_at}</Table.Td>
       <Table.Td>{row.session_id}</Table.Td>
-      <Table.Td>{row.pair_id}</Table.Td>
-      <Table.Td>{row.selected_answer}</Table.Td>
+      <Table.Td>{row.sets?.name ?? row.set_id}</Table.Td>
+      <Table.Td>{row.left_stim?.name ?? row.left_stimulus}</Table.Td>
+      <Table.Td>{row.right_stim?.name ?? row.right_stimulus}</Table.Td>
+      <Table.Td>{row.selected_stim?.name ?? row.selected_stimulus}</Table.Td>
       <Table.Td>{row.selected_side}</Table.Td>
     </Table.Tr>
   ));
@@ -110,9 +114,10 @@ export function StudyData() {
           <Table.Tr>
             <Table.Th>Created At</Table.Th>
             <Table.Th>Session ID</Table.Th>
-            <Table.Th>Pair ID</Table.Th>
+            <Table.Th>Set</Table.Th>
+            <Table.Th>Left</Table.Th>
+            <Table.Th>Right</Table.Th>
             <Table.Th>Selected Answer</Table.Th>
-            <Table.Th>Selected Side</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
