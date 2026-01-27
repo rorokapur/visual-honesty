@@ -18,7 +18,7 @@ export interface StimulusPair {
  */
 export const fetchNextPair = async (
   sessionId: string,
-): Promise<StimulusPair | "DONE" | null> => {
+): Promise<StimulusPair | null> => {
   const { data, error } = await supabase.rpc("get_random_unseen_pair", {
     p_session_id: sessionId,
   });
@@ -30,7 +30,7 @@ export const fetchNextPair = async (
 
   // The RPC returns { sets_remaining: 0 } when finished
   if (data.sets_remaining === 0) {
-    return "DONE";
+    return null;
   }
 
   return data as StimulusPair;

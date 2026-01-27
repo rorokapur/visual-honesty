@@ -35,7 +35,7 @@ export function StudyController({ session }: StudyControllerProps) {
   const [stage, setStage] = useState<"landing" | "survey" | "complete">(
     "landing",
   );
-  const [stimulus, setStimulus] = useState<StimulusPair | "DONE" | null>(null);
+  const [stimulus, setStimulus] = useState<StimulusPair | null>(null);
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
@@ -43,7 +43,7 @@ export function StudyController({ session }: StudyControllerProps) {
    */
   const handleSelect = async (choice: "left" | "right") => {
     setLoading(true);
-    if (!stimulus || stimulus === "DONE") {
+    if (!stimulus) {
       throw new Error("cannot submit answer for invalid stimulus");
     }
     await submitResponse(session, stimulus, choice);
@@ -55,7 +55,7 @@ export function StudyController({ session }: StudyControllerProps) {
     setLoading(true);
     const nextPair = await fetchNextPair(session);
     setStimulus(nextPair);
-    if (nextPair && nextPair !== "DONE") {
+    if (nextPair) {
       setStage("survey");
     } else {
       setStage("complete");
@@ -84,7 +84,7 @@ export function StudyController({ session }: StudyControllerProps) {
   }
 
   // Show completion message if finished
-  if (stage === "survey" && stimulus && stimulus != "DONE") {
+  if (stage === "survey" && stimulus) {
     return <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
   }
 
