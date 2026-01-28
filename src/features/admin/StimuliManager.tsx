@@ -9,28 +9,19 @@ import {
   LoadingOverlay,
   Modal,
   Stack,
+  Switch,
   Table,
   Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useEffect, useState } from "react";
-import { deleteStimulus } from "../../lib/storage";
+import {
+  deleteStimulus,
+  type StimuliSet,
+  type Stimulus,
+} from "../../lib/storage";
 import { getSupabaseAdmin } from "../../lib/supabase";
 import { StimuliUpload } from "./StimuliUpload";
-
-interface StimulusRow {
-  id: string;
-  set_id: string;
-  image_url: string;
-  is_deceptive: boolean;
-  name: string;
-}
-
-interface StimuliSet {
-  set_id: string;
-  set_name: string;
-  rows: StimulusRow[];
-}
 
 /**
  * Interface for viewing, uploading and deleting stimuli and stimuli sets
@@ -54,6 +45,22 @@ export function StimuliManager() {
     }
   };
 
+  const handleToggleSetEnabled = async (setId: string, enabled: boolean) => {
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase
+      .from("sets")
+      .update({ enabled })
+      .eq("id", setId);
+
+    if (error) {
+      alert("Failed to update set: " + JSON.stringify(error));
+    } else {
+      setData((prev) =>
+        prev.map((set) => (set.set_id === setId ? { ...set, enabled } : set)),
+      );
+    }
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -61,16 +68,19 @@ export function StimuliManager() {
 
       const { data: stimuli } = await supabase
         .from("stimuli")
-        .select("*, sets!inner(name)");
+        .select("*, sets!inner(name, enabled)");
 
       if (stimuli) {
         const grouped = (
-          stimuli as (StimulusRow & { sets: { name: string } })[]
+          stimuli as (Stimulus & {
+            sets: { name: string; enabled: boolean };
+          })[]
         ).reduce<Record<string, StimuliSet>>((acc, row) => {
           if (!acc[row.set_id]) {
             acc[row.set_id] = {
               set_id: row.set_id,
               set_name: row.sets.name,
+              enabled: row.sets.enabled,
               rows: [],
             };
           }
@@ -88,9 +98,16 @@ export function StimuliManager() {
 
   const tables = data.map((set) => (
     <Box key={set.set_id} mb="xl">
-      <Title order={4} mb="xs">
-        {set.set_name}
-      </Title>
+      <Group mb="xs">
+        <Title order={4}>{set.set_name}</Title>
+        <Switch
+          label={set.enabled ? "Enabled" : "Disabled"}
+          checked={set.enabled}
+          onChange={(e) =>
+            handleToggleSetEnabled(set.set_id, e.currentTarget.checked)
+          }
+        />
+      </Group>
       <Table striped highlightOnHover withTableBorder>
         <Table.Thead>
           <Table.Tr>
