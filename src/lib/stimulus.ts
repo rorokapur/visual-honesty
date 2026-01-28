@@ -1,20 +1,48 @@
 import { supabase } from "./supabase";
 
+/**
+ * A single stimulus in the participant client
+ */
 export interface StimulusImage {
+  /**
+   * Unique image id
+   */
   id: string;
+
+  /**
+   * Image URL on Supabase
+   */
   image_url: string;
 }
 
+/**
+ * A left/right pair of stimuli in the participant client.
+ */
 export interface StimulusPair {
+  /**
+   * Unique set id
+   */
   set_id: string;
+
+  /**
+   * Stimulus to display on left side
+   */
   left: StimulusImage;
+
+  /**
+   * Stimulus to display on right side
+   */
   right: StimulusImage;
+
+  /**
+   * Number of new sets left in Supabase
+   */
   sets_remaining: number;
 }
 
 /**
  * Fetches a random pair of honest/deceptive images that the user has not seen yet.
- * Returns 'DONE' if the survey is complete, or the pair data.
+ * @returns the next StimulusPair if available, or null if there are none
  */
 export const fetchNextPair = async (
   sessionId: string,
@@ -37,7 +65,7 @@ export const fetchNextPair = async (
 };
 
 /**
- * Submits the user's choice to the database.
+ * Submits particiapnt choice to Supabase
  */
 export const submitResponse = async (
   sessionId: string,

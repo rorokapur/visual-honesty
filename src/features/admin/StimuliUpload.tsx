@@ -17,7 +17,7 @@ interface StimuliUploadProps {
 }
 
 /**
- * Uploads images into a stimuli set in supabase
+ * Uploads images into a stimuli set in supabase (used as a modal)
  * @component
  */
 export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
@@ -30,6 +30,9 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
     message: string;
   } | null>(null);
 
+  /**
+   * Attempts to upload stimulus to Supabase
+   */
   const handleUpload = async () => {
     if (!file || !name) return;
     setLoading(true);
