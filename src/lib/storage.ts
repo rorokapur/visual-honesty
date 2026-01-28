@@ -1,10 +1,32 @@
 import { getSupabaseAdmin } from "./supabase";
 
 /**
+ * A signle stimulus entry in database/storage
+ */
+export interface Stimulus {
+  id: string;
+  set_id: string;
+  image_url: string;
+  is_deceptive: boolean;
+  name: string;
+}
+
+/**
+ * A set of stimuli in database/storage
+ */
+export interface StimuliSet {
+  set_id: string;
+  set_name: string;
+  enabled: boolean;
+  rows: Stimulus[];
+}
+
+/**
  * Add an image to a stimuli set in the backend
  * @param file - image file to upload
  * @param setName - stimuli set name to add to
  * @param isDeceptive - whether or not the image is deceptive
+ * @param name - (optional) name of stimulus. will use file name without extension as default
  */
 export async function uploadStimulus(
   file: File,

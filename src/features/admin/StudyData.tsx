@@ -25,9 +25,51 @@ export function StudyData() {
 
   // Fetches CSV data and triggers a download
   const downloadCsv = async () => {
-    const { data } = await getSupabaseAdmin().from("responses").select().csv();
+    const { data } = await getSupabaseAdmin()
+      .from("responses")
+      .select(
+        "*, sets(name), left_stim:stimuli!responses_left_stimulus_fkey(name), right_stim:stimuli!responses_right_stimulus_fkey(name), selected_stim:stimuli!responses_selected_stimulus_fkey(name)",
+      );
+
     if (data) {
-      const blob = new Blob([data], { type: "csv" });
+      // Flatten joined data for CSV export
+      const flattenedData = data.map((row) => ({
+        ...row,
+        set_name: row.sets?.name ?? "",
+        left_stimulus_name: row.left_stim?.name ?? "",
+        right_stimulus_name: row.right_stim?.name ?? "",
+        selected_stimulus_name: row.selected_stim?.name ?? "",
+        sets: undefined,
+        left_stim: undefined,
+        right_stim: undefined,
+        selected_stim: undefined,
+      }));
+
+      // Convert to CSV
+      const headers = Object.keys(flattenedData[0] || {}).filter(
+        (key) => flattenedData[0][key] !== undefined,
+      );
+      const csvRows = [
+        headers.join(","),
+        ...flattenedData.map((row) =>
+          headers
+            .map((header) => {
+              const value = row[header];
+              // Escape values with commas or quotes
+              if (
+                typeof value === "string" &&
+                (value.includes(",") || value.includes('"'))
+              ) {
+                return `"${value.replace(/"/g, '""')}"`;
+              }
+              return value ?? "";
+            })
+            .join(","),
+        ),
+      ];
+      const csvString = csvRows.join("\n");
+
+      const blob = new Blob([csvString], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
 
       const a = document.createElement("a");
@@ -51,7 +93,9 @@ export function StudyData() {
 
       const { data: results } = await supabase
         .from("responses")
-        .select("*")
+        .select(
+          "*, sets(name), left_stim:stimuli!responses_left_stimulus_fkey(name), right_stim:stimuli!responses_right_stimulus_fkey(name), selected_stim:stimuli!responses_selected_stimulus_fkey(name)",
+        )
         .order("created_at", { ascending: false })
         .range(
           (page - 1) * 50,
@@ -75,8 +119,10 @@ export function StudyData() {
     <Table.Tr key={row.created_at + row.pair_id}>
       <Table.Td>{row.created_at}</Table.Td>
       <Table.Td>{row.session_id}</Table.Td>
-      <Table.Td>{row.pair_id}</Table.Td>
-      <Table.Td>{row.selected_answer}</Table.Td>
+      <Table.Td>{row.sets?.name ?? row.set_id}</Table.Td>
+      <Table.Td>{row.left_stim?.name ?? row.left_stimulus}</Table.Td>
+      <Table.Td>{row.right_stim?.name ?? row.right_stimulus}</Table.Td>
+      <Table.Td>{row.selected_stim?.name ?? row.selected_stimulus}</Table.Td>
       <Table.Td>{row.selected_side}</Table.Td>
     </Table.Tr>
   ));
@@ -110,9 +156,10 @@ export function StudyData() {
           <Table.Tr>
             <Table.Th>Created At</Table.Th>
             <Table.Th>Session ID</Table.Th>
-            <Table.Th>Pair ID</Table.Th>
+            <Table.Th>Set</Table.Th>
+            <Table.Th>Left</Table.Th>
+            <Table.Th>Right</Table.Th>
             <Table.Th>Selected Answer</Table.Th>
-            <Table.Th>Selected Side</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
