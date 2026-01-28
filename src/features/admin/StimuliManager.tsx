@@ -48,7 +48,7 @@ export function StimuliManager() {
       await deleteStimulus(imageId);
       setRefresh((r) => r + 1);
     } catch (error) {
-      alert("Failed to delete:" + error);
+      alert("Failed to delete:" + JSON.stringify(error));
     } finally {
       setLoading(false);
     }
