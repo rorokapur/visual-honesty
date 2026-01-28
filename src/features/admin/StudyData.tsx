@@ -23,7 +23,9 @@ export function StudyData() {
   const [pageCount, setPageCount] = useState<number>(0);
   const [refresh, setRefresh] = useState(0);
 
-  // Fetches CSV data and triggers a download
+  /**
+   * Fetches data from supabase, converts to csv and triggers download
+   */
   const downloadCsv = async () => {
     const { data } = await getSupabaseAdmin()
       .from("responses")
@@ -114,7 +116,9 @@ export function StudyData() {
     loadData();
   }, [page, refresh]);
 
-  // Map JSON response to table entry
+  /**
+   * Table entries mapped to the JSON response
+   */
   const rows = data?.map((row) => (
     <Table.Tr key={row.created_at + row.pair_id}>
       <Table.Td>{row.created_at}</Table.Td>

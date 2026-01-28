@@ -1,7 +1,7 @@
 import { getSupabaseAdmin } from "./supabase";
 
 /**
- * A signle stimulus entry in database/storage
+ * A single stimulus entry in database/storage
  */
 export interface Stimulus {
   id: string;
@@ -39,16 +39,19 @@ export async function uploadStimulus(
   const uuid = window.crypto.randomUUID();
   const fileName = `${uuid}.${fileExt}`;
 
+  // Upload image to storage
   const { error: uploadError } = await supabase.storage
     .from("stimuli")
     .upload(fileName, file);
 
   if (uploadError) throw uploadError;
 
+  // Get URL of newly uplaoded image
   const {
     data: { publicUrl },
   } = supabase.storage.from("stimuli").getPublicUrl(fileName);
 
+  // Add info to database
   const { error } = await supabase.rpc("add_stimulus", {
     p_image_url: publicUrl,
     p_name: name ? name : file.name.split(".")[0],

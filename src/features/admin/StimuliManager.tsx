@@ -33,6 +33,10 @@ export function StimuliManager() {
   const [refresh, setRefresh] = useState(0);
   const [uploadOpened, { open, close }] = useDisclosure(false);
 
+  /**
+   * /Attempts to delete a stimulus (will not work if it has already been used in results).
+   * @param imageId - id of image in Supabase to delete
+   */
   const handleDelete = async (imageId: string) => {
     setLoading(true);
     try {
@@ -45,6 +49,11 @@ export function StimuliManager() {
     }
   };
 
+  /**
+   * Changes whether or not a set is enabled (will be shown to participants) in Supabase
+   * @param setId - id of set to change
+   * @param enabled - enabled/disabled state
+   */
   const handleToggleSetEnabled = async (setId: string, enabled: boolean) => {
     const supabase = getSupabaseAdmin();
     const { error } = await supabase
@@ -61,6 +70,7 @@ export function StimuliManager() {
     }
   };
 
+  // Load stimuli data from Supabase and format to rows and sets
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -96,6 +106,7 @@ export function StimuliManager() {
     loadData();
   }, [refresh]);
 
+  // Generate tables for each stimuli set
   const tables = data.map((set) => (
     <Box key={set.set_id} mb="xl">
       <Group mb="xs">

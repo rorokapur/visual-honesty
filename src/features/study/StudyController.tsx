@@ -83,10 +83,11 @@ export function StudyController({ session }: StudyControllerProps) {
     return <Landing handleStart={() => handleStart()} />;
   }
 
-  // Show completion message if finished
+  // Show survey flow
   if (stage === "survey" && stimulus) {
     return <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
   }
 
+  // Show results page when done
   return <Results></Results>;
 }
