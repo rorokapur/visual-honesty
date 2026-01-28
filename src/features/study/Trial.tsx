@@ -1,29 +1,24 @@
 import { Card, Center, Image, SimpleGrid, Space, Text } from "@mantine/core";
-import type { Stimulus } from "../data/stimuli";
+import type { StimulusPair } from "../../lib/stimulus";
 
 interface TrialProps {
   /**
    * The pair of images to display for this trial.
    */
-  stimulus: Stimulus;
+  stimulus: StimulusPair;
 
   /**
    * Callback to handle user answer selection.
    * @param choice - the stimulus side selected by the user
    */
   onSelect: (choice: "left" | "right") => void;
-
-  /**
-   * Whether or not to flip the left/right order of the images from the default.
-   */
-  isFlipped: boolean;
 }
 
 /**
  * A component containing an individual trial of the Visual Honesty survey
  * @component
  */
-export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
+export function Trial({ stimulus, onSelect }: TrialProps) {
   return (
     <>
       <Center>
@@ -40,7 +35,7 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
           className="panels"
         >
           <Image
-            src={isFlipped ? stimulus.deceptiveImage : stimulus.honestImage}
+            src={stimulus.left.image_url}
             alt="Stimulus A"
             draggable={false}
             //TODO: Images are still selectable on Safari - need to investigate
@@ -56,7 +51,7 @@ export function Trial({ stimulus, onSelect, isFlipped }: TrialProps) {
           className="panels"
         >
           <Image
-            src={isFlipped ? stimulus.honestImage : stimulus.deceptiveImage}
+            src={stimulus.right.image_url}
             alt="Stimulus B"
             draggable={false}
             style={{ userSelect: "none" }}

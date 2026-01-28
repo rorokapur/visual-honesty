@@ -1,6 +1,5 @@
-import { Center, Container, Title } from "@mantine/core";
 import { useState } from "react";
-import { SurveyContainer } from "./components/SurveyContainer";
+import { StudyController } from "./features/study/StudyController";
 
 /**
  *Main application component for the project.
@@ -8,9 +7,9 @@ import { SurveyContainer } from "./components/SurveyContainer";
  * * Manages session and survey completion info
  * @component
  */
-export default function App() {
+export default function Study() {
   // Generate session ID or retrieve existing one
-  const [session] = useState(() => {
+  const [participantSession] = useState(() => {
     const KEY = "vh_session_id";
     const existing = localStorage.getItem(KEY);
     if (existing) return existing;
@@ -21,24 +20,13 @@ export default function App() {
   });
 
   // Check if the user has already taken the survey
-  const [hasTaken] = useState(() => {
+  const [hasTakenSurvey] = useState(() => {
     const KEY = "vh_taken";
     const existing = localStorage.getItem(KEY);
     return existing === "true";
   });
 
   return (
-    <>
-      <header style={{ background: "white" }}>
-        <Container px="md">
-          <Center style={{ padding: "16px 0" }}>
-            <Title ta="center">Can you spot the deceptive visualization?</Title>
-          </Center>
-        </Container>
-      </header>
-      <main style={{ padding: "16px" }}>
-        <SurveyContainer session={session} hasTaken={hasTaken} />
-      </main>
-    </>
+    <StudyController session={participantSession} hasTaken={hasTakenSurvey} />
   );
 }
