@@ -89,5 +89,5 @@ export function StudyController({ session }: StudyControllerProps) {
   }
 
   // Show results page when done
-  return <Results></Results>;
+  return <Results session={session}></Results>;
 }
