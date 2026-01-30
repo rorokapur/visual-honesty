@@ -131,7 +131,7 @@ export function ResultsViewer() {
           </Button>
         </Group>
       </Flex>
-      <Box pos="relative">
+      <Box pos="relative" mih={200}>
         <LoadingOverlay visible={loading} />
         <Stack>{tables}</Stack>
       </Box>

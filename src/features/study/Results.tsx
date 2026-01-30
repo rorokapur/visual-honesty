@@ -2,7 +2,6 @@ import {
   Center,
   Container,
   Group,
-  LoadingOverlay,
   Paper,
   Stack,
   Text,
@@ -24,18 +23,15 @@ interface ResultsProps {
  */
 export function Results({ session }: ResultsProps) {
   const [data, setData] = useState<ParticipantResults | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadResults = async () => {
-      setLoading(true);
       const results = await fetchResults(session);
       if (results) {
         setData(results);
       } else {
         alert("An error occured while trying to fetch your results!");
       }
-      setLoading(false);
     };
     loadResults();
   }, [session]);
@@ -52,7 +48,6 @@ export function Results({ session }: ResultsProps) {
       <main>
         <Container size="sm" px="md">
           <Stack align="center" gap="md">
-            <LoadingOverlay visible={loading} />
             {data ? (
               <Paper p="xl" radius="md" withBorder w="75%">
                 <Stack gap="lg">

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   Flex,
@@ -153,21 +154,22 @@ export function DataViewer() {
           withPages={true}
         />
       </Flex>
-
-      <Table>
+      <Box pos="relative" mih={200}>
         <LoadingOverlay visible={loading} />
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Created At</Table.Th>
-            <Table.Th>Session ID</Table.Th>
-            <Table.Th>Set</Table.Th>
-            <Table.Th>Left</Table.Th>
-            <Table.Th>Right</Table.Th>
-            <Table.Th>Selected Answer</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Created At</Table.Th>
+              <Table.Th>Session ID</Table.Th>
+              <Table.Th>Set</Table.Th>
+              <Table.Th>Left</Table.Th>
+              <Table.Th>Right</Table.Th>
+              <Table.Th>Selected Answer</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      </Box>
     </Container>
   );
 }
