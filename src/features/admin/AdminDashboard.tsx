@@ -1,6 +1,7 @@
 import { AppShell, Burger, Group, NavLink, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { ResultsViewer } from "./ResultsViewer";
 import { StimuliManager } from "./StimuliManager";
 import { StudyData } from "./StudyData";
 
@@ -9,13 +10,15 @@ import { StudyData } from "./StudyData";
  */
 export function AdminDashboard() {
   const [opened, { toggle }] = useDisclosure();
-  const [tab, setTab] = useState<"data" | "stimuli">("data");
+  const [tab, setTab] = useState<"data" | "stimuli" | "results">("data");
 
   const mainContent = (): React.ReactNode => {
     if (tab == "data") {
       return <StudyData></StudyData>;
     } else if (tab == "stimuli") {
       return <StimuliManager />;
+    } else if (tab == "results") {
+      return <ResultsViewer />;
     }
     // Fallback
     return <Text>Select a tab to get started</Text>;
@@ -34,8 +37,21 @@ export function AdminDashboard() {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
-        <NavLink label="Data" onClick={() => setTab("data")} />
-        <NavLink label="Stimuli" onClick={() => setTab("stimuli")} />
+        <NavLink
+          label="Responses"
+          active={tab === "data"}
+          onClick={() => setTab("data")}
+        />
+        <NavLink
+          label="Results"
+          active={tab === "results"}
+          onClick={() => setTab("results")}
+        />
+        <NavLink
+          label="Stimuli Manager"
+          active={tab === "stimuli"}
+          onClick={() => setTab("stimuli")}
+        />
       </AppShell.Navbar>
       <AppShell.Main>{mainContent()}</AppShell.Main>
     </AppShell>

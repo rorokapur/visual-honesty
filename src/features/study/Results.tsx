@@ -9,7 +9,10 @@ import {
   Title,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { fetchResults, type ParticipantResults } from "../../lib/results";
+import {
+  fetchResults,
+  type ParticipantResults,
+} from "../../lib/participant_results";
 
 interface ResultsProps {
   /** Session ID of user to fetch statistics for */
