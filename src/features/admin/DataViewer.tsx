@@ -14,7 +14,7 @@ import { getSupabaseAdmin } from "../../lib/supabase";
  * Displays all response data (latest first) and allows downloads in csv format
  * @component
  */
-export function StudyData() {
+export function DataViewer() {
   const [loading, setLoading] = useState<boolean>(false);
   // TODO: Change this once we have a solidified set of collected info
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -1,9 +1,9 @@
 import { AppShell, Burger, Group, NavLink, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { DataViewer } from "./DataViewer";
 import { ResultsViewer } from "./ResultsViewer";
 import { StimuliManager } from "./StimuliManager";
-import { StudyData } from "./StudyData";
 
 /**
  * Admin dashboard component to oversee and manage study.
@@ -14,7 +14,7 @@ export function AdminDashboard() {
 
   const mainContent = (): React.ReactNode => {
     if (tab == "data") {
-      return <StudyData></StudyData>;
+      return <DataViewer></DataViewer>;
     } else if (tab == "stimuli") {
       return <StimuliManager />;
     } else if (tab == "results") {
