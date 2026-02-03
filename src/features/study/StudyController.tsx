@@ -51,10 +51,14 @@ export function StudyController({ session }: StudyControllerProps) {
       throw new Error("cannot submit answer for invalid stimulus");
     }
     await submitResponse(session, stimulus, choice);
-    const next = await fetchNextPair(session);
-    if (next) {
-      setStimulus(next);
-      setTrial(trial + 1);
+    if (trial < totalTrials) {
+      const next = await fetchNextPair(session);
+      if (next) {
+        setStimulus(next);
+        setTrial(trial + 1);
+      } else {
+        setStage("results");
+      }
     } else {
       setStage("results");
     }
@@ -69,7 +73,7 @@ export function StudyController({ session }: StudyControllerProps) {
     if (nextPair) {
       setStage("survey");
       setTrial(1);
-      setTotalTrials(nextPair.sets_remaining);
+      setTotalTrials(nextPair.sets_remaining > 5 ? 5 : nextPair.sets_remaining);
     } else {
       setStage("results");
     }
