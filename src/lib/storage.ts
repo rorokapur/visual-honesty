@@ -80,13 +80,6 @@ export async function deleteStimulus(id: string) {
 
   if (!fileName) throw new Error("Could not extract file name from URL");
 
-  // Delete from storage
-  const { error: storageError } = await supabase.storage
-    .from("stimuli")
-    .remove([fileName]);
-
-  if (storageError) throw storageError;
-
   // Delete database entry
   const { error: dbError } = await supabase
     .from("stimuli")
@@ -94,4 +87,11 @@ export async function deleteStimulus(id: string) {
     .eq("id", id);
 
   if (dbError) throw dbError;
+
+  // Delete from storage
+  const { error: storageError } = await supabase.storage
+    .from("stimuli")
+    .remove([fileName]);
+
+  if (storageError) throw storageError;
 }
