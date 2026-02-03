@@ -16,14 +16,19 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   }
 
   const questions = [];
-  for (let i = 0; i < num_trials; i++) {
+  questions.push(<Stepper.Step label="Questions"></Stepper.Step>);
+  for (let i = 1; i < num_trials; i++) {
     questions.push(<Stepper.Step></Stepper.Step>);
   }
 
   if (typeof stage === "number" && questions.length > 0) {
     return (
       <Box>
-        <Stepper active={stage - 1} allowNextStepsSelect={false}>
+        <Stepper
+          active={stage - 1}
+          allowNextStepsSelect={false}
+          iconPosition="right"
+        >
           {questions}
         </Stepper>
       </Box>
