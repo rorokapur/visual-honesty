@@ -1,10 +1,18 @@
 import { Box, Stepper } from "@mantine/core";
 
 interface StudyProgressProps {
+  /** Total number of trials the participant will complete */
   num_trials: number;
+
+  /** Current stage or question number */
   stage: "landing" | "results" | number;
 }
 
+/**
+ * Shows current progress of participant in study flow, breaking down into
+ * invidual questions during the survey stage.
+ * @component
+ */
 export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   let active;
   if (typeof stage === "number") {
@@ -21,6 +29,7 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
     questions.push(<Stepper.Step></Stepper.Step>);
   }
 
+  // Show individual question numbers when in the trials phase
   if (typeof stage === "number" && questions.length > 0) {
     return (
       <Box>
@@ -36,6 +45,7 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
     );
   }
 
+  // Otherwise show progress of overall flow
   return (
     <Box>
       <Stepper active={active} allowNextStepsSelect={false}>
