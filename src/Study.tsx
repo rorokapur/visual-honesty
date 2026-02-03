@@ -1,3 +1,4 @@
+import { AppShell } from "@mantine/core";
 import { useState } from "react";
 import { StudyController } from "./features/study/StudyController";
 
@@ -27,6 +28,13 @@ export default function Study() {
   });
 
   return (
-    <StudyController session={participantSession} hasTaken={hasTakenSurvey} />
+    <AppShell>
+      <AppShell.Main>
+        <StudyController
+          session={participantSession}
+          hasTaken={hasTakenSurvey}
+        />
+      </AppShell.Main>
+    </AppShell>
   );
 }

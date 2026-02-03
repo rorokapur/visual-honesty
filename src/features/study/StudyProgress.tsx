@@ -1,4 +1,4 @@
-import { Stepper } from "@mantine/core";
+import { Box, Stepper } from "@mantine/core";
 
 interface StudyProgressProps {
   num_trials: number;
@@ -8,29 +8,35 @@ interface StudyProgressProps {
 export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   let active;
   if (typeof stage === "number") {
-    active = stage;
+    active = 1;
   } else if (stage === "landing") {
     active = 0;
   } else {
-    active = num_trials;
+    active = 2;
   }
 
   const questions = [];
   for (let i = 0; i < num_trials; i++) {
-    questions.push(<Stepper.Step label={"Q" + (i + 1)}></Stepper.Step>);
+    questions.push(<Stepper.Step></Stepper.Step>);
+  }
+
+  if (typeof stage === "number" && questions.length > 0) {
+    return (
+      <Box>
+        <Stepper active={stage - 1} allowNextStepsSelect={false}>
+          {questions}
+        </Stepper>
+      </Box>
+    );
   }
 
   return (
-    <Stepper active={active} allowNextStepsSelect={false}>
-      <Stepper.Step label="Instructions"></Stepper.Step>
-      {typeof stage === "number" && questions.length > 0 ? (
-        questions
-      ) : (
+    <Box>
+      <Stepper active={active} allowNextStepsSelect={false}>
+        <Stepper.Step label="Instructions"></Stepper.Step>
         <Stepper.Step label="Questions"></Stepper.Step>
-      )}
-      <Stepper.Step label="Results">
-        Step 3 content: Get full access
-      </Stepper.Step>
-    </Stepper>
+        <Stepper.Step label="Results"></Stepper.Step>
+      </Stepper>
+    </Box>
   );
 }

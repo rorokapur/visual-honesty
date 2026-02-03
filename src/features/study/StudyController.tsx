@@ -1,4 +1,4 @@
-import { Loader } from "@mantine/core";
+import { Container, Loader, Stack } from "@mantine/core";
 import { useState } from "react";
 import {
   fetchNextPair,
@@ -33,9 +33,12 @@ export function StudyController({ session }: StudyControllerProps) {
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
   // Current stage in study flow
-  const [stage, setStage] = useState<"landing" | "survey" | "complete">(
+  const [stage, setStage] = useState<"landing" | "survey" | "results">(
     "landing",
   );
+
+  const [trial, setTrial] = useState<number>(0);
+  const [totalTrials, setTotalTrials] = useState<number>(0);
   const [stimulus, setStimulus] = useState<StimulusPair | null>(null);
 
   /**
@@ -48,7 +51,14 @@ export function StudyController({ session }: StudyControllerProps) {
       throw new Error("cannot submit answer for invalid stimulus");
     }
     await submitResponse(session, stimulus, choice);
-    setStimulus(await fetchNextPair(session));
+    const next = await fetchNextPair(session);
+    if (next) {
+      setStimulus(next);
+      setTrial(trial + 1);
+    } else {
+      setStage("results");
+    }
+
     setLoading(false);
   };
 
@@ -58,8 +68,10 @@ export function StudyController({ session }: StudyControllerProps) {
     setStimulus(nextPair);
     if (nextPair) {
       setStage("survey");
+      setTrial(1);
+      setTotalTrials(nextPair.sets_remaining);
     } else {
-      setStage("complete");
+      setStage("results");
     }
     setLoading(false);
   };
@@ -79,35 +91,26 @@ export function StudyController({ session }: StudyControllerProps) {
     );
   }
 
-  const progress = (
-    <StudyProgress num_trials={2} stage={"landing"}></StudyProgress>
-  );
+  let page;
 
-  // Show landing page initially
   if (stage === "landing") {
-    return (
-      <>
-        {progress}
-        <Landing handleStart={() => handleStart()} />
-      </>
-    );
+    page = <Landing handleStart={() => handleStart()} />;
+  } else if (stage === "survey" && stimulus) {
+    page = <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
+  } else {
+    page = <Results session={session}></Results>;
   }
 
-  // Show survey flow
-  if (stage === "survey" && stimulus) {
-    return (
-      <>
-        {progress}
-        <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>
-      </>
-    );
-  }
-
-  // Show results page when done
   return (
-    <>
-      {progress}
-      <Results session={session}></Results>
-    </>
+    <Stack>
+      <Container maw="80%" miw="60%">
+        <StudyProgress
+          num_trials={totalTrials}
+          stage={stage === "survey" ? trial : stage}
+        ></StudyProgress>
+      </Container>
+
+      {page}
+    </Stack>
   );
 }
