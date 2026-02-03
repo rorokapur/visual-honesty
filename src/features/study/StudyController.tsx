@@ -73,7 +73,9 @@ export function StudyController({ session }: StudyControllerProps) {
     if (nextPair) {
       setStage("survey");
       setTrial(1);
-      setTotalTrials(nextPair.sets_remaining > 5 ? 5 : nextPair.sets_remaining);
+      setTotalTrials(
+        nextPair.sets_remaining > 20 ? 20 : nextPair.sets_remaining,
+      );
     } else {
       setStage("results");
     }
