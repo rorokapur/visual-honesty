@@ -1,4 +1,4 @@
-import { Container, Loader, Stack } from "@mantine/core";
+import { Box, Container, LoadingOverlay, Stack } from "@mantine/core";
 import { useState } from "react";
 import {
   fetchNextPair,
@@ -76,21 +76,6 @@ export function StudyController({ session }: StudyControllerProps) {
     setLoading(false);
   };
 
-  // Show loader while submitting (prevents multiple API calls)
-  if (loading) {
-    return (
-      <Loader
-        size="xl"
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-        }}
-      />
-    );
-  }
-
   let page;
 
   if (stage === "landing") {
@@ -103,14 +88,16 @@ export function StudyController({ session }: StudyControllerProps) {
 
   return (
     <Stack>
-      <Container maw="80%" miw="60%">
+      <Container maw="80%" miw="60%" p="lg">
         <StudyProgress
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
         ></StudyProgress>
       </Container>
-
-      {page}
+      <Box pos="relative">
+        <LoadingOverlay visible={loading}></LoadingOverlay>
+        {page}
+      </Box>
     </Stack>
   );
 }
