@@ -28,6 +28,7 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
           active={stage - 1}
           allowNextStepsSelect={false}
           iconPosition="right"
+          styles={{ steps: { justifyContent: "center" } }}
         >
           {questions}
         </Stepper>
