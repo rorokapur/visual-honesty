@@ -7,6 +7,7 @@ import {
 } from "../../lib/stimulus";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
+import { StudyProgress } from "./StudyProgress";
 import { Trial } from "./Trial";
 
 interface StudyControllerProps {
@@ -78,16 +79,35 @@ export function StudyController({ session }: StudyControllerProps) {
     );
   }
 
+  const progress = (
+    <StudyProgress num_trials={2} stage={"landing"}></StudyProgress>
+  );
+
   // Show landing page initially
   if (stage === "landing") {
-    return <Landing handleStart={() => handleStart()} />;
+    return (
+      <>
+        {progress}
+        <Landing handleStart={() => handleStart()} />
+      </>
+    );
   }
 
   // Show survey flow
   if (stage === "survey" && stimulus) {
-    return <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
+    return (
+      <>
+        {progress}
+        <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>
+      </>
+    );
   }
 
   // Show results page when done
-  return <Results session={session}></Results>;
+  return (
+    <>
+      {progress}
+      <Results session={session}></Results>
+    </>
+  );
 }
