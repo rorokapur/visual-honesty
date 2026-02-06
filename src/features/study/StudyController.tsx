@@ -93,8 +93,8 @@ export function StudyController({ session }: StudyControllerProps) {
   }
 
   return (
-    <Stack>
-      <Container maw="80%" miw="60%" p="lg">
+    <Stack gap="0">
+      <Container maw="80%" miw="60%" p="md">
         <StudyProgress
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
