@@ -84,8 +84,8 @@ export function Results({ session }: ResultsProps) {
                 <b>Area vs Radius Encoding: </b>
                 When using the size of cirlces to display differences in data
                 values, mapping the data to radius instead of area can make
-                smaller differnces seem more pronoucned, since the area is being
-                squared relative to the data.
+                smaller differences seem more pronoucned, since the area is
+                being squared relative to the data.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>

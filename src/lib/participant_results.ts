@@ -9,6 +9,9 @@ export interface ParticipantResults {
 
   /** Percentage of all questions answered correctly by participant */
   accuracy_percentage: number;
+
+  /** Inclusive percentile ranking of participant by correct answers */
+  percentile: number;
 }
 
 /**

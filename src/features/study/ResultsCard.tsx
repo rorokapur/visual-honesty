@@ -58,7 +58,13 @@ export function ResultsCard({ data }: ResultsCardProps) {
         <Group justify="space-between">
           <Text fw={500}>Percentage Correct:</Text>
           <Text size="lg" fw={700}>
-            {data.accuracy_percentage.toFixed(1)}%
+            {data.accuracy_percentage}%
+          </Text>
+        </Group>
+        <Group justify="space-between">
+          <Text fw={500}>Percentile:</Text>
+          <Text size="lg" fw={700}>
+            {data.percentile}%
           </Text>
         </Group>
       </Stack>
