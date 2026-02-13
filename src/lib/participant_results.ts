@@ -12,6 +12,9 @@ export interface ParticipantResults {
 
   /** Inclusive percentile ranking of participant by correct answers */
   percentile: number;
+
+  /** Average time taken to answer trials */
+  average_time: number;
 }
 
 /**
