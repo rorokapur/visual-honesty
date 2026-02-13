@@ -19,6 +19,9 @@ export interface StimulusImage {
  * A left/right pair of stimuli in the participant client.
  */
 export interface StimulusPair {
+  /** Unique id for this trial pair */
+  trial_id: string;
+
   /**
    * Unique set id
    */
@@ -75,18 +78,28 @@ export const submitResponse = async (
   sessionId: string,
   stimulus: StimulusPair,
   selectedSide: "left" | "right",
+  timeTaken: number,
 ) => {
-  const { error } = await supabase.from("responses").insert({
-    session_id: sessionId,
-    set_id: stimulus.set_id,
-    selected_stimulus:
-      selectedSide === "right" ? stimulus.right.id : stimulus.left.id,
-    left_stimulus: stimulus.left.id,
-    right_stimulus: stimulus.right.id,
+  const choiceId =
+    selectedSide === "right" ? stimulus.right.id : stimulus.left.id;
+
+  const { data, error } = await supabase.rpc("submit_response", {
+    p_session_id: sessionId,
+    p_trial_id: stimulus.trial_id,
+    p_choice: choiceId,
+    p_frontend_time: Math.round(timeTaken),
   });
 
   if (error) {
     console.error("Error submitting response:", error);
     throw error;
+  }
+
+  const result = data as { success?: boolean; error?: string } | null;
+
+  if (!result?.success) {
+    const message = result?.error || "Failed to submit response";
+    console.error("Error submitting response:", message);
+    throw new Error(message);
   }
 };

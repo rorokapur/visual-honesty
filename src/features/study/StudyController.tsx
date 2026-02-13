@@ -1,5 +1,5 @@
 import { Box, Container, LoadingOverlay, Stack } from "@mantine/core";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   fetchNextPair,
   submitResponse,
@@ -36,10 +36,31 @@ export function StudyController({ session }: StudyControllerProps) {
   const [stage, setStage] = useState<"landing" | "survey" | "results">(
     "landing",
   );
-
+  const trialStartTime = useRef<number | null>(null);
   const [trial, setTrial] = useState<number>(0);
   const [totalTrials, setTotalTrials] = useState<number>(0);
   const [stimulus, setStimulus] = useState<StimulusPair | null>(null);
+  /**
+   * Preloads an image into the browser cache
+   * @param url - url of image to preload
+   */
+  const preloadImage = (url: string) =>
+    new Promise<void>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve();
+      img.onerror = reject;
+      img.src = url;
+    });
+
+  /**
+   * Preloads the images for a stimulus pair
+   * @param pair - StimulusPair to preload
+   */
+  const preloadStimulus = (pair: StimulusPair) =>
+    Promise.all([
+      preloadImage(pair.left.image_url),
+      preloadImage(pair.right.image_url),
+    ]);
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
@@ -50,12 +71,20 @@ export function StudyController({ session }: StudyControllerProps) {
     if (!stimulus) {
       throw new Error("cannot submit answer for invalid stimulus");
     }
-    await submitResponse(session, stimulus, choice);
+    const timeTaken = trialStartTime.current
+      ? performance.now() - trialStartTime.current
+      : null;
+    if (!timeTaken) {
+      throw new Error("timekeeping error!");
+    }
+    await submitResponse(session, stimulus, choice, timeTaken);
     if (trial < totalTrials) {
       const next = await fetchNextPair(session);
       if (next) {
+        await preloadStimulus(next);
         setStimulus(next);
         setTrial(trial + 1);
+        trialStartTime.current = performance.now();
       } else {
         setStage("results");
       }
@@ -69,13 +98,15 @@ export function StudyController({ session }: StudyControllerProps) {
   const handleStart = async () => {
     setLoading(true);
     const nextPair = await fetchNextPair(session);
-    setStimulus(nextPair);
     if (nextPair) {
+      await preloadStimulus(nextPair);
+      setStimulus(nextPair);
       setStage("survey");
       setTrial(1);
       setTotalTrials(
         nextPair.sets_remaining > 20 ? 20 : nextPair.sets_remaining,
       );
+      trialStartTime.current = performance.now();
     } else {
       setStage("results");
     }
