@@ -24,6 +24,7 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
   const [file, setfile] = useState<File | null>(null);
   const [isDeceptive, setIsDeceptive] = useState<boolean>(false);
   const [name, setName] = useState("");
+  const [category, setCategory] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<{
     type: "success" | "error";
@@ -37,9 +38,8 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
     if (!file || !name) return;
     setLoading(true);
     setStatus(null);
-
     try {
-      uploadStimulus(file, name, isDeceptive);
+      uploadStimulus(file, name, isDeceptive, category);
       setStatus({
         type: "success",
         message: "Stimuli set uploaded successfully!",
@@ -74,6 +74,13 @@ export function StimuliUpload({ onSuccess }: StimuliUploadProps) {
         value={name}
         onChange={(e) => setName(e.currentTarget.value)}
         required
+      />
+
+      <TextInput
+        label="Category"
+        placeholder=""
+        value={category}
+        onChange={(e) => setCategory(e.currentTarget.value)}
       />
 
       <FileInput

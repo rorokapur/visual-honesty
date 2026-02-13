@@ -13,6 +13,7 @@ export interface Stimulus {
 export interface StimuliSet {
   set_id: string;
   set_name: string;
+  category: string;
   enabled: boolean;
   rows: Stimulus[];
 }
@@ -22,18 +23,24 @@ export interface StimuliSet {
  * @param file - image file to upload
  * @param setName - stimuli set name to add to
  * @param isDeceptive - whether or not the image is deceptive
+ * @param category - (optional) category of stimuli set
  * @param name - (optional) name of stimulus. will use file name without extension as default
  */
 export async function uploadStimulus(
   file: File,
   setName: string,
   isDeceptive: boolean,
+  category?: string,
   name?: string,
 ) {
   const supabase = getSupabaseAdmin();
   const fileExt = file.name.split(".").pop();
   const uuid = window.crypto.randomUUID();
   const fileName = `${uuid}.${fileExt}`;
+
+  if (category === "") {
+    category = undefined;
+  }
 
   // Upload image to storage
   const { error: uploadError } = await supabase.storage
@@ -53,6 +60,7 @@ export async function uploadStimulus(
     p_name: name ? name : file.name.split(".")[0],
     p_is_deceptive: isDeceptive,
     p_set_name: setName,
+    p_category: category ? category : null,
   });
 
   if (error) throw error;

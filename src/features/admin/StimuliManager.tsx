@@ -8,6 +8,7 @@ import {
   Image,
   LoadingOverlay,
   Modal,
+  Pill,
   Stack,
   Switch,
   Table,
@@ -78,18 +79,19 @@ export function StimuliManager() {
 
       const { data: stimuli } = await supabase
         .from("stimuli")
-        .select("*, sets!inner(name, enabled)");
+        .select("*, sets!inner(name, category, enabled)");
 
       if (stimuli) {
         const grouped = (
           stimuli as (Stimulus & {
-            sets: { name: string; enabled: boolean };
+            sets: { name: string; category: string; enabled: boolean };
           })[]
         ).reduce<Record<string, StimuliSet>>((acc, row) => {
           if (!acc[row.set_id]) {
             acc[row.set_id] = {
               set_id: row.set_id,
               set_name: row.sets.name,
+              category: row.sets.category,
               enabled: row.sets.enabled,
               rows: [],
             };
@@ -111,6 +113,7 @@ export function StimuliManager() {
     <Box key={set.set_id} mb="xl">
       <Group mb="xs">
         <Title order={4}>{set.set_name}</Title>
+        {set.category ? <Pill>{set.category}</Pill> : <></>}
         <Switch
           label={set.enabled ? "Enabled" : "Disabled"}
           checked={set.enabled}
