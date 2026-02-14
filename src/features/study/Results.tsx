@@ -1,3 +1,4 @@
+import { RadarChart } from "@mantine/charts";
 import {
   Center,
   Container,
@@ -26,6 +27,14 @@ interface ResultsProps {
  */
 export function Results({ session }: ResultsProps) {
   const [data, setData] = useState<ParticipantResults | null>(null);
+
+  const chartData = [
+    { category: "a", user: 25, average: 100 },
+    { category: "b", user: 100, average: 90 },
+    { category: "c", user: 50, average: 60 },
+    { category: "d", user: 50, average: 40 },
+    { category: "e", user: 50, average: 50 },
+  ];
 
   useEffect(() => {
     const loadResults = async () => {
@@ -59,6 +68,30 @@ export function Results({ session }: ResultsProps) {
             </Text>
             <Center>
               <ResultsCard data={data}></ResultsCard>
+            </Center>
+            <b>Percentage correct by category:</b>
+            <Center>
+              <RadarChart
+                withDots
+                withPolarGrid
+                h={500}
+                style={{ width: 360 }}
+                data={chartData}
+                dataKey="category"
+                series={[
+                  { name: "user", color: "blue.4", opacity: 0.2 },
+                  { name: "average", color: "grey", opacity: 0.2 },
+                ]}
+                polarGridProps={{
+                  stroke: "rgba(0,0,0,0.12)",
+                  strokeDasharray: "3 3",
+                }}
+                radarProps={{
+                  stroke: "#1f6feb",
+                  fill: "#1f6feb",
+                  fillOpacity: 0.2,
+                }}
+              />
             </Center>
             <b>
               Still Curious? Here are some of the ways we tried to deceive you:
