@@ -34,6 +34,7 @@ export function Results({ session }: ResultsProps) {
     { category: "c", user: 50, average: 60 },
     { category: "d", user: 50, average: 40 },
     { category: "e", user: 50, average: 50 },
+    { category: "f", user: 50, average: 50 },
   ];
 
   useEffect(() => {
@@ -70,11 +71,17 @@ export function Results({ session }: ResultsProps) {
               <ResultsCard data={data}></ResultsCard>
             </Center>
             <b>Percentage correct by category:</b>
-            <Center>
+            <Center
+              style={{
+                width: "100%",
+                maxWidth: "800px",
+                aspectRatio: "2/1", // or '2 / 1'
+              }}
+            >
               <RadarChart
                 withDots
                 withPolarGrid
-                h={500}
+                h="100r%"
                 style={{ width: 360 }}
                 data={chartData}
                 dataKey="category"
