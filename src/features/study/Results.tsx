@@ -81,7 +81,7 @@ export function Results({ session }: ResultsProps) {
               <RadarChart
                 withDots
                 withPolarGrid
-                h="100r%"
+                h="100%"
                 style={{ width: 360 }}
                 data={chartData}
                 dataKey="category"
