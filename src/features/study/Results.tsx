@@ -11,7 +11,9 @@ import {
 } from "@mantine/core";
 import { useEffect, useState } from "react";
 import {
+  fetchCategoryStats,
   fetchResults,
+  type CategoryStats,
   type ParticipantResults,
 } from "../../lib/participant_results";
 import { ResultsCard } from "./ResultsCard";
@@ -26,24 +28,26 @@ interface ResultsProps {
  * @component
  */
 export function Results({ session }: ResultsProps) {
-  const [data, setData] = useState<ParticipantResults | null>(null);
-
-  const chartData = [
-    { category: "a", user: 25, average: 100 },
-    { category: "b", user: 100, average: 90 },
-    { category: "c", user: 50, average: 60 },
-    { category: "d", user: 50, average: 40 },
-    { category: "e", user: 50, average: 50 },
-    { category: "f", user: 50, average: 50 },
-  ];
+  const [overallResults, setOverallResults] =
+    useState<ParticipantResults | null>(null);
+  const [categoryStats, setCategoryStats] = useState<CategoryStats[] | null>(
+    null,
+  );
 
   useEffect(() => {
     const loadResults = async () => {
-      const results = await fetchResults(session);
-      if (results) {
-        setData(results);
+      const overall = await fetchResults(session);
+      if (overall) {
+        setOverallResults(overall);
       } else {
         alert("An error occured while trying to fetch your results!");
+      }
+
+      const categories = await fetchCategoryStats(session);
+      if (categories) {
+        setCategoryStats(categories);
+      } else {
+        alert("An error occured while trying to fetch category stats!");
       }
     };
     loadResults();
@@ -68,22 +72,22 @@ export function Results({ session }: ResultsProps) {
               likely add more in the future!
             </Text>
             <Center>
-              <ResultsCard data={data}></ResultsCard>
+              <ResultsCard data={overallResults}></ResultsCard>
             </Center>
             <b>Percentage correct by category:</b>
             <Center
               style={{
                 width: "100%",
-                maxWidth: "800px",
-                aspectRatio: "2/1", // or '2 / 1'
+                aspectRatio: "2 / 1",
               }}
             >
               <RadarChart
                 withDots
                 withPolarGrid
                 h="100%"
+                w="100%"
                 style={{ width: 360 }}
-                data={chartData}
+                data={categoryStats ? categoryStats : []}
                 dataKey="category"
                 series={[
                   { name: "user", color: "blue.4", opacity: 0.2 },

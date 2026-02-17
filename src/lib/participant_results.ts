@@ -17,6 +17,17 @@ export interface ParticipantResults {
   average_time: number;
 }
 
+export interface CategoryStats {
+  /** Deception category */
+  category: string;
+
+  /** Percentage of correct answers by participant in category */
+  user: number;
+
+  /** Average number of correct answers in category over all participants*/
+  average: number;
+}
+
 /**
  * Gets basic perfomance statistics for a specifed participant
  * @param session - unique id of user to fetch data for
@@ -34,4 +45,21 @@ export const fetchResults = async (
     throw error;
   }
   return data as ParticipantResults;
+};
+
+export const fetchCategoryStats = async (
+  session: string,
+): Promise<CategoryStats[]> => {
+  const supabase = getSupabaseAdmin();
+  const { data, error } = await supabase.rpc(
+    "get_participant_category_comparison",
+    {
+      target_uuid: session,
+    },
+  );
+
+  if (error) {
+    throw error;
+  }
+  return data as CategoryStats[];
 };
