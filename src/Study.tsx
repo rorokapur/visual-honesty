@@ -1,5 +1,5 @@
 import { AppShell } from "@mantine/core";
-import { useState } from "react";
+import { SessionProvider } from "./features/study/session/SessionContext";
 import { StudyController } from "./features/study/StudyController";
 
 /**
@@ -9,32 +9,13 @@ import { StudyController } from "./features/study/StudyController";
  * @component
  */
 export default function Study() {
-  // Generate session ID or retrieve existing one
-  const [participantSession] = useState(() => {
-    const KEY = "vh_session_id";
-    const existing = localStorage.getItem(KEY);
-    if (existing) return existing;
-
-    const newId = window.crypto.randomUUID();
-    localStorage.setItem(KEY, newId);
-    return newId;
-  });
-
-  // Check if the user has already taken the survey
-  const [hasTakenSurvey] = useState(() => {
-    const KEY = "vh_taken";
-    const existing = localStorage.getItem(KEY);
-    return existing === "true";
-  });
-
   return (
-    <AppShell>
-      <AppShell.Main>
-        <StudyController
-          session={participantSession}
-          hasTaken={hasTakenSurvey}
-        />
-      </AppShell.Main>
-    </AppShell>
+    <SessionProvider>
+      <AppShell>
+        <AppShell.Main>
+          <StudyController />
+        </AppShell.Main>
+      </AppShell>
+    </SessionProvider>
   );
 }

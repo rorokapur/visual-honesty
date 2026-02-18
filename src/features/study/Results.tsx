@@ -17,17 +17,14 @@ import {
   type ParticipantResults,
 } from "../../lib/participant_results";
 import { ResultsCard } from "./ResultsCard";
-
-interface ResultsProps {
-  /** Session ID of user to fetch statistics for */
-  session: string;
-}
+import { useSessionContext } from "./session/useSessionContext";
 
 /**
  * Results page displayed after survey completion
  * @component
  */
-export function Results({ session }: ResultsProps) {
+export function Results() {
+  const { sessionId } = useSessionContext();
   const [overallResults, setOverallResults] =
     useState<ParticipantResults | null>(null);
   const [categoryStats, setCategoryStats] = useState<CategoryStats[] | null>(
@@ -36,14 +33,14 @@ export function Results({ session }: ResultsProps) {
 
   useEffect(() => {
     const loadResults = async () => {
-      const overall = await fetchResults(session);
+      const overall = await fetchResults(sessionId);
       if (overall) {
         setOverallResults(overall);
       } else {
         alert("An error occured while trying to fetch your results!");
       }
 
-      const categories = await fetchCategoryStats(session);
+      const categories = await fetchCategoryStats(sessionId);
       if (categories) {
         setCategoryStats(categories);
       } else {
@@ -51,7 +48,7 @@ export function Results({ session }: ResultsProps) {
       }
     };
     loadResults();
-  }, [session]);
+  }, [sessionId]);
 
   return (
     <>

@@ -7,29 +7,17 @@ import {
 } from "../../lib/stimulus";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
+import { useSessionContext } from "./session/useSessionContext";
 import { StudyProgress } from "./StudyProgress";
 import { Trial } from "./Trial";
-
-interface StudyControllerProps {
-  /**
-   * Unique session identifier for the participant.
-   * Prevents duplicate submissions and helps group responses together in the db.
-   */
-  session: string;
-
-  /**
-   * Whether the participant has already taken the survey or not.
-   * Prevents duplicate submissions to the database to save resources.
-   */
-  hasTaken?: boolean;
-}
 
 /**
  * Main Visual Honesty survey component.
  * Handles trial progression, user selections, and data submission to Supabase.
  * @component
  */
-export function StudyController({ session }: StudyControllerProps) {
+export function StudyController() {
+  const { sessionId } = useSessionContext();
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
   // Current stage in study flow
@@ -77,9 +65,9 @@ export function StudyController({ session }: StudyControllerProps) {
     if (!timeTaken) {
       throw new Error("timekeeping error!");
     }
-    await submitResponse(session, stimulus, choice, timeTaken);
+    await submitResponse(sessionId, stimulus, choice, timeTaken);
     if (trial < totalTrials) {
-      const next = await fetchNextPair(session);
+      const next = await fetchNextPair(sessionId);
       if (next) {
         await preloadStimulus(next);
         setStimulus(next);
@@ -97,7 +85,7 @@ export function StudyController({ session }: StudyControllerProps) {
 
   const handleStart = async () => {
     setLoading(true);
-    const nextPair = await fetchNextPair(session);
+    const nextPair = await fetchNextPair(sessionId);
     if (nextPair) {
       await preloadStimulus(nextPair);
       setStimulus(nextPair);
@@ -120,7 +108,7 @@ export function StudyController({ session }: StudyControllerProps) {
   } else if (stage === "survey" && stimulus) {
     page = <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
   } else {
-    page = <Results session={session}></Results>;
+    page = <Results></Results>;
   }
 
   return (
