@@ -17,7 +17,12 @@ interface TooltipProps {
   label?: string | number;
 }
 
+/**
+ * Radar chart that displays participant performance across categories with average user comparison
+ * @component
+ */
 export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
+  // Generate tooltip element
   const tooltipContent = ({ active, payload, label }: TooltipProps) => {
     if (!active || !payload || payload.length === 0) return null;
 

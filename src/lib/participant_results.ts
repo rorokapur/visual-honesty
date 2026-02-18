@@ -1,4 +1,4 @@
-import { getSupabaseAdmin } from "./supabase";
+import { supabase } from "./supabase";
 
 export interface ParticipantResults {
   /** Total number of questions answered by participant across all sessions */
@@ -29,14 +29,24 @@ export interface CategoryStats {
 }
 
 export interface TimeAccuracyBenchmarkPoint {
-  x: number; // Average Time
-  y: number; // Average Accuracy
-  range_min: number; // Bottom of the "River"
-  range_max: number; // Top of the "River"
-  count: number; // Sample size in this bin
+  /** Average time for this bin */
+  x: number;
+
+  /** Average accuracy for this bin */
+  y: number;
+
+  /** One stddev below x */
+  range_min: number;
+
+  /** One stddev above x */
+  range_max: number;
+
+  /** Sample size for this bin */
+  count: number;
 }
 
 export interface TimeAccuracyBenchmarkData {
+  /** Trendline for time vs. accurancy benchmark graph */
   trend: TimeAccuracyBenchmarkPoint[];
 }
 
@@ -48,7 +58,6 @@ export interface TimeAccuracyBenchmarkData {
 export const fetchResults = async (
   session: string,
 ): Promise<ParticipantResults> => {
-  const supabase = getSupabaseAdmin();
   const { data, error } = await supabase.rpc("get_participant_results", {
     target_uuid: session,
   });
@@ -59,10 +68,15 @@ export const fetchResults = async (
   return data as ParticipantResults;
 };
 
+/**
+ * Gets accuracy statistics broken down by category for a specified participant.
+ * Includes benchmark values for the average user.
+ * @param session - unique id of user to fetch data for
+ * @returns Promise<CategoryStats[]> for the specified participant
+ */
 export const fetchCategoryStats = async (
   session: string,
 ): Promise<CategoryStats[]> => {
-  const supabase = getSupabaseAdmin();
   const { data, error } = await supabase.rpc(
     "get_participant_category_comparison",
     {
@@ -76,9 +90,12 @@ export const fetchCategoryStats = async (
   return data as CategoryStats[];
 };
 
+/**
+ * Gets a benchmark curve for the relationship between time and accuracy over all participants.
+ * @returns Promise<TimeAccuracyBenchmarkData> for the specified participant
+ */
 export const fetchTimeAccuracyBenchmarks =
   async (): Promise<TimeAccuracyBenchmarkData> => {
-    const supabase = getSupabaseAdmin();
     const { data, error } = await supabase.rpc("get_binned_benchmarks");
 
     if (error) {

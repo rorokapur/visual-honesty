@@ -17,6 +17,10 @@ interface Props {
   currentUser: { time: number; accuracy: number };
 }
 
+/**
+ * A line chart showing a benchmark curve of the relationship between time and accuracy over a participant dataset
+ * @component
+ */
 export function TimeAccuracyChart({ data, currentUser }: Props) {
   // Transform data: convert ms to seconds
   const chartData = data.trend.map((d) => ({

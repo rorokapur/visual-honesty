@@ -37,25 +37,25 @@ export function Results() {
 
   useEffect(() => {
     const loadResults = async () => {
-      const overall = await fetchResults(sessionId);
-      if (overall) {
+      try {
+        const overall = await fetchResults(sessionId);
         setOverallResults(overall);
-      } else {
-        alert("An error occured while trying to fetch your results!");
-      }
-
-      const categories = await fetchCategoryStats(sessionId);
-      if (categories) {
-        setCategoryStats(categories);
-      } else {
-        alert("An error occured while trying to fetch category stats!");
+      } catch (e) {
+        console.error("Failed to load general stats", e);
       }
 
       try {
-        const benchmarks = await fetchTimeAccuracyBenchmarks();
+        const categories = await fetchCategoryStats(sessionId);
+        setCategoryStats(categories);
+      } catch (e) {
+        console.error("Failed to load category stats", e);
+      }
+
+      try {
+        const benchmarks = await fetchTimeAccuracyBenchmarks(sessionId);
         setTimeAccuracyBenchmarkData(benchmarks);
       } catch (e) {
-        console.error("Failed to load benchmarks", e);
+        console.error("Failed to load time/accuracy benchmarks", e);
       }
     };
     loadResults();
