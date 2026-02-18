@@ -1,5 +1,5 @@
 import { RadarChart } from "@mantine/charts";
-import { Paper, Stack, Text } from "@mantine/core";
+import { ColorSwatch, Group, Paper, Stack, Text } from "@mantine/core";
 import type { CategoryStats } from "../../lib/participant_results";
 
 interface CategoryRadarChartProps {
@@ -48,29 +48,40 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
   };
 
   return (
-    <RadarChart
-      withDots
-      withTooltip
-      withPolarGrid
-      h="100%"
-      w="100%"
-      style={{ width: 360 }}
-      data={data}
-      dataKey="category"
-      series={[
-        { name: "user", color: "blue.4", opacity: 0.2 },
-        { name: "average", color: "grey", opacity: 0.2 },
-      ]}
-      polarGridProps={{
-        stroke: "rgba(0,0,0,0.12)",
-        strokeDasharray: "3 3",
-      }}
-      radarProps={{
-        stroke: "#1f6feb",
-        fill: "#1f6feb",
-        fillOpacity: 0.2,
-      }}
-      tooltipProps={{ content: tooltipContent }}
-    />
+    <Stack gap="xs" align="center" h="100%" w="100%">
+      <Group gap="lg">
+        <Group gap={6}>
+          <ColorSwatch color="var(--mantine-color-blue-4)" size={10} />
+          <Text size="xs" fw={500} c="dimmed">
+            You
+          </Text>
+        </Group>
+        <Group gap={6}>
+          <ColorSwatch color="var(--mantine-color-gray-6)" size={10} />
+          <Text size="xs" fw={500} c="dimmed">
+            Average Participant
+          </Text>
+        </Group>
+      </Group>
+      <RadarChart
+        withDots
+        withTooltip
+        withPolarGrid
+        h="100%"
+        w="100%"
+        style={{ width: 360 }}
+        data={data}
+        dataKey="category"
+        series={[
+          { name: "average", color: "gray.6", opacity: 0.3 },
+          { name: "user", color: "blue.4", opacity: 0.2 },
+        ]}
+        polarGridProps={{
+          stroke: "rgba(0,0,0,0.12)",
+          strokeDasharray: "3 3",
+        }}
+        tooltipProps={{ content: tooltipContent }}
+      />
+    </Stack>
   );
 }
