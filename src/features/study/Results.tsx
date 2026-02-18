@@ -1,4 +1,3 @@
-import { RadarChart } from "@mantine/charts";
 import {
   Center,
   Container,
@@ -6,7 +5,6 @@ import {
   ListItem,
   Space,
   Stack,
-  Text,
   Title,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -16,6 +14,7 @@ import {
   type CategoryStats,
   type ParticipantResults,
 } from "../../lib/participant_results";
+import { CategoryRadarChart } from "./CategoryRadarChart";
 import { ResultsCard } from "./ResultsCard";
 import { useSessionContext } from "./session/useSessionContext";
 
@@ -62,12 +61,6 @@ export function Results() {
       <main>
         <Container size="sm" px="md">
           <Stack gap="md">
-            <Text>
-              Thank you for completing our test! We hope you enjoyed seeing some
-              of the ways that data visualizations can deceive you. Some
-              statistics about your performance can be seen below, and we will
-              likely add more in the future!
-            </Text>
             <Center>
               <ResultsCard data={overallResults}></ResultsCard>
             </Center>
@@ -78,28 +71,7 @@ export function Results() {
                 aspectRatio: "2 / 1",
               }}
             >
-              <RadarChart
-                withDots
-                withPolarGrid
-                h="100%"
-                w="100%"
-                style={{ width: 360 }}
-                data={categoryStats ? categoryStats : []}
-                dataKey="category"
-                series={[
-                  { name: "user", color: "blue.4", opacity: 0.2 },
-                  { name: "average", color: "grey", opacity: 0.2 },
-                ]}
-                polarGridProps={{
-                  stroke: "rgba(0,0,0,0.12)",
-                  strokeDasharray: "3 3",
-                }}
-                radarProps={{
-                  stroke: "#1f6feb",
-                  fill: "#1f6feb",
-                  fillOpacity: 0.2,
-                }}
-              />
+              <CategoryRadarChart data={categoryStats ? categoryStats : []} />
             </Center>
             <b>
               Still Curious? Here are some of the ways we tried to deceive you:

@@ -1,13 +1,6 @@
 import type { ReactNode } from "react";
-import { createContext, useMemo, useState } from "react";
-
-type SessionContextValue = {
-  sessionId: string;
-  hasTaken: boolean;
-  markTaken: () => void;
-};
-
-export const SessionContext = createContext<SessionContextValue | null>(null);
+import { useMemo, useState } from "react";
+import { SessionContext } from "./context";
 
 /**
  * Provides participant session data to the study flow.

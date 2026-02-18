@@ -6,6 +6,16 @@ interface ResultsCardProps {
   data: ParticipantResults | null;
 }
 
+const getMessage = (percentile: number): string => {
+  if (percentile > 90) {
+    return "You're a master at catching deception!";
+  } else if (percentile > 50) {
+    return "You're hard to fool!";
+  } else {
+    return "You're starting to gain an intuition when you are being deceived.";
+  }
+};
+
 /**
  * Card that display participant results data
  * @component
@@ -49,38 +59,31 @@ export function ResultsCard({ data }: ResultsCardProps) {
   return (
     <Paper p="xl" radius="md" withBorder w="75%">
       <Stack gap="lg">
-        <Group justify="space-between">
-          <Text fw={500}>Total Questions Answered:</Text>
-          <Text size="lg" fw={700}>
-            {data.total_questions}
-          </Text>
-        </Group>
+        <Text fw={700} size="lg">
+          {getMessage(data.percentile)} You perfomed the same as or better than{" "}
+          {data.percentile}% of other participants
+          {data.percentile > 50 ? "!" : "."}
+        </Text>
         <Group justify="space-between">
           <Text fw={500}>Correct Answers:</Text>
           <Text size="lg" fw={700}>
-            {data.correct_answers}
+            {data.correct_answers} / {data.total_questions}
           </Text>
         </Group>
         <Group justify="space-between">
-          <Text fw={500}>Percentage Correct:</Text>
+          <Text fw={500}>Accuracy:</Text>
           <Text size="lg" fw={700}>
             {data.accuracy_percentage}%
           </Text>
         </Group>
         <Group justify="space-between">
-          <Text fw={500}>Average Time Taken:</Text>
+          <Text fw={500}>Avg. Time:</Text>
           <Text size="lg" fw={700}>
             {`${Math.floor(data.average_time / 60000)}:${Math.floor(
               (data.average_time % 60000) / 1000,
             )
               .toString()
               .padStart(2, "0")}`}
-          </Text>
-        </Group>
-        <Group justify="space-between">
-          <Text fw={500}>Percentile:</Text>
-          <Text size="lg" fw={700}>
-            {data.percentile}%
           </Text>
         </Group>
       </Stack>
