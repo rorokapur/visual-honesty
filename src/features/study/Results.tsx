@@ -52,7 +52,7 @@ export function Results() {
       }
 
       try {
-        const benchmarks = await fetchTimeAccuracyBenchmarks(sessionId);
+        const benchmarks = await fetchTimeAccuracyBenchmarks();
         setTimeAccuracyBenchmarkData(benchmarks);
       } catch (e) {
         console.error("Failed to load time/accuracy benchmarks", e);
