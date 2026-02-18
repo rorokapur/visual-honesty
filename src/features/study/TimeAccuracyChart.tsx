@@ -84,8 +84,10 @@ export function TimeAccuracyChart({ data, currentUser }: Props) {
               type="number"
               unit="s"
               domain={[
-                (dataMin: number) => Math.min(Math.floor(dataMin || 0), Math.floor(userTime)),
-                (dataMax: number) => Math.max(Math.ceil(dataMax || 0), Math.ceil(userTime)),
+                (dataMin: number) =>
+                  Math.min(Math.floor(dataMin || 0), Math.floor(userTime)),
+                (dataMax: number) =>
+                  Math.max(Math.ceil(dataMax || 0), Math.ceil(userTime)),
               ]}
               allowDataOverflow={false}
               axisLine={false}
