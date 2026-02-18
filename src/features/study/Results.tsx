@@ -11,12 +11,15 @@ import { useEffect, useState } from "react";
 import {
   fetchCategoryStats,
   fetchResults,
+  fetchTimeAccuracyBenchmarks,
   type CategoryStats,
   type ParticipantResults,
+  type TimeAccuracyBenchmarkData,
 } from "../../lib/participant_results";
 import { CategoryRadarChart } from "./CategoryRadarChart";
 import { ResultsCard } from "./ResultsCard";
 import { useSessionContext } from "./session/useSessionContext";
+import { TimeAccuracyChart } from "./TimeAccuracyChart";
 
 /**
  * Results page displayed after survey completion
@@ -29,6 +32,8 @@ export function Results() {
   const [categoryStats, setCategoryStats] = useState<CategoryStats[] | null>(
     null,
   );
+  const [timeAccuracyBenchmarkData, setTimeAccuracyBenchmarkData] =
+    useState<TimeAccuracyBenchmarkData | null>(null);
 
   useEffect(() => {
     const loadResults = async () => {
@@ -44,6 +49,13 @@ export function Results() {
         setCategoryStats(categories);
       } else {
         alert("An error occured while trying to fetch category stats!");
+      }
+
+      try {
+        const benchmarks = await fetchTimeAccuracyBenchmarks();
+        setTimeAccuracyBenchmarkData(benchmarks);
+      } catch (e) {
+        console.error("Failed to load benchmarks", e);
       }
     };
     loadResults();
@@ -73,6 +85,18 @@ export function Results() {
             >
               <CategoryRadarChart data={categoryStats ? categoryStats : []} />
             </Center>
+            {overallResults && timeAccuracyBenchmarkData && (
+              <>
+                <b>How do you compare?</b>
+                <TimeAccuracyChart
+                  data={timeAccuracyBenchmarkData}
+                  currentUser={{
+                    time: overallResults.average_time,
+                    accuracy: overallResults.accuracy_percentage,
+                  }}
+                />
+              </>
+            )}
             <b>
               Still Curious? Here are some of the ways we tried to deceive you:
             </b>

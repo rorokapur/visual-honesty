@@ -28,6 +28,18 @@ export interface CategoryStats {
   average: number;
 }
 
+export interface TimeAccuracyBenchmarkPoint {
+  x: number; // Average Time
+  y: number; // Average Accuracy
+  range_min: number; // Bottom of the "River"
+  range_max: number; // Top of the "River"
+  count: number; // Sample size in this bin
+}
+
+export interface TimeAccuracyBenchmarkData {
+  trend: TimeAccuracyBenchmarkPoint[];
+}
+
 /**
  * Gets basic perfomance statistics for a specifed participant
  * @param session - unique id of user to fetch data for
@@ -63,3 +75,14 @@ export const fetchCategoryStats = async (
   }
   return data as CategoryStats[];
 };
+
+export const fetchTimeAccuracyBenchmarks =
+  async (): Promise<TimeAccuracyBenchmarkData> => {
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase.rpc("get_binned_benchmarks");
+
+    if (error) {
+      throw error;
+    }
+    return data as TimeAccuracyBenchmarkData;
+  };
