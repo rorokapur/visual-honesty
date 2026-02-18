@@ -1,6 +1,7 @@
 import { AppShell } from "@mantine/core";
 import { SessionProvider } from "./features/study/session/SessionContext";
 import { StudyController } from "./features/study/StudyController";
+import "./index.css";
 
 /**
  *Main application component for the project.

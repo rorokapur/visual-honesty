@@ -24,28 +24,22 @@ export function ResultsCard({ data }: ResultsCardProps) {
   if (!data) {
     return (
       <>
-        <Paper p="xl" radius="md" withBorder w="75%">
+        <Paper p="xl" radius="md" withBorder w="100%">
           <Stack gap="lg">
             <Group justify="space-between">
-              <Text fw={500}>Total Questions Answered:</Text>
+              <Text fw={500}>Correct Answers</Text>
               <Text size="lg" fw={700}>
-                -
+                - / -
               </Text>
             </Group>
             <Group justify="space-between">
-              <Text fw={500}>Correct Answers:</Text>
+              <Text fw={500}>Accuracy:</Text>
               <Text size="lg" fw={700}>
-                -
+                -%
               </Text>
             </Group>
             <Group justify="space-between">
-              <Text fw={500}>Average Time Taken:</Text>
-              <Text size="lg" fw={700}>
-                -
-              </Text>
-            </Group>
-            <Group justify="space-between">
-              <Text fw={500}>Percentage Correct:</Text>
+              <Text fw={500}>Average Time:</Text>
               <Text size="lg" fw={700}>
                 -
               </Text>
@@ -57,12 +51,12 @@ export function ResultsCard({ data }: ResultsCardProps) {
   }
 
   return (
-    <Paper p="xl" radius="md" withBorder w="75%">
+    <Paper p="xl" radius="md" withBorder>
       <Stack gap="lg">
-        <Text fw={700} size="lg">
-          {getMessage(data.percentile)} You perfomed the same as or better than{" "}
-          {data.percentile}% of other participants
-          {data.percentile > 50 ? "!" : "."}
+        <Text size="lg">
+          You perfomed the same as or better than <b>{data.percentile}%</b> of
+          other participants
+          {data.percentile > 50 ? "!" : "."} {getMessage(data.percentile)}
         </Text>
         <Group justify="space-between">
           <Text fw={500}>Correct Answers:</Text>
