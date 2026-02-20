@@ -17,7 +17,7 @@ import { Trial } from "./Trial";
  * @component
  */
 export function StudyController() {
-  const { sessionId } = useSessionContext();
+  const { sessionId, initializeSession } = useSessionContext();
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
   // Current stage in study flow
@@ -85,7 +85,12 @@ export function StudyController() {
 
   const handleStart = async () => {
     setLoading(true);
-    const nextPair = await fetchNextPair(sessionId);
+    if (!sessionId) {
+      await initializeSession();
+    }
+    const currentSessionId = localStorage.getItem("vh_session_id") || "";
+
+    const nextPair = await fetchNextPair(currentSessionId);
     if (nextPair) {
       await preloadStimulus(nextPair);
       setStimulus(nextPair);
