@@ -55,7 +55,7 @@ export function ResultsCard({ data }: ResultsCardProps) {
       <Stack gap="lg">
         <Text size="lg">
           You perfomed the same as or better than <b>{data.percentile}%</b> of
-          other participants
+          the <b>{data.total_users}</b> other participants that took this test
           {data.percentile > 50 ? "!" : "."} {getMessage(data.percentile)}
         </Text>
         <Group justify="space-between">

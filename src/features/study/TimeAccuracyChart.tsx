@@ -102,7 +102,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               tick={{ fill: "var(--mantine-color-dimmed)", fontSize: 12 }}
               dy={10}
               label={{
-                value: "Avg Time (s)",
+                value: "Avg. time per question (s)",
                 position: "bottom",
                 offset: 0,
                 fill: "var(--mantine-color-dimmed)",

@@ -76,7 +76,6 @@ export function Results() {
             <Center>
               <ResultsCard data={overallResults}></ResultsCard>
             </Center>
-            <b>Percentage correct by category:</b>
             <Center
               style={{
                 width: "100%",
@@ -87,7 +86,6 @@ export function Results() {
             </Center>
             {overallResults && timeAccuracyBenchmarkData && (
               <>
-                <b>How do you compare?</b>
                 <TimeAccuracyChart
                   data={timeAccuracyBenchmarkData}
                   currentUser={{
