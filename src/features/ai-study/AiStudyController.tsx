@@ -5,11 +5,11 @@ import {
   submitResponse,
   type StimulusPair,
 } from "../../lib/stimulus";
-import { Landing } from "../study/Landing";
-import { Results } from "../study/Results";
-import { useSessionContext } from "../study/session/useSessionContext";
 import { StudyProgress } from "../study/StudyProgress";
 import { Trial } from "../study/Trial";
+import { Landing } from "./Landing";
+import { Results } from "./Results";
+import { useSessionContext } from "./session/useSessionContext";
 
 /**
  * AI Study Controller.
@@ -18,7 +18,7 @@ import { Trial } from "../study/Trial";
  * @component
  */
 export function AiStudyController() {
-  const { sessionId } = useSessionContext();
+  const { sessionId, initializeSession } = useSessionContext();
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
   // Current stage in study flow
@@ -84,28 +84,32 @@ export function AiStudyController() {
     setLoading(false);
   };
 
-  const handleStart = async () => {
+  const handleStart = async (model: string) => {
     setLoading(true);
-    const nextPair = await fetchNextPair(sessionId);
-    if (nextPair) {
-      await preloadStimulus(nextPair);
-      setStimulus(nextPair);
-      setStage("survey");
-      setTrial(1);
-      setTotalTrials(
-        nextPair.sets_remaining > 20 ? 20 : nextPair.sets_remaining,
-      );
-      trialStartTime.current = performance.now();
-    } else {
-      setStage("results");
+    try {
+      const newId = await initializeSession(model);
+      const nextPair = await fetchNextPair(newId);
+      if (nextPair) {
+        await preloadStimulus(nextPair);
+        setStimulus(nextPair);
+        setStage("survey");
+        setTrial(1);
+        setTotalTrials(
+          nextPair.sets_remaining > 20 ? 20 : nextPair.sets_remaining,
+        );
+        trialStartTime.current = performance.now();
+      } else {
+        setStage("results");
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   let page;
 
   if (stage === "landing") {
-    page = <Landing handleStart={() => handleStart()} />;
+    page = <Landing handleStart={handleStart} />;
   } else if (stage === "survey" && stimulus) {
     page = <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
   } else {
