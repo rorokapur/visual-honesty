@@ -1,5 +1,6 @@
 import { RadarChart } from "@mantine/charts";
-import { ColorSwatch, Group, Paper, Stack, Text } from "@mantine/core";
+import { ColorSwatch, Group, Paper, Select, Stack, Text } from "@mantine/core";
+import { useState } from "react";
 import type { CategoryStats } from "../../lib/participant_results";
 
 interface CategoryRadarChartProps {
@@ -22,16 +23,21 @@ interface TooltipProps {
  * @component
  */
 export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
+  const [comparisonGroup, setComparisonGroup] = useState<"ai" | "average">(
+    "average",
+  );
   // Generate tooltip element
   const tooltipContent = ({ active, payload, label }: TooltipProps) => {
     if (!active || !payload || payload.length === 0) return null;
 
     const user = payload.find((item) => item.dataKey === "user");
     const average = payload.find((item) => item.dataKey === "average");
+    const ai = payload.find((item) => item.dataKey === "ai");
 
     const userValue = typeof user?.value === "number" ? user.value : null;
     const averageValue =
       typeof average?.value === "number" ? average.value : null;
+    const aiValue = typeof ai?.value === "number" ? ai.value : null;
 
     return (
       <Paper shadow="sm" radius="md" p="sm" withBorder>
@@ -47,13 +53,32 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
               Avg. Participant: {averageValue}%
             </Text>
           )}
+          {aiValue !== null && (
+            <Text size="sm" c="gray.7">
+              Avg. AI: {aiValue}%
+            </Text>
+          )}
         </Stack>
       </Paper>
     );
   };
 
   return (
-    <Paper p="md" withBorder radius="md" h="100%" w="100%">
+    <Paper p="md" withBorder radius="md" h="100%" w="100%" pos="relative">
+      <Select
+        pos="absolute"
+        top={10}
+        right={10}
+        size="xs"
+        w={160}
+        data={[
+          { value: "average", label: "Average Participant" },
+          { value: "ai", label: "AI" },
+        ]}
+        value={comparisonGroup}
+        onChange={(val) => val && setComparisonGroup(val as "ai" | "average")}
+        allowDeselect={false}
+      />
       <Stack gap="xs" align="center" h="100%" w="100%">
         <Text fw={600} size="sm" c="dimmed" tt="uppercase" ta="center">
           Category Accuracy
@@ -68,7 +93,7 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
           <Group gap={6}>
             <ColorSwatch color="var(--mantine-color-gray-6)" size={10} />
             <Text size="xs" fw={500} c="dimmed">
-              Average Participant
+              {comparisonGroup === "average" ? "Average Participant" : "AI"}
             </Text>
           </Group>
         </Group>
@@ -91,7 +116,7 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
             data={data}
             dataKey="category"
             series={[
-              { name: "average", color: "gray.6", opacity: 0.3 },
+              { name: comparisonGroup, color: "gray.6", opacity: 0.3 },
               { name: "user", color: "blue.4", opacity: 0.2 },
             ]}
             polarGridProps={{

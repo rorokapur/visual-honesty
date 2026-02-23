@@ -27,8 +27,11 @@ export interface CategoryStats {
   /** Percentage of correct answers by participant in category */
   user: number;
 
-  /** Average number of correct answers in category over all participants*/
+  /** Percentage of correct answers in category over all participants*/
   average: number;
+
+  /** Percent of correct answers in category over all AI models*/
+  ai: number;
 }
 
 export interface TimeAccuracyBenchmarkPoint {
