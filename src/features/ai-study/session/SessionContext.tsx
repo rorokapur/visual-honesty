@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from "../../../lib/supabase";
 import { SessionContext } from "./context";
 
 /**
- * Provides participant session data to the study flow.
+ * Provides AI session data to the study flow.
  */
 export function SessionProvider({ children }: { children: ReactNode }) {
   const [sessionId, setSessionId] = useState<string | null>(null);
