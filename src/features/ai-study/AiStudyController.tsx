@@ -13,7 +13,7 @@ import { Trial } from "./Trial";
 
 /**
  * AI Study Controller.
- * Currently duplicates the logic of StudyController but allows for future AI-specific overrides.
+ * Duplicates the logic of StudyController but includes AI-specific overrides.
  * Uses shared UI components from the main study feature.
  * @component
  */

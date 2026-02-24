@@ -26,6 +26,7 @@ import { Trial } from "./Trial";
  * @component
  */
 export function StudyController() {
+  // Participant session
   const { sessionId, initializeSession } = useSessionContext();
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
@@ -77,6 +78,7 @@ export function StudyController() {
     }
     await submitResponse(sessionId, stimulus, choice, timeTaken);
     if (choice === "none") {
+      // Pause the test flow if the user timed out on the last question
       setWaitingContinue(true);
     } else {
       if (trial < totalTrials) {
@@ -96,6 +98,7 @@ export function StudyController() {
     setLoading(false);
   };
 
+  /** Starts the test and loads the first image pair */
   const handleStart = async () => {
     setLoading(true);
     if (!sessionId) {
@@ -119,8 +122,10 @@ export function StudyController() {
     setLoading(false);
   };
 
-  let page;
-
+  /**
+   * If the last trial ended in a timeout, a modal shows and we pause the flow.
+   * When run, this function continues the test flow.
+   */
   const continueAfterTimeout = async () => {
     setWaitingContinue(false);
     setLoading(true);
@@ -139,6 +144,8 @@ export function StudyController() {
     }
     setLoading(false);
   };
+
+  let page;
 
   if (stage === "landing") {
     page = <Landing handleStart={() => handleStart()} />;
@@ -161,7 +168,7 @@ export function StudyController() {
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
         ></StudyProgress>
-        {/* when timeout occurs we pause here before loading next stimulus */}
+        {/* When timeout occurs we pause here before loading next stimulus */}
         <Modal
           opened={waitingContinue}
           onClose={() => {}}
