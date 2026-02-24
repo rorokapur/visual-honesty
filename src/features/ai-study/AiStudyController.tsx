@@ -6,10 +6,10 @@ import {
   type StimulusPair,
 } from "../../lib/stimulus";
 import { StudyProgress } from "../study/StudyProgress";
-import { Trial } from "../study/Trial";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
 import { useSessionContext } from "./session/useSessionContext";
+import { Trial } from "./Trial";
 
 /**
  * AI Study Controller.
@@ -53,9 +53,9 @@ export function AiStudyController() {
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
-   * @param {'left' | 'right'} choice - the graph the user selected (as being deceptive)
+   * @param {'left' | 'right' | 'none'} choice - the graph the user selected (as being deceptive)
    */
-  const handleSelect = async (choice: "left" | "right") => {
+  const handleSelect = async (choice: "left" | "right" | "none") => {
     setLoading(true);
     if (!stimulus) {
       throw new Error("cannot submit answer for invalid stimulus");
@@ -111,7 +111,13 @@ export function AiStudyController() {
   if (stage === "landing") {
     page = <Landing handleStart={handleStart} />;
   } else if (stage === "survey" && stimulus) {
-    page = <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
+    page = (
+      <Trial
+        key={stimulus.trial_id}
+        stimulus={stimulus}
+        onSelect={handleSelect}
+      ></Trial>
+    );
   } else {
     page = <Results></Results>;
   }
@@ -123,11 +129,11 @@ export function AiStudyController() {
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
         ></StudyProgress>
+        <Box pos="relative">
+          <LoadingOverlay visible={loading}></LoadingOverlay>
+          {page}
+        </Box>
       </Container>
-      <Box pos="relative">
-        <LoadingOverlay visible={loading}></LoadingOverlay>
-        {page}
-      </Box>
     </Stack>
   );
 }

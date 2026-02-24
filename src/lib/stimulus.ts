@@ -77,7 +77,7 @@ export const fetchNextPair = async (
 export const submitResponse = async (
   sessionId: string,
   stimulus: StimulusPair,
-  selectedSide: "left" | "right",
+  selectedSide: "left" | "right" | "none",
   timeTaken: number,
 ) => {
   const choiceId =
@@ -86,7 +86,7 @@ export const submitResponse = async (
   const { data, error } = await supabase.rpc("submit_response", {
     p_session_id: sessionId,
     p_trial_id: stimulus.trial_id,
-    p_choice: choiceId,
+    p_choice: selectedSide === "none" ? null : choiceId,
     p_frontend_time: Math.round(timeTaken),
   });
 

@@ -1,4 +1,13 @@
-import { Box, Container, LoadingOverlay, Stack } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Container,
+  LoadingOverlay,
+  Modal,
+  Space,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useRef, useState } from "react";
 import {
   fetchNextPair,
@@ -28,6 +37,7 @@ export function StudyController() {
   const [trial, setTrial] = useState<number>(0);
   const [totalTrials, setTotalTrials] = useState<number>(0);
   const [stimulus, setStimulus] = useState<StimulusPair | null>(null);
+  const [waitingContinue, setWaitingContinue] = useState(false);
   /**
    * Preloads an image into the browser cache
    * @param url - url of image to preload
@@ -52,9 +62,9 @@ export function StudyController() {
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
-   * @param {'left' | 'right'} choice - the graph the user selected (as being deceptive)
+   * @param {'left' | 'right' | 'none'} choice - the graph the user selected (as being deceptive)
    */
-  const handleSelect = async (choice: "left" | "right") => {
+  const handleSelect = async (choice: "left" | "right" | "none") => {
     setLoading(true);
     if (!stimulus) {
       throw new Error("cannot submit answer for invalid stimulus");
@@ -66,20 +76,23 @@ export function StudyController() {
       throw new Error("timekeeping error!");
     }
     await submitResponse(sessionId, stimulus, choice, timeTaken);
-    if (trial < totalTrials) {
-      const next = await fetchNextPair(sessionId);
-      if (next) {
-        await preloadStimulus(next);
-        setStimulus(next);
-        setTrial(trial + 1);
-        trialStartTime.current = performance.now();
+    if (choice === "none") {
+      setWaitingContinue(true);
+    } else {
+      if (trial < totalTrials) {
+        const next = await fetchNextPair(sessionId);
+        if (next) {
+          await preloadStimulus(next);
+          setStimulus(next);
+          setTrial(trial + 1);
+          trialStartTime.current = performance.now();
+        } else {
+          setStage("results");
+        }
       } else {
         setStage("results");
       }
-    } else {
-      setStage("results");
     }
-
     setLoading(false);
   };
 
@@ -108,10 +121,35 @@ export function StudyController() {
 
   let page;
 
+  const continueAfterTimeout = async () => {
+    setWaitingContinue(false);
+    setLoading(true);
+    if (trial < totalTrials) {
+      const next = await fetchNextPair(sessionId);
+      if (next) {
+        await preloadStimulus(next);
+        setStimulus(next);
+        setTrial(trial + 1);
+        trialStartTime.current = performance.now();
+      } else {
+        setStage("results");
+      }
+    } else {
+      setStage("results");
+    }
+    setLoading(false);
+  };
+
   if (stage === "landing") {
     page = <Landing handleStart={() => handleStart()} />;
   } else if (stage === "survey" && stimulus) {
-    page = <Trial stimulus={stimulus} onSelect={handleSelect}></Trial>;
+    page = (
+      <Trial
+        key={stimulus.trial_id}
+        stimulus={stimulus}
+        onSelect={handleSelect}
+      ></Trial>
+    );
   } else {
     page = <Results></Results>;
   }
@@ -123,11 +161,24 @@ export function StudyController() {
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
         ></StudyProgress>
+        {/* when timeout occurs we pause here before loading next stimulus */}
+        <Modal
+          opened={waitingContinue}
+          onClose={() => {}}
+          withCloseButton={false}
+          centered
+        >
+          <Text mb="md">You ran out of time.</Text>
+          <Button fullWidth onClick={continueAfterTimeout}>
+            Continue
+          </Button>
+        </Modal>
+        <Space h="md"></Space>
+        <Box pos="relative">
+          <LoadingOverlay visible={loading}></LoadingOverlay>
+          {page}
+        </Box>
       </Container>
-      <Box pos="relative">
-        <LoadingOverlay visible={loading}></LoadingOverlay>
-        {page}
-      </Box>
     </Stack>
   );
 }
