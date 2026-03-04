@@ -4,7 +4,6 @@ import {
   Container,
   LoadingOverlay,
   Modal,
-  Space,
   Stack,
   Text,
 } from "@mantine/core";
@@ -163,11 +162,13 @@ export function StudyController() {
 
   return (
     <Stack gap="0">
-      <Container maw="80%" miw="60%" p="md">
-        <StudyProgress
-          num_trials={totalTrials}
-          stage={stage === "survey" ? trial : stage}
-        ></StudyProgress>
+      <Container fluid>
+        <Box p={"md"} className={"pixel-progress"}>
+          <StudyProgress
+            num_trials={totalTrials}
+            stage={stage === "survey" ? trial : stage}
+          ></StudyProgress>
+        </Box>
         {/* When timeout occurs we pause here before loading next stimulus */}
         <Modal
           opened={waitingContinue}
@@ -180,7 +181,6 @@ export function StudyController() {
             Continue
           </Button>
         </Modal>
-        <Space h="md"></Space>
         <Box pos="relative">
           <LoadingOverlay visible={loading}></LoadingOverlay>
           {page}

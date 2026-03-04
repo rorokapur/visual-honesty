@@ -49,9 +49,9 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   return (
     <Box>
       <Stepper active={active} allowNextStepsSelect={false}>
-        <Stepper.Step label="Instructions"></Stepper.Step>
-        <Stepper.Step label="Questions"></Stepper.Step>
-        <Stepper.Step label="Results"></Stepper.Step>
+        <Stepper.Step label="Memo"></Stepper.Step>
+        <Stepper.Step label="Briefings"></Stepper.Step>
+        <Stepper.Step label="Debrief"></Stepper.Step>
       </Stepper>
     </Box>
   );

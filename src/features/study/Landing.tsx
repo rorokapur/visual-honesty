@@ -17,45 +17,54 @@ interface LandingProps {
 /** Landing page displayed before starting the survey */
 export function Landing({ handleStart }: LandingProps) {
   return (
-    <>
-      <header style={{ background: "white" }}>
-        <Container px="md">
-          <Center style={{ paddingBottom: "1rem" }}>
-            <Title ta="center">Are you fooled by deceptive charts?</Title>
-          </Center>
-        </Container>
-      </header>
-      <main>
-        <Container size="sm" px="md" bg="">
-          <Text p="md">
-            Graphs and charts are supposed to simplify the truth, but they are
-            often used to hide it. We’ve created a series of charts to test your
-            ability to spot 'dishonest' representations of data. It only takes 5
-            minutes, and your results will help us better understand how people
-            respond to visual deception. Take the test and see how you score
-            against your friends, family, and other participants!
+    <main className="pixel-landing">
+      <Container size="sm" px="md">
+        <Stack gap="md">
+          <Title ta="center" order={1} className="pixel-title">
+            Information Defender Guild
+          </Title>
+
+          <Text className="pixel-copy" ta="center">
+            Rogue designers are bending axes and stretching gradients. Step into
+            the war room, inspect 10 pairs of charts that seem identical, and
+            call out the impostors before they rewrite the truth. Ready your
+            perception -- every tap sharpens the guild&apos;s defenses.
           </Text>
-          <Space h="md"></Space>
-          <Card withBorder radius="lg">
-            <Stack gap="md">
-              <Title order={4}>Instructions:</Title>
-              <Text>
-                The following test will show you pairs of charts displaying the
-                same data. Your goal is to identify which one is trying to
-                decieve you or misrepresent its data. For each pair displayed,
-                click on the graph that you think is the most deceptive. At the
-                end of the test, your results will be displayed.
+
+          <Space h="xs" />
+
+          <Card className="pixel-card" p="lg">
+            <Stack gap="sm">
+              <Title order={4} className="pixel-title">
+                Mission Brief
+              </Title>
+              <Text className="pixel-copy">
+                You&apos;ll review chart duels built from the same data. In each
+                round, select the chart that twists the story most. Your final
+                score reveals how sharp your visual instincts are.
               </Text>
+              <Stack gap={0}>
+                <Text className="pixel-copy">- 10 rounds</Text>
+                <Text className="pixel-copy">- Pick the impostor chart</Text>
+                <Text className="pixel-copy">- Score at the end</Text>
+              </Stack>
             </Stack>
           </Card>
-          <Space h="lg"></Space>
+
+          <Space h="sm" />
+
           <Center>
-            <Button size="md" onClick={handleStart}>
-              Start Test
+            <Button
+              size="lg"
+              radius={0}
+              className="pixel-button"
+              onClick={handleStart}
+            >
+              Enter the War Room
             </Button>
           </Center>
-        </Container>
-      </main>
-    </>
+        </Stack>
+      </Container>
+    </main>
   );
 }
