@@ -38,7 +38,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
     <Paper p="md" withBorder radius="md">
       <Stack gap="xs" align="center">
         <Text fw={600} size="sm" c="dimmed" tt="uppercase" ta="center">
-          Speed vs. Accuracy Benchmark
+          Performance
         </Text>
         <Group gap="lg">
           <Group gap={6}>
@@ -102,7 +102,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               tick={{ fill: "var(--mantine-color-dimmed)", fontSize: 12 }}
               dy={10}
               label={{
-                value: "Avg. time per question (s)",
+                value: "Avg. time per task (s)",
                 position: "bottom",
                 offset: 0,
                 fill: "var(--mantine-color-dimmed)",

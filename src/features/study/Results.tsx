@@ -98,23 +98,23 @@ export function Results() {
               </>
             )}
             <Text fw="bold" size="md">
-              Still Curious? Here are some of the ways we tried to deceive you:
+              Still Curious? Here are some of the kinds of deception you
+              encountered:
             </Text>
             <List>
               <ListItem>
                 <b>Axis Truncation: </b>
                 By changing the start and end points of the x and y axes on
-                graphs, we were able to make small fluctuations in data look
-                very large and make small differences between values look
-                signficant.
+                graphs, designers can make small fluctuations in data look very
+                large and make small differences between values look signficant.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
                 <b>3D Distortion: </b>
-                By displaying tradionally 2D charts in 3D, we were able to
-                distort the visualization, making some regions seem bigger than
-                others. While this is accurate from a 3D perspective, when seen
-                from a single viewpoint in 2D it misrepresents the data.
+                By displaying tradionally 2D charts in 3D, designers can distort
+                visualizations, making some regions seem bigger than others.
+                While this is accurate from a 3D perspective, when seen from a
+                single viewpoint in 2D it misrepresents the data.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
@@ -128,8 +128,8 @@ export function Results() {
               <ListItem>
                 <b>Cherry Picking: </b>
                 Using some of the techniques above (particularly x-axis
-                truncation), we were able to hide sections of data. While the
-                data visualized on its own may still be accurate, it might be
+                truncation), designers can hide sections of data. While the data
+                visualized on its own may still be accurate, it might be
                 interpreted incorrectly since there is missing context.
               </ListItem>
               <Space h="xl"></Space>
