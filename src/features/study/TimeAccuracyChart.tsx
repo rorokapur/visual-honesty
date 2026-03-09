@@ -38,7 +38,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
     <Paper p="md" withBorder radius="md">
       <Stack gap="xs" align="center">
         <Text fw={600} size="sm" c="dimmed" tt="uppercase" ta="center">
-          Speed vs. Accuracy Benchmark
+          Performance
         </Text>
         <Group gap="lg">
           <Group gap={6}>
@@ -65,7 +65,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               style={{
                 width: 14,
                 height: 10,
-                backgroundColor: "var(--mantine-color-gray-3)",
+                backgroundColor: "var(--mantine-color-dark-4)",
                 borderRadius: 2,
               }}
             />
@@ -83,7 +83,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="var(--mantine-color-gray-2)"
+              stroke="var(--mantine-color-dark-4)"
             />
 
             <XAxis
@@ -102,7 +102,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               tick={{ fill: "var(--mantine-color-dimmed)", fontSize: 12 }}
               dy={10}
               label={{
-                value: "Avg. time per question (s)",
+                value: "Avg. time per task (s)",
                 position: "bottom",
                 offset: 0,
                 fill: "var(--mantine-color-dimmed)",
@@ -134,12 +134,13 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               content={({ active, payload, label }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <Paper
-                      withBorder
-                      shadow="md"
-                      radius="md"
-                      p="xs"
-                      bg="var(--mantine-color-body)"
+                    <div
+                      style={{
+                        backgroundColor: "var(--mantine-color-body)",
+                        padding: "var(--mantine-spacing-xs)",
+                        borderRadius: "var(--mantine-radius-md)",
+                        border: "1px solid var(--mantine-color-dark-4)",
+                      }}
                     >
                       <Stack gap={4}>
                         <Text size="xs" fw={600} mb={4}>
@@ -158,7 +159,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
                           );
                         })}
                       </Stack>
-                    </Paper>
+                    </div>
                   );
                 }
                 return null;
@@ -169,7 +170,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               dataKey="range"
               name="Typical Range"
               stroke="none"
-              fill="var(--mantine-color-gray-2)"
+              fill="var(--mantine-color-dark-4)"
               type="monotone"
             />
 

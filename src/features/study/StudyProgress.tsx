@@ -24,7 +24,7 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   }
 
   const questions = [];
-  questions.push(<Stepper.Step label="Questions"></Stepper.Step>);
+  questions.push(<Stepper.Step label="Tasks"></Stepper.Step>);
   for (let i = 1; i < num_trials; i++) {
     questions.push(<Stepper.Step></Stepper.Step>);
   }
@@ -49,8 +49,8 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   return (
     <Box>
       <Stepper active={active} allowNextStepsSelect={false}>
-        <Stepper.Step label="Memo"></Stepper.Step>
-        <Stepper.Step label="Briefings"></Stepper.Step>
+        <Stepper.Step label="Briefing"></Stepper.Step>
+        <Stepper.Step label="Mission"></Stepper.Step>
         <Stepper.Step label="Debrief"></Stepper.Step>
       </Stepper>
     </Box>

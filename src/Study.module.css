@@ -1,0 +1,9 @@
+.layout {
+  min-height: 100vh;
+  background: linear-gradient(
+    to bottom,
+    var(--mantine-color-dark-8),
+    var(--mantine-color-dark-9)
+  );
+  color: var(--mantine-color-gray-1);
+}

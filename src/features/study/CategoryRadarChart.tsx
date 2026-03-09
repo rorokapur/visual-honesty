@@ -40,26 +40,33 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
     const aiValue = typeof ai?.value === "number" ? ai.value : null;
 
     return (
-      <Paper shadow="sm" radius="md" p="sm" withBorder>
+      <div
+        style={{
+          backgroundColor: "var(--mantine-color-body)",
+          padding: "var(--mantine-spacing-sm)",
+          borderRadius: "var(--mantine-radius-md)",
+          border: "1px solid var(--mantine-color-dark-4)",
+        }}
+      >
         <Stack gap={4}>
           <Text fw={600}>{label}</Text>
           {userValue !== null && (
-            <Text size="sm" c="blue.6">
+            <Text size="sm" c="blue.4">
               Your Accuracy: {userValue}%
             </Text>
           )}
           {averageValue !== null && (
-            <Text size="sm" c="gray.7">
-              Avg. Participant: {averageValue}%
+            <Text size="sm" c="dimmed">
+              Avg. Player: {averageValue}%
             </Text>
           )}
           {aiValue !== null && (
-            <Text size="sm" c="gray.7">
+            <Text size="sm" c="dimmed">
               Avg. AI: {aiValue}%
             </Text>
           )}
         </Stack>
-      </Paper>
+      </div>
     );
   };
 
@@ -70,9 +77,9 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
         top={10}
         right={10}
         size="xs"
-        w={160}
+        w={100}
         data={[
-          { value: "average", label: "Average Participant" },
+          { value: "average", label: "Players" },
           { value: "ai", label: "AI" },
         ]}
         value={comparisonGroup}
@@ -81,7 +88,7 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
       />
       <Stack gap="xs" align="center" h="100%" w="100%">
         <Text fw={600} size="sm" c="dimmed" tt="uppercase" ta="center">
-          Category Accuracy
+          Threat Detection
         </Text>
         <Group gap="lg">
           <Group gap={6}>
@@ -93,7 +100,9 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
           <Group gap={6}>
             <ColorSwatch color="var(--mantine-color-gray-6)" size={10} />
             <Text size="xs" fw={500} c="dimmed">
-              {comparisonGroup === "average" ? "Average Participant" : "AI"}
+              {comparisonGroup === "average"
+                ? "Average Player"
+                : "Average AI Agent"}
             </Text>
           </Group>
         </Group>
@@ -112,7 +121,7 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
             withPolarGrid
             h="100%"
             w="100%"
-            gridColor="rgba(0,0,0,0.1)"
+            gridColor="var(--mantine-color-dark-4)"
             data={data}
             dataKey="category"
             series={[
@@ -120,7 +129,7 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
               { name: "user", color: "blue.4", opacity: 0.2 },
             ]}
             polarGridProps={{
-              stroke: "rgba(0,0,0,0.12)",
+              stroke: "var(--mantine-color-dark-4)",
               strokeDasharray: "3 3",
             }}
             tooltipProps={{ content: tooltipContent }}

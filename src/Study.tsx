@@ -2,6 +2,7 @@ import { AppShell } from "@mantine/core";
 import { SessionProvider } from "./features/study/session/SessionContext";
 import { StudyController } from "./features/study/StudyController";
 import "./index.css";
+import layoutClasses from "./Study.module.css";
 
 /**
  *Main application component for the project.
@@ -12,7 +13,7 @@ import "./index.css";
 export default function Study() {
   return (
     <SessionProvider>
-      <AppShell>
+      <AppShell className={layoutClasses.layout}>
         <AppShell.Main>
           <StudyController />
         </AppShell.Main>

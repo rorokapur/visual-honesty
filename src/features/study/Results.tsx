@@ -5,6 +5,7 @@ import {
   ListItem,
   Space,
   Stack,
+  Text,
   Title,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import {
   type ParticipantResults,
   type TimeAccuracyBenchmarkData,
 } from "../../lib/participant_results";
+import classes from "../../styles/Page.module.css";
 import { CategoryRadarChart } from "./CategoryRadarChart";
 import { ResultsCard } from "./ResultsCard";
 import { useSessionContext } from "./session/useSessionContext";
@@ -62,15 +64,15 @@ export function Results() {
   }, [sessionId]);
 
   return (
-    <>
-      <header style={{ background: "white" }}>
+    <main className={classes.container}>
+      <header>
         <Container px="md">
           <Center style={{ paddingBottom: "1rem" }}>
-            <Title ta="center">Test Complete</Title>
+            <Title ta="center">Mission Complete</Title>
           </Center>
         </Container>
       </header>
-      <main>
+      <div>
         <Container size="sm" px="md">
           <Stack gap="md">
             <Center>
@@ -95,24 +97,24 @@ export function Results() {
                 />
               </>
             )}
-            <b>
-              Still Curious? Here are some of the ways we tried to deceive you:
-            </b>
+            <Text fw="bold" size="md">
+              Still Curious? Here are some of the kinds of deception you
+              encountered:
+            </Text>
             <List>
               <ListItem>
                 <b>Axis Truncation: </b>
                 By changing the start and end points of the x and y axes on
-                graphs, we were able to make small fluctuations in data look
-                very large and make small differences between values look
-                signficant.
+                graphs, designers can make small fluctuations in data look very
+                large and make small differences between values look signficant.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
                 <b>3D Distortion: </b>
-                By displaying tradionally 2D charts in 3D, we were able to
-                distort the visualization, making some regions seem bigger than
-                others. While this is accurate from a 3D perspective, when seen
-                from a single viewpoint in 2D it misrepresents the data.
+                By displaying tradionally 2D charts in 3D, designers can distort
+                visualizations, making some regions seem bigger than others.
+                While this is accurate from a 3D perspective, when seen from a
+                single viewpoint in 2D it misrepresents the data.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
@@ -126,15 +128,15 @@ export function Results() {
               <ListItem>
                 <b>Cherry Picking: </b>
                 Using some of the techniques above (particularly x-axis
-                truncation), we were able to hide sections of data. While the
-                data visualized on its own may still be accurate, it might be
+                truncation), designers can hide sections of data. While the data
+                visualized on its own may still be accurate, it might be
                 interpreted incorrectly since there is missing context.
               </ListItem>
               <Space h="xl"></Space>
             </List>
           </Stack>
         </Container>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }
