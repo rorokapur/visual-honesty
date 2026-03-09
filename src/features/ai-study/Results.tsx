@@ -4,7 +4,7 @@ import {
   fetchResults,
   type ParticipantResults,
 } from "../../lib/participant_results";
-import { ResultsCard } from "../study/ResultsCard";
+import { ResultsCard } from "./ResultsCard";
 import { useSessionContext } from "./session/useSessionContext";
 
 /**

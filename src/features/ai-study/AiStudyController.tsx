@@ -5,10 +5,10 @@ import {
   submitResponse,
   type StimulusPair,
 } from "../../lib/stimulus";
-import { StudyProgress } from "../study/StudyProgress";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
 import { useSessionContext } from "./session/useSessionContext";
+import { StudyProgress } from "./StudyProgress";
 import { Trial } from "./Trial";
 
 /**
