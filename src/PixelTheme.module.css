@@ -1,0 +1,67 @@
+.title {
+  font-family: "Upheaval Pro", sans-serif;
+  letter-spacing: 1px;
+  font-weight: normal;
+  color: var(--mantine-color-yellow-4) !important;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 var(--mantine-color-dark-9);
+}
+
+.copy {
+  font-family: "VCR OSD Mono", monospace;
+  font-weight: normal;
+  line-height: 1.6;
+}
+
+.card {
+  border: 2px solid var(--mantine-color-yellow-6) !important;
+  border-radius: 0 !important;
+  background: var(--mantine-color-dark-7) !important;
+  box-shadow: 0 0 0 3px var(--mantine-color-dark-9) !important;
+}
+
+.button {
+  font-family: "Upheaval Pro", sans-serif;
+  letter-spacing: 1px;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+.stepperRoot {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.stepperStepLabel {
+  font-family: "Upheaval Pro", sans-serif;
+  letter-spacing: 1px;
+  font-weight: normal;
+  text-transform: uppercase;
+  color: var(--mantine-color-gray-4) !important;
+}
+
+.stepperSeparator {
+  background-color: var(--mantine-color-dark-5);
+}
+
+.stepperStepIcon {
+  font-family: "Upheaval Pro", sans-serif !important;
+  font-weight: normal;
+  border-color: var(--mantine-color-yellow-6) !important;
+  background: var(--mantine-color-dark-7) !important;
+  color: var(--mantine-color-yellow-4) !important;
+}
+
+.stepperStepCompletedIcon,
+.stepperStepIcon[data-progress="true"] {
+  background: var(--mantine-color-yellow-6) !important;
+  border-color: var(--mantine-color-yellow-4) !important;
+  color: var(--mantine-color-dark-9) !important;
+  box-shadow: 0 0 0 2px var(--mantine-color-dark-9) !important;
+}
+
+.stepperStepLabel[data-progress="true"] {
+  color: var(--mantine-color-yellow-4) !important;
+  text-shadow: 1px 1px 0 var(--mantine-color-dark-9) !important;
+}

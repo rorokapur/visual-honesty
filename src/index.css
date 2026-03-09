@@ -10,95 +10,31 @@
   font-display: swap;
 }
 
-.pixel-landing {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+body {
+  margin: 0;
   min-height: 100vh;
-  padding-top: 2rem;
-  padding-bottom: 3rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  background: linear-gradient(
-    to bottom,
-    var(--mantine-color-dark-8),
-    var(--mantine-color-dark-9)
-  );
-}
-
-.pixel-title {
-  font-family: "Upheaval Pro", sans-serif;
-  letter-spacing: 1px;
-  color: var(--mantine-color-yellow-4);
-  text-transform: uppercase;
-  text-shadow: 2px 2px 0 var(--mantine-color-dark-9);
-}
-
-.pixel-copy {
-  font-family: "VCR OSD Mono", monospace;
-  color: var(--mantine-color-gray-1);
-  line-height: 1.6;
-}
-
-.pixel-card {
-  border: 2px solid var(--mantine-color-yellow-6);
-  border-radius: 0;
-  background: var(--mantine-color-dark-7);
-  box-shadow: 0 0 0 3px var(--mantine-color-dark-9);
-}
-
-.pixel-button {
-  font-family: "Upheaval Pro", sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.pixel-progress {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  background: var(--mantine-color-dark-9);
-}
-
-.pixel-progress .mantine-Stepper-root {
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.pixel-progress .mantine-Stepper-stepLabel {
-  font-family: "Upheaval Pro", sans-serif;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--mantine-color-gray-4);
-}
-
-.pixel-progress .mantine-Stepper-separator {
-  background-color: var(--mantine-color-dark-5);
-}
-
-.pixel-progress .mantine-Stepper-stepIcon {
-  border-color: var(--mantine-color-yellow-6);
-  background: var(--mantine-color-dark-7);
-  color: var(--mantine-color-yellow-4);
-  font-family: "Upheaval Pro", sans-serif;
-}
-
-.pixel-progress .mantine-Stepper-stepCompletedIcon,
-.pixel-progress .mantine-Stepper-stepIcon[data-progress="true"] {
-  background: var(--mantine-color-yellow-6);
-  border-color: var(--mantine-color-yellow-4);
-  color: var(--mantine-color-dark-9);
-  box-shadow: 0 0 0 2px var(--mantine-color-dark-9);
-}
-
-.pixel-progress .mantine-Stepper-stepLabel[data-progress="true"] {
-  color: var(--mantine-color-yellow-4);
-  text-shadow: 1px 1px 0 var(--mantine-color-dark-9);
 }
 
 .panels {
   cursor: pointer;
+}
+
+.recharts-wrapper,
+.recharts-surface,
+.recharts-surface *,
+.recharts-radar-polygon,
+.recharts-radar-polygon:focus,
+.recharts-radar-polygon:active {
+  outline: none !important;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-focus-ring-color: transparent;
+}
+
+.recharts-dot:focus,
+.recharts-polygon:focus,
+.recharts-path:focus {
+  outline: none !important;
 }
 
 .recharts-wrapper,

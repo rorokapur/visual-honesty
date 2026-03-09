@@ -18,6 +18,7 @@ import { Results } from "./Results";
 import { useSessionContext } from "./session/useSessionContext";
 import { StudyProgress } from "./StudyProgress";
 import { Trial } from "./Trial";
+import classes from "./StudyController.module.css";
 
 /**
  * Main Visual Honesty survey component.
@@ -163,7 +164,7 @@ export function StudyController() {
   return (
     <Stack gap="0">
       <Container fluid>
-        <Box p={"md"} className={"pixel-progress"}>
+        <Box p={"md"} className={classes.progressContainer}>
           <StudyProgress
             num_trials={totalTrials}
             stage={stage === "survey" ? trial : stage}

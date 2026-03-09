@@ -5,6 +5,7 @@ import {
   ListItem,
   Space,
   Stack,
+  Text,
   Title,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import {
   type ParticipantResults,
   type TimeAccuracyBenchmarkData,
 } from "../../lib/participant_results";
+import classes from "../../styles/Page.module.css";
 import { CategoryRadarChart } from "./CategoryRadarChart";
 import { ResultsCard } from "./ResultsCard";
 import { useSessionContext } from "./session/useSessionContext";
@@ -62,15 +64,15 @@ export function Results() {
   }, [sessionId]);
 
   return (
-    <>
-      <header style={{ background: "white" }}>
+    <main className={classes.container}>
+      <header>
         <Container px="md">
           <Center style={{ paddingBottom: "1rem" }}>
-            <Title ta="center">Test Complete</Title>
+            <Title ta="center">Mission Complete</Title>
           </Center>
         </Container>
       </header>
-      <main>
+      <div>
         <Container size="sm" px="md">
           <Stack gap="md">
             <Center>
@@ -95,9 +97,9 @@ export function Results() {
                 />
               </>
             )}
-            <b>
+            <Text fw="bold" size="md">
               Still Curious? Here are some of the ways we tried to deceive you:
-            </b>
+            </Text>
             <List>
               <ListItem>
                 <b>Axis Truncation: </b>
@@ -134,7 +136,7 @@ export function Results() {
             </List>
           </Stack>
         </Container>
-      </main>
-    </>
+      </div>
+    </main>
   );
 }
