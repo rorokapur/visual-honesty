@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: visual-honesty-app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - SESSION_SECRET=dev_secret_key_at_least_32_chars_long_for_safety
+      - VITE_CLIENT_URL=http://localhost:5173
+      - VITE_API_URL=http://localhost:3000
+      - DB_HOST=db
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_NAME=${DB_NAME:-visual_honesty}
+      - DB_PORT=5432
+    command: sh -c "npm install && npm run dev"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+  db:
+    ports:
+      - "5432:5432"

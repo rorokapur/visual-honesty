@@ -1,0 +1,4 @@
+# Replace with your domain before deploying
+localhost {
+	reverse_proxy app:3000
+}

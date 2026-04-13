@@ -1,0 +1,69 @@
+import express, { Request, Response } from 'express';
+const router = express.Router();
+import pool from '../db';
+import { requireParticipant } from '../middleware/auth';
+
+// --- Participant Management ---
+
+// Create new participant
+router.post('/', async (req: Request, res: Response) => {
+  try {
+    const { p_category = 'human', p_demographics = {} } = req.body || {};
+    const { rows } = await pool.query('SELECT create_participant($1, $2) AS data', [p_category, p_demographics]);
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// Validate session
+router.get('/validate', requireParticipant, async (req: Request, res: Response) => {
+  try {
+    const { rows } = await pool.query('SELECT is_valid_participant($1) AS data', [req.sessionId]);
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// Get participant results summary
+router.get('/results/summary', requireParticipant, async (req: Request, res: Response) => {
+  try {
+    const { rows } = await pool.query('SELECT get_participant_results($1) AS data', [req.sessionId]);
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// Get categorical results
+router.get('/results/categories', requireParticipant, async (req: Request, res: Response) => {
+  try {
+    const { rows } = await pool.query('SELECT get_participant_category_comparison($1) AS data', [req.sessionId]);
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// General results benchmarks
+router.get('/results/benchmarks', async (req: Request, res: Response) => {
+  try {
+    const { rows } = await pool.query('SELECT get_binned_benchmarks() AS data');
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+// --- Trial Presentation ---
+
+router.get('/trial/next', requireParticipant, async (req: Request, res: Response) => {
+  try {
+    const { rows } = await pool.query('SELECT get_random_unseen_pair($1) AS data', [req.sessionId]);
+    res.set('Vary', 'X-Session-ID'); // Inform caches that the response varies by session ID
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+router.post('/trial/submit', requireParticipant, async (req: Request, res: Response) => {
+  try {
+    const { trialId, choice, frontendTime } = req.body;
+    if (!trialId || !frontendTime) return res.status(400).json({ error: "Missing required fields" });
+    const { rows } = await pool.query('SELECT submit_response($1, $2, $3, $4) AS data', 
+      [req.sessionId, trialId, choice, frontendTime]);
+    res.json(rows[0].data);
+  } catch (err: any) { res.status(500).json({ error: err.message }); }
+});
+
+export default router;
