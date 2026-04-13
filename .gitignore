@@ -31,3 +31,4 @@ server/create-admin.js
 server/uploads/
 
 .env
+cookies.txt
