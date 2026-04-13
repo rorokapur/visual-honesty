@@ -16,8 +16,6 @@ SET row_security = off;
 COMMENT ON SCHEMA "public" IS 'standard public schema';
 
 
--- Removed Supabase-specific extensions
--- CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
 CREATE SCHEMA IF NOT EXISTS "extensions";
 
 
@@ -25,7 +23,7 @@ CREATE SCHEMA IF NOT EXISTS "extensions";
 
 
 
--- CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
+
 
 
 
@@ -39,7 +37,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA "extensions";
 
 
 
--- CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
+
 
 
 
