@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
-const router = express.Router();
 import pool from '../db';
 import { requireParticipant } from '../middleware/auth';
+const router = express.Router();
 
 // --- Participant Management ---
 
@@ -22,7 +22,7 @@ router.get('/validate', requireParticipant, async (req: Request, res: Response) 
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });
 
-// Get participant results summary
+// Get participant results summary (upsert pattern)
 router.get('/results/summary', requireParticipant, async (req: Request, res: Response) => {
   try {
     const { rows } = await pool.query('SELECT get_participant_results($1) AS data', [req.sessionId]);
@@ -60,7 +60,7 @@ router.post('/trial/submit', requireParticipant, async (req: Request, res: Respo
   try {
     const { trialId, choice, frontendTime } = req.body;
     if (!trialId || !frontendTime) return res.status(400).json({ error: "Missing required fields" });
-    const { rows } = await pool.query('SELECT submit_response($1, $2, $3, $4) AS data', 
+    const { rows } = await pool.query('SELECT submit_response($1, $2, $3, $4) AS data',
       [req.sessionId, trialId, choice, frontendTime]);
     res.json(rows[0].data);
   } catch (err: any) { res.status(500).json({ error: err.message }); }
