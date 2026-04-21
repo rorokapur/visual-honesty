@@ -11,7 +11,7 @@ router.post('/', async (req: Request, res: Response) => {
     const { category, demographics = {} } = req.body || {};
 
     if (category !== 'human' && category !== 'ai') {
-      return res.status(400).json({ error: "Invalid session category." });
+      return res.status(400).json({ error: "Invalid session category, must be 'ai' or 'human'" });
     }
 
     if (category === 'human' && demographics?.agreed_to_consent !== true) {
