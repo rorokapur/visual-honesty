@@ -189,15 +189,15 @@ export const validateParticipantSession = async (
  */
 export const initializeParticipantSession = async (
   category: string = "human",
-  demographics: object = {},
+  demographics: object = {}
 ): Promise<string> => {
   const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
   const res = await fetch(`${apiUrl}/api/user`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      p_category: category,
-      p_demographics: demographics,
+      category: category,
+      demographics: demographics,
     }),
   });
   const data = await res.json();

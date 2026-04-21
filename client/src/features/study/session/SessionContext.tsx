@@ -40,7 +40,9 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const initializeSession = useCallback(async () => {
     if (sessionId) return;
     try {
-      const newId = await initializeParticipantSession("human", {});
+      const newId = await initializeParticipantSession("human", {
+        agreed_to_consent: true,
+      });
       localStorage.setItem("vh_session_id", newId);
       setSessionId(newId);
     } catch (err) {
