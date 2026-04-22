@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useTypewriter } from "./useTypewriter";
+import { useSessionContext } from "./session/useSessionContext";
 import styles from "./GameTheme.module.css";
 
 import CharacterSprite from "../../assets/CharacterGif.gif";
@@ -17,7 +18,7 @@ interface DemographicPayload {
 
 /* ── Step definitions ───────────────────────────────────── */
 
-type StepId = "consent" | "age" | "major" | "skill" | "finish";
+type StepId = "consent" | "age" | "major" | "skill" | "finish" | "returning";
 
 interface DialogueStep {
   id: StepId;
@@ -44,6 +45,10 @@ const STEPS: DialogueStep[] = [
   {
     id: "finish",
     text: "All intel received. Your profile is locked in.\n\nThe command center awaits you, operative. Good luck out there.",
+  },
+  {
+    id: "returning",
+    text: "Welcome back, operative. Your credentials have been verified.\n\nReady to rejoin the mission?",
   },
 ];
 
@@ -87,6 +92,15 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   // Pending callback after exiting completes
   const pendingExit = useRef<(() => void) | null>(null);
 
+  const { sessionId } = useSessionContext();
+
+  useEffect(() => {
+    // If user already has a session, jump to the "returning" step (last in array)
+    if (sessionId && phase === "entering") {
+      setStepIndex(STEPS.length - 1);
+    }
+  }, [sessionId, phase]);
+
   useEffect(() => {
     const img = new Image();
     img.onload = () => {
@@ -120,7 +134,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
     if (phase === "exiting") {
       const timer = setTimeout(() => {
         onComplete?.({
-          agreed_to_consent: consent ?? false,
+          agreed_to_consent: consent ?? true, // Assume true if returning
           age_range: ageRange,
           academic_background: major,
           data_viz_skill: skill,
@@ -128,7 +142,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       }, SPEECH_GIF_DURATION_MS);
       return () => clearTimeout(timer);
     }
-  }, [phase]);
+  }, [phase, onComplete, consent, ageRange, major, skill]);
 
   /* ── Handlers ───────────────────────────────────────── */
 
@@ -241,6 +255,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
         );
 
       case "finish":
+      case "returning":
         return (
           <div className={styles.controls}>
             <button className={styles.btn} onClick={handleFinish}>
@@ -260,21 +275,23 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
     return (
       <div className={styles.scene}>
         <div className={styles.dialogueArea}>
-          <img
-            src={charIdleFrame || CharacterSprite}
-            alt="Operative"
-            className={styles.character}
-          />
-          <div
-            className={styles.speechBox}
-            style={
-              { "--speech-frame": `url(${SpeechFrame})` } as React.CSSProperties
-            }
-          >
-            <p className={styles.dialogueText}>
-              Understood. Transmission terminated.
-              {"\n\n"}You may close this window, operative.
-            </p>
+          <div className={styles.bubbleRow}>
+            <img
+              src={charIdleFrame || CharacterSprite}
+              alt="Operative"
+              className={styles.character}
+            />
+            <div className={styles.speechWrapper}>
+              <div
+                className={`${styles.speechBox} ${styles.isActive}`}
+                style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
+              >
+                <p className={styles.dialogueText}>
+                  Understood. Transmission terminated.
+                  {"\n\n"}You may close this window, operative.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

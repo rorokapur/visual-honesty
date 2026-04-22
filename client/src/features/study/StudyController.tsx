@@ -32,7 +32,7 @@ export function StudyController() {
   // Loading state for async operations
   const [loading, setLoading] = useState<boolean>(false);
   // Current stage in study flow
-  const [stage, setStage] = useState<"landing" | "survey" | "results">(
+  const [stage, setStage] = useState<"landing" | "onboarding" | "survey" | "results">(
     "landing",
   );
   const trialStartTime = useRef<number | null>(null);
@@ -100,13 +100,17 @@ export function StudyController() {
   };
 
   /** Starts the test and loads the first image pair */
-  const handleStart = async () => {
+  const handleStart = () => {
+    setStage("onboarding");
+  };
+
+  /** Completes onboarding, initializes session, and starts survey */
+  const handleCompleteOnboarding = async (demographics: any) => {
     setLoading(true);
     try {
-      if (!sessionId) {
-        await initializeSession();
-      }
-      const currentSessionId = localStorage.getItem("vh_session_id") || "";
+      const newSessionId = await initializeSession(demographics);
+      const currentSessionId =
+        newSessionId || localStorage.getItem("vh_session_id") || "";
 
       const nextPair = await fetchNextPair(currentSessionId);
       if (nextPair) {
@@ -122,10 +126,11 @@ export function StudyController() {
         setStage("results");
       }
     } catch (e) {
-      console.error("Failed to start study:", e);
-      // If the session was corrupt or completely detached from POSTGRES, wipe it!
+      console.error("Failed to complete onboarding:", e);
       localStorage.removeItem("vh_session_id");
-      alert("A server error interrupted your connection! We have reset your session. Please refresh the page and try again.");
+      alert(
+        "A server error interrupted your connection! We have reset your session. Please refresh the page and try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -157,7 +162,9 @@ export function StudyController() {
   let page;
 
   if (stage === "landing") {
-    page = <Landing handleStart={() => handleStart()} />;
+    page = <Landing handleStart={handleStart} />;
+  } else if (stage === "onboarding") {
+    page = <OnboardingGame onComplete={handleCompleteOnboarding} />;
   } else if (stage === "survey" && stimulus) {
     page = (
       <Trial
@@ -170,30 +177,17 @@ export function StudyController() {
     page = <Results></Results>;
   }
 
-  // Intentional test mode: keep onboarding mounted from StudyController.
-  const renderOnboardingForTesting = true;
+
 
   return (
-    <Stack gap="0" style={{ height: "100dvh", overflow: "hidden", minHeight: 0 }}>
-      <Container
-        fluid
-        px={0}
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column" as const,
-          minHeight: 0,
-          overflow: "hidden",
-          maxWidth: "none",
-          width: "100%",
-        }}
-      >
-        <Box p={"md"} className={classes.progressContainer}>
-          <StudyProgress
-            num_trials={totalTrials}
-            stage={stage === "survey" ? trial : stage}
-          ></StudyProgress>
-        </Box>
+    <Stack gap="0">
+      <Box p={"md"} className={classes.progressContainer}>
+        <StudyProgress
+          num_trials={totalTrials}
+          stage={stage === "survey" ? trial : stage}
+        ></StudyProgress>
+      </Box>
+      <Container fluid>
         {/* When timeout occurs we pause here before loading next stimulus */}
         <Modal
           opened={waitingContinue}
@@ -206,9 +200,9 @@ export function StudyController() {
             Continue
           </Button>
         </Modal>
-        <Box pos="relative" style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
+        <Box pos="relative">
           <LoadingOverlay visible={loading}></LoadingOverlay>
-          {renderOnboardingForTesting ? <OnboardingGame /> : page}
+          {page}
         </Box>
       </Container>
     </Stack>

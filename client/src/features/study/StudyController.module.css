@@ -1,5 +1,10 @@
 .progressContainer {
-  width: 100%;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   background: var(--mantine-color-dark-9);
   box-sizing: border-box;
 }
