@@ -1,5 +1,4 @@
 .layout {
-  min-height: 100dvh;
   background: linear-gradient(
     to bottom,
     var(--mantine-color-dark-8),

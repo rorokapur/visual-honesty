@@ -187,7 +187,7 @@ export function StudyController() {
 
   return (
     <Stack gap="0" w="100%">
-      <Box p="md" className={classes.progressContainer} w="100%">
+      <Box p="sm" className={classes.progressContainer} w="100%">
         <StudyProgress
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
