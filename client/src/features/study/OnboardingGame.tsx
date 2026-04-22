@@ -49,7 +49,7 @@ const STEPS: DialogueStep[] = [
 
 const AGE_RANGES = ["18-24", "25-34", "35-44", "45-54", "55+"];
 
-/** Duration of one loop of SpeechGif.gif (43 frames × 20ms) */
+/** Duration of one loop of SpeechGif.gif (measured from binary: 860ms) */
 const SPEECH_GIF_DURATION_MS = 860;
 
 /* ── Phase state machine ────────────────────────────────── *
@@ -115,23 +115,18 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   /* ── Phase transitions ─────────────────────────────── */
 
   // entering → active: after the GIF plays one loop
-  useEffect(() => {
-    if (phase !== "entering") return;
-    const timer = setTimeout(() => setPhase("active"), SPEECH_GIF_DURATION_MS);
-    return () => clearTimeout(timer);
-  }, [phase]);
-
-  // exiting → complete: after the GIF plays for close
-  useEffect(() => {
-    if (phase !== "exiting") return;
-    const timer = setTimeout(() => {
-      if (pendingExit.current) {
-        pendingExit.current();
-        pendingExit.current = null;
-      }
-    }, SPEECH_GIF_DURATION_MS);
-    return () => clearTimeout(timer);
-  }, [phase]);
+  const handleGifLoad = () => {
+    if (phase === "entering") {
+      setTimeout(() => setPhase("active"), SPEECH_GIF_DURATION_MS);
+    } else if (phase === "exiting") {
+      setTimeout(() => {
+        if (pendingExit.current) {
+          pendingExit.current();
+          pendingExit.current = null;
+        }
+      }, SPEECH_GIF_DURATION_MS);
+    }
+  };
 
   /* ── Handlers ───────────────────────────────────────── */
 
@@ -312,18 +307,19 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
             {showGif && (
               <img
                 key={`speech-gif-${gifKey}`}
-                src={SpeechBubbleGif}
+                src={`${SpeechBubbleGif}?t=${gifKey}`}
                 alt=""
                 className={styles.speechGif}
+                onLoad={handleGifLoad}
               />
             )}
 
-            {/* Static speech box — always visible; GIF covers it during enter/exit */}
+            {/* Static speech box — background hidden during animations so GIF is visible */}
             <div
               className={styles.speechBox}
               style={
                 {
-                  "--speech-frame": `url(${SpeechFrame})`,
+                  "--speech-frame": showGif ? "none" : `url(${SpeechFrame})`,
                 } as React.CSSProperties
               }
             >

@@ -17,11 +17,11 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: flex-start; /* Ensure items align to top of this area */
-  gap: 24px;
+  justify-content: flex-start; /* Items added downwards from a fixed starting point */
+  gap: 8px;
   max-width: 820px;
   width: 100%;
-  height: 580px; /* Increased to accommodate larger text */
+  height: 600px; /* Total stable height */
   position: relative;
   min-width: 0;
 }
@@ -30,10 +30,12 @@
 
 .bubbleRow {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-end; /* Everything in this row is anchored to the bottom */
   gap: 0;
   width: 100%;
+  height: 450px; /* Fixed height: bubble grows UP into this space, bottom stays fixed */
   position: relative;
+  flex-shrink: 0;
 }
 
 /* ── Character Sprite ───────────────────────────────────── */
@@ -57,6 +59,8 @@
   z-index: 1;
   order: 1;
   min-width: 0;
+  /* Anchor to bottom so growth goes upwards */
+  align-self: flex-end;
 }
 
 /* ── Speech Bubble (static frame — shown after GIF finishes) ── */
