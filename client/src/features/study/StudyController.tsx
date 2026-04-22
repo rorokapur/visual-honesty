@@ -19,6 +19,7 @@ import { useSessionContext } from "./session/useSessionContext";
 import { StudyProgress } from "./StudyProgress";
 import { Trial } from "./Trial";
 import classes from "./StudyController.module.css";
+import { OnboardingGame } from "./OnboardingGame";
 
 /**
  * Main Visual Honesty survey component.
@@ -169,9 +170,24 @@ export function StudyController() {
     page = <Results></Results>;
   }
 
+  // Intentional test mode: keep onboarding mounted from StudyController.
+  const renderOnboardingForTesting = true;
+
   return (
-    <Stack gap="0">
-      <Container fluid>
+    <Stack gap="0" style={{ height: "100dvh", overflow: "hidden", minHeight: 0 }}>
+      <Container
+        fluid
+        px={0}
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column" as const,
+          minHeight: 0,
+          overflow: "hidden",
+          maxWidth: "none",
+          width: "100%",
+        }}
+      >
         <Box p={"md"} className={classes.progressContainer}>
           <StudyProgress
             num_trials={totalTrials}
@@ -190,9 +206,9 @@ export function StudyController() {
             Continue
           </Button>
         </Modal>
-        <Box pos="relative">
+        <Box pos="relative" style={{ flex: 1, display: "flex", minHeight: 0, overflow: "hidden" }}>
           <LoadingOverlay visible={loading}></LoadingOverlay>
-          {page}
+          {renderOnboardingForTesting ? <OnboardingGame /> : page}
         </Box>
       </Container>
     </Stack>

@@ -1,9 +1,16 @@
 .layout {
-  min-height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   background: linear-gradient(
     to bottom,
     var(--mantine-color-dark-8),
     var(--mantine-color-dark-9)
   );
   color: var(--mantine-color-gray-1);
+}
+
+.layout :global(.mantine-AppShell-main) {
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
 }
