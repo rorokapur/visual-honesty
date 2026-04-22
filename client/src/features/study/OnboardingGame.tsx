@@ -3,7 +3,7 @@ import { useTypewriter } from "./useTypewriter";
 import styles from "./GameTheme.module.css";
 
 import CharacterSprite from "../../assets/CharacterGif.gif";
-import SpeechBubbleGif from "../../assets/SpeechGif.gif";
+import SpeechSprite from "../../assets/SpeechSprite.png";
 import SpeechFrame from "../../assets/SpeechFrame.png";
 
 /* ── Data contract ──────────────────────────────────────── */
@@ -81,10 +81,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   const [major, setMajor] = useState("");
   const [skill, setSkill] = useState(0);
 
-  // For restarting the GIF (forces remount via key)
-  const [gifKey, setGifKey] = useState(0);
-
-  // Capture first frame of CharacterSprite for "paused" state
+  // No more gifKey needed for sprite sheet
   const [charIdleFrame, setCharIdleFrame] = useState("");
 
   // Pending callback after exiting completes
@@ -114,19 +111,24 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
 
   /* ── Phase transitions ─────────────────────────────── */
 
-  // entering → active: after the GIF plays one loop
-  const handleGifLoad = () => {
+  // Phase transitions
+  useEffect(() => {
     if (phase === "entering") {
-      setTimeout(() => setPhase("active"), SPEECH_GIF_DURATION_MS);
-    } else if (phase === "exiting") {
-      setTimeout(() => {
-        if (pendingExit.current) {
-          pendingExit.current();
-          pendingExit.current = null;
-        }
-      }, SPEECH_GIF_DURATION_MS);
+      const timer = setTimeout(() => setPhase("active"), SPEECH_GIF_DURATION_MS);
+      return () => clearTimeout(timer);
     }
-  };
+    if (phase === "exiting") {
+      const timer = setTimeout(() => {
+        onComplete?.({
+          agreed_to_consent: consent ?? false,
+          age_range: ageRange,
+          academic_background: major,
+          data_viz_skill: skill,
+        });
+      }, SPEECH_GIF_DURATION_MS);
+      return () => clearTimeout(timer);
+    }
+  }, [phase]);
 
   /* ── Handlers ───────────────────────────────────────── */
 
@@ -155,14 +157,6 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   };
 
   const handleFinish = () => {
-    const payload: DemographicPayload = {
-      agreed_to_consent: consent ?? false,
-      age_range: ageRange,
-      academic_background: major,
-      data_viz_skill: skill,
-    };
-    pendingExit.current = () => onComplete?.(payload);
-    setGifKey((k) => k + 1);
     setPhase("exiting");
   };
 
@@ -296,32 +290,17 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       <div className={styles.dialogueArea}>
         {/* ── Character + bubble row ── */}
         <div className={styles.bubbleRow}>
-          <img
-            src={characterSrc}
-            alt="Operative"
-            className={styles.character}
-          />
+          <img src={characterSrc} alt="Operative" className={styles.character} />
 
           <div className={styles.speechWrapper}>
-            {/* GIF overlay — fills wrapper during entering/exiting */}
-            {showGif && (
-              <img
-                key={`speech-gif-${gifKey}`}
-                src={`${SpeechBubbleGif}?t=${gifKey}`}
-                alt=""
-                className={styles.speechGif}
-                onLoad={handleGifLoad}
-              />
-            )}
-
-            {/* Static speech box — background hidden during animations so GIF is visible */}
+            {/* Single element for both animation and background */}
             <div
-              className={styles.speechBox}
-              style={
-                {
-                  "--speech-frame": showGif ? "none" : `url(${SpeechFrame})`,
-                } as React.CSSProperties
-              }
+              className={`${styles.speechBox} ${
+                phase === "entering" ? styles.isEntering : 
+                phase === "exiting" ? styles.isExiting : 
+                styles.isActive
+              }`}
+              style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
             >
               {phase === "active" && (
                 <p className={styles.dialogueText}>
