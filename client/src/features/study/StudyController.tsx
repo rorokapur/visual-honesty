@@ -167,44 +167,48 @@ export function StudyController() {
     page = <OnboardingGame onComplete={handleCompleteOnboarding} />;
   } else if (stage === "survey" && stimulus) {
     page = (
-      <Trial
-        key={stimulus.trial_id}
-        stimulus={stimulus}
-        onSelect={handleSelect}
-      ></Trial>
+      <Container>
+        <Trial
+          key={stimulus.trial_id}
+          stimulus={stimulus}
+          onSelect={handleSelect}
+        ></Trial>
+      </Container>
     );
   } else {
-    page = <Results></Results>;
+    page = (
+      <Container>
+        <Results></Results>
+      </Container>
+    );
   }
 
 
 
   return (
-    <Stack gap="0">
-      <Box p={"md"} className={classes.progressContainer}>
+    <Stack gap="0" w="100%">
+      <Box p="md" className={classes.progressContainer} w="100%">
         <StudyProgress
           num_trials={totalTrials}
           stage={stage === "survey" ? trial : stage}
-        ></StudyProgress>
+        />
       </Box>
-      <Container fluid>
-        {/* When timeout occurs we pause here before loading next stimulus */}
-        <Modal
-          opened={waitingContinue}
-          onClose={() => {}}
-          withCloseButton={false}
-          centered
-        >
-          <Text mb="md">You ran out of time.</Text>
-          <Button fullWidth onClick={continueAfterTimeout}>
-            Continue
-          </Button>
-        </Modal>
-        <Box pos="relative">
-          <LoadingOverlay visible={loading}></LoadingOverlay>
-          {page}
-        </Box>
-      </Container>
+      {/* When timeout occurs we pause here before loading next stimulus */}
+      <Modal
+        opened={waitingContinue}
+        onClose={() => {}}
+        withCloseButton={false}
+        centered
+      >
+        <Text mb="md">You ran out of time.</Text>
+        <Button fullWidth onClick={continueAfterTimeout}>
+          Continue
+        </Button>
+      </Modal>
+      <Box pos="relative" w="100%">
+        <LoadingOverlay visible={loading} />
+        {page}
+      </Box>
     </Stack>
   );
 }

@@ -2,20 +2,13 @@
 
 .scene {
   display: flex;
-  align-items: center; /* Center vertically to lift it from the bottom */
+  align-items: center;
   justify-content: center;
   background-color: #151b25;
   padding: 2rem;
   box-sizing: border-box;
-  
-  /* Break out of parent Container fluid (which has padding) */
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  min-height: calc(100vh - 80px); /* Account for progress bar area */
+  width: 100%;
+  min-height: 85vh;
 }
 
 .dialogueArea {
