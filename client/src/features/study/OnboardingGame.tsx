@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from "react";
-import { useTypewriter } from "./useTypewriter";
-import { useSessionContext } from "./session/useSessionContext";
+import { useEffect, useRef, useState } from "react";
 import styles from "./GameTheme.module.css";
+import { useSessionContext } from "./session/useSessionContext";
+import { useTypewriter } from "./useTypewriter";
 
-import CharacterSprite from "../../assets/CharacterGif.gif";
+import CharacterSprite from "../../assets/CharacterSprite.png";
+import CharacterSpriteTalking from "../../assets/CharacterSprite_Talking.png";
 import SpeechSprite from "../../assets/SpeechSprite.png";
-import SpeechFrame from "../../assets/SpeechFrame.png";
 
 /* ── Data contract ──────────────────────────────────────── */
 
@@ -86,9 +86,6 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   const [major, setMajor] = useState("");
   const [skill, setSkill] = useState(0);
 
-  // No more gifKey needed for sprite sheet
-  const [charIdleFrame, setCharIdleFrame] = useState("");
-
   // Pending callback after exiting completes
   const pendingExit = useRef<(() => void) | null>(null);
 
@@ -100,21 +97,6 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       setStepIndex(STEPS.length - 1);
     }
   }, [sessionId, phase]);
-
-  useEffect(() => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(img, 0, 0);
-        setCharIdleFrame(canvas.toDataURL("image/png"));
-      }
-    };
-    img.src = CharacterSprite;
-  }, []);
 
   const currentStep = STEPS[stepIndex];
 
@@ -128,7 +110,10 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   // Phase transitions
   useEffect(() => {
     if (phase === "entering") {
-      const timer = setTimeout(() => setPhase("active"), SPEECH_GIF_DURATION_MS);
+      const timer = setTimeout(
+        () => setPhase("active"),
+        SPEECH_GIF_DURATION_MS,
+      );
       return () => clearTimeout(timer);
     }
     if (phase === "exiting") {
@@ -176,11 +161,9 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
 
   /* ── Character sprite src ──────────────────────────── */
 
-  // Animate character only while actively typing, pause on first frame otherwise
-  const characterSrc =
-    phase === "active" && isTyping
-      ? CharacterSprite
-      : charIdleFrame || CharacterSprite;
+  // Animate character only while actively typing
+  const isTalking = phase === "active" && isTyping;
+  const characterSrc = isTalking ? CharacterSpriteTalking : CharacterSprite;
 
   /* ── Step-specific controls ─────────────────────────── */
 
@@ -191,10 +174,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       case "consent":
         return (
           <div className={styles.controls}>
-            <button
-              className={styles.btn}
-              onClick={() => handleConsent(true)}
-            >
+            <button className={styles.btn} onClick={() => handleConsent(true)}>
               I Accept
             </button>
             <button
@@ -276,10 +256,9 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       <div className={styles.scene}>
         <div className={styles.dialogueArea}>
           <div className={styles.bubbleRow}>
-            <img
-              src={charIdleFrame || CharacterSprite}
-              alt="Operative"
+            <div
               className={styles.character}
+              style={{ "--char-sprite": `url(${CharacterSprite})` } as any}
             />
             <div className={styles.speechWrapper}>
               <div
@@ -307,15 +286,20 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       <div className={styles.dialogueArea}>
         {/* ── Character + bubble row ── */}
         <div className={styles.bubbleRow}>
-          <img src={characterSrc} alt="Operative" className={styles.character} />
+          <div
+            className={styles.character}
+            style={{ "--char-sprite": `url(${characterSrc})` } as any}
+          />
 
           <div className={styles.speechWrapper}>
             {/* Single element for both animation and background */}
             <div
               className={`${styles.speechBox} ${
-                phase === "entering" ? styles.isEntering : 
-                phase === "exiting" ? styles.isExiting : 
-                styles.isActive
+                phase === "entering"
+                  ? styles.isEntering
+                  : phase === "exiting"
+                    ? styles.isExiting
+                    : styles.isActive
               }`}
               style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
             >
@@ -331,6 +315,12 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
 
         {/* ── Controls below bubble ── */}
         {renderControls()}
+      </div>
+
+      {/* Preload images to prevent blinking on first talk */}
+      <div style={{ display: "none" }}>
+        <img src={CharacterSprite} alt="" />
+        <img src={CharacterSpriteTalking} alt="" />
       </div>
     </div>
   );

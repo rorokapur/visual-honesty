@@ -41,11 +41,22 @@
 .character {
   width: 160px;
   min-width: 160px;
+  aspect-ratio: 238 / 221;
   image-rendering: pixelated;
   flex-shrink: 0;
   z-index: 2;
-  margin-left: -14px;
+  margin-left: -20px; /* Small overlap to connect the corners */
   order: 2;
+  
+  background-image: var(--char-sprite);
+  background-size: 100% 400%;
+  background-repeat: no-repeat;
+  animation: playChar 600ms steps(3) infinite;
+}
+
+@keyframes playChar {
+  from { background-position-y: 0%; }
+  to { background-position-y: 100%; }
 }
 
 /* ── Speech area wrapper (holds both GIF and static box) ────── */
@@ -53,12 +64,12 @@
 .speechWrapper {
   position: relative;
   flex: 1;
-  /* No fixed height — let content drive the height */
   z-index: 1;
   order: 1;
   min-width: 0;
-  /* Anchor to bottom so growth goes upwards */
   align-self: flex-end;
+  /* Lift bubble so its bottom aligns with character's top (~148px height) */
+  margin-bottom: 140px; 
 }
 
 /* ── Speech Bubble (static frame — shown after GIF finishes) ── */
