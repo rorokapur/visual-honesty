@@ -7,16 +7,6 @@ interface CategoryRadarChartProps {
   data: CategoryStats[];
 }
 
-interface TooltipItem {
-  dataKey?: string | number | null;
-  value?: string | number | null;
-}
-
-interface TooltipProps {
-  active?: boolean;
-  payload?: readonly TooltipItem[];
-  label?: string | number;
-}
 
 /**
  * Radar chart that displays participant performance across categories with average user comparison
@@ -27,7 +17,7 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
     "average",
   );
   // Generate tooltip element
-  const tooltipContent = ({ active, payload, label }: TooltipProps) => {
+  const tooltipContent = ({ active, payload, label }: { active?: boolean; payload?: readonly any[]; label?: string | number }) => {
     if (!active || !payload || payload.length === 0) return null;
 
     const user = payload.find((item) => item.dataKey === "user");

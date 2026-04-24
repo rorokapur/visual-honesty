@@ -167,26 +167,24 @@ export function StudyController() {
     page = <OnboardingGame onComplete={handleCompleteOnboarding} />;
   } else if (stage === "survey" && stimulus) {
     page = (
-      <Container>
-        <Trial
-          key={stimulus.trial_id}
-          stimulus={stimulus}
-          onSelect={handleSelect}
-        ></Trial>
-      </Container>
+      <Box style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <Container w="100%">
+          <Trial
+            key={stimulus.trial_id}
+            stimulus={stimulus}
+            onSelect={handleSelect}
+          ></Trial>
+        </Container>
+      </Box>
     );
   } else {
-    page = (
-      <Container>
-        <Results></Results>
-      </Container>
-    );
+    page = <Results />;
   }
 
 
 
   return (
-    <Stack gap="0" w="100%">
+    <Stack gap="0" w="100%" h="100vh" style={{ overflow: "hidden" }}>
       <Box p="sm" className={classes.progressContainer} w="100%">
         <StudyProgress
           num_trials={totalTrials}
@@ -205,7 +203,7 @@ export function StudyController() {
           Continue
         </Button>
       </Modal>
-      <Box pos="relative" w="100%">
+      <Box pos="relative" w="100%" style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto" }}>
         <LoadingOverlay visible={loading} />
         {page}
       </Box>

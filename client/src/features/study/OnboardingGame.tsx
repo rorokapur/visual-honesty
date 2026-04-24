@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./GameTheme.module.css";
 import { useSessionContext } from "./session/useSessionContext";
 import { useTypewriter } from "./useTypewriter";
@@ -86,8 +86,6 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   const [major, setMajor] = useState("");
   const [skill, setSkill] = useState(0);
 
-  // Pending callback after exiting completes
-  const pendingExit = useRef<(() => void) | null>(null);
 
   const { sessionId } = useSessionContext();
 
@@ -178,7 +176,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
               I Accept
             </button>
             <button
-              className={styles.btnDanger}
+              className={`${styles.btn} ${styles.btnDanger}`}
               onClick={() => handleConsent(false)}
             >
               Decline
@@ -239,7 +237,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
         return (
           <div className={styles.controls}>
             <button className={styles.btn} onClick={handleFinish}>
-              Enter Command Center
+              Begin Mission
             </button>
           </div>
         );
@@ -254,6 +252,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   if (consent === false) {
     return (
       <div className={styles.scene}>
+      <div className={styles.scrollArea}>
         <div className={styles.dialogueArea}>
           <div className={styles.bubbleRow}>
             <div
@@ -274,47 +273,49 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
           </div>
         </div>
       </div>
+      </div>
     );
   }
 
   /* ── Main render ────────────────────────────────────── */
 
-  const showGif = phase === "entering" || phase === "exiting";
 
   return (
     <div className={styles.scene}>
-      <div className={styles.dialogueArea}>
-        {/* ── Character + bubble row ── */}
-        <div className={styles.bubbleRow}>
-          <div
-            className={styles.character}
-            style={{ "--char-sprite": `url(${characterSrc})` } as any}
-          />
-
-          <div className={styles.speechWrapper}>
-            {/* Single element for both animation and background */}
+      <div className={styles.scrollArea}>
+        <div className={styles.dialogueArea}>
+          {/* ── Character + bubble row ── */}
+          <div className={styles.bubbleRow}>
             <div
-              className={`${styles.speechBox} ${
-                phase === "entering"
-                  ? styles.isEntering
-                  : phase === "exiting"
-                    ? styles.isExiting
-                    : styles.isActive
-              }`}
-              style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
-            >
-              {phase === "active" && (
-                <p className={styles.dialogueText}>
-                  {displayedText}
-                  {isTyping && <span className={styles.cursor} />}
-                </p>
-              )}
+              className={styles.character}
+              style={{ "--char-sprite": `url(${characterSrc})` } as any}
+            />
+
+            <div className={styles.speechWrapper}>
+              {/* Single element for both animation and background */}
+              <div
+                className={`${styles.speechBox} ${
+                  phase === "entering"
+                    ? styles.isEntering
+                    : phase === "exiting"
+                      ? styles.isExiting
+                      : styles.isActive
+                }`}
+                style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
+              >
+                {phase === "active" && (
+                  <p className={styles.dialogueText}>
+                    {displayedText}
+                    {isTyping && <span className={styles.cursor} />}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* ── Controls below bubble ── */}
-        {renderControls()}
+          {/* ── Controls below bubble ── */}
+          {renderControls()}
+        </div>
       </div>
 
       {/* Preload images to prevent blinking on first talk */}
