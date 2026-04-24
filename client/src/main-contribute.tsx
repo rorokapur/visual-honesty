@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Contribute from "./features/contribute/Contribute";
-import { theme } from "./theme";
+import { theme } from "./theme/theme";
 
 /**
  * React app root, applies MantineProvider.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "./GameTheme.module.css";
+import styles from "./OnboardingGame.module.css";
 import { useSessionContext } from "./session/useSessionContext";
 import { useTypewriter } from "./useTypewriter";
 
