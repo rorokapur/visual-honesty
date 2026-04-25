@@ -32,26 +32,26 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
     return (
       <div
         style={{
-          backgroundColor: "var(--mantine-color-body)",
+          backgroundColor: "#151b25",
           padding: "var(--mantine-spacing-sm)",
-          borderRadius: "var(--mantine-radius-md)",
-          border: "1px solid var(--mantine-color-dark-4)",
+          borderRadius: "0",
+          border: "2px solid #00d346",
         }}
       >
         <Stack gap={4}>
           <Text fw={600}>{label}</Text>
           {userValue !== null && (
-            <Text size="sm" c="blue.4">
+            <Text size="sm" c="#00d346">
               Your Accuracy: {userValue}%
             </Text>
           )}
           {averageValue !== null && (
-            <Text size="sm" c="dimmed">
+            <Text size="sm" c="#888888">
               Avg. Player: {averageValue}%
             </Text>
           )}
           {aiValue !== null && (
-            <Text size="sm" c="dimmed">
+            <Text size="sm" c="#888888">
               Avg. AI: {aiValue}%
             </Text>
           )}
@@ -77,19 +77,19 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
         allowDeselect={false}
       />
       <Stack gap="xs" align="center" h="100%" w="100%">
-        <Text fw={600} size="sm" c="dimmed" tt="uppercase" ta="center">
+        <Text fw={600} size="sm" c="rgba(0, 211, 70, 0.5)" tt="uppercase" ta="center">
           Threat Detection
         </Text>
         <Group gap="lg">
           <Group gap={6}>
-            <ColorSwatch color="var(--mantine-color-blue-4)" size={10} />
-            <Text size="xs" fw={500} c="dimmed">
+            <ColorSwatch color="#00d346" size={10} />
+            <Text size="xs" fw={500} c="rgba(0, 211, 70, 0.5)">
               You
             </Text>
           </Group>
           <Group gap={6}>
-            <ColorSwatch color="var(--mantine-color-gray-6)" size={10} />
-            <Text size="xs" fw={500} c="dimmed">
+            <ColorSwatch color="#888888" size={10} />
+            <Text size="xs" fw={500} c="#888888">
               {comparisonGroup === "average"
                 ? "Average Player"
                 : "Average AI Agent"}
@@ -111,15 +111,15 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
             withPolarGrid
             h="100%"
             w="100%"
-            gridColor="var(--mantine-color-dark-4)"
+            gridColor="#0a0d12"
             data={data}
             dataKey="category"
             series={[
-              { name: comparisonGroup, color: "gray.6", opacity: 0.3 },
-              { name: "user", color: "blue.4", opacity: 0.2 },
+              { name: comparisonGroup, color: "#888888", opacity: 0.3 },
+              { name: "user", color: "#00d346", opacity: 0.2 },
             ]}
             polarGridProps={{
-              stroke: "var(--mantine-color-dark-4)",
+              stroke: "#0a0d12",
               strokeDasharray: "3 3",
             }}
             tooltipProps={{ content: tooltipContent }}

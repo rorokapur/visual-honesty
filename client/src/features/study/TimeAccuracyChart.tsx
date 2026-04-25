@@ -39,13 +39,13 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
   return (
     <Paper p="md" withBorder radius="md">
       <Stack gap="xs" align="center">
-        <Text fw={600} size="sm" c="dimmed" tt="uppercase" ta="center">
+        <Text fw={600} size="sm" c="#00d346" tt="uppercase" ta="center">
           Performance
         </Text>
         <Group gap="lg">
           <Group gap={6}>
-            <ColorSwatch color="var(--mantine-color-blue-4)" size={10} />
-            <Text size="xs" fw={500} c="dimmed">
+            <ColorSwatch color="#00d346" size={10} />
+            <Text size="xs" fw={500} c="#00d346">
               You
             </Text>
           </Group>
@@ -54,11 +54,11 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               style={{
                 width: 14,
                 height: 3,
-                backgroundColor: "var(--mantine-color-gray-6)",
-                borderRadius: 2,
+                backgroundColor: "#00d346",
+                borderRadius: 0,
               }}
             />
-            <Text size="xs" fw={500} c="dimmed">
+            <Text size="xs" fw={500} c="#00d346">
               Average Trend
             </Text>
           </Group>
@@ -67,11 +67,11 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               style={{
                 width: 14,
                 height: 10,
-                backgroundColor: "var(--mantine-color-dark-4)",
-                borderRadius: 2,
+                backgroundColor: "rgba(0, 211, 70, 0.2)",
+                borderRadius: 0,
               }}
             />
-            <Text size="xs" fw={500} c="dimmed">
+            <Text size="xs" fw={500} c="#00d346">
               Typical Range
             </Text>
           </Group>
@@ -85,7 +85,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
             <CartesianGrid
               strokeDasharray="3 3"
               vertical={false}
-              stroke="var(--mantine-color-dark-4)"
+              stroke="#888888"
             />
 
             <XAxis
@@ -101,14 +101,15 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               allowDataOverflow={false}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "var(--mantine-color-dimmed)", fontSize: 12 }}
+              tick={{ fill: "#00d346", fontSize: 12, fontFamily: '"VCR OSD Mono", monospace' }}
               dy={10}
               label={{
                 value: "Avg. time per task (s)",
                 position: "bottom",
                 offset: 0,
-                fill: "var(--mantine-color-dimmed)",
+                fill: "#00d346",
                 fontSize: 12,
+                fontFamily: '"VCR OSD Mono", monospace',
               }}
             />
 
@@ -117,20 +118,21 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               domain={[0, 100]}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "var(--mantine-color-dimmed)", fontSize: 12 }}
+              tick={{ fill: "#00d346", fontSize: 12, fontFamily: '"VCR OSD Mono", monospace' }}
               label={{
                 value: "Accuracy (%)",
                 angle: -90,
                 position: "insideLeft",
-                fill: "var(--mantine-color-dimmed)",
+                fill: "#00d346",
                 fontSize: 12,
                 style: { textAnchor: "middle" },
+                fontFamily: '"VCR OSD Mono", monospace',
               }}
             />
 
             <Tooltip
               cursor={{
-                stroke: "var(--mantine-color-gray-4)",
+                stroke: "rgba(0, 211, 70, 0.3)",
                 strokeDasharray: "3 3",
               }}
               content={({ active, payload, label }) => {
@@ -138,20 +140,20 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
                   return (
                     <div
                       style={{
-                        backgroundColor: "var(--mantine-color-body)",
+                        backgroundColor: "#151b25",
                         padding: "var(--mantine-spacing-xs)",
-                        borderRadius: "var(--mantine-radius-md)",
-                        border: "1px solid var(--mantine-color-dark-4)",
+                        borderRadius: "0",
+                        border: "2px solid #00d346",
                       }}
                     >
                       <Stack gap={4}>
-                        <Text size="xs" fw={600} mb={4}>
+                        <Text size="xs" fw={600} mb={4} c="#00d346">
                           Time: ~{Number(label).toFixed(1)}s
                         </Text>
                         {payload.map((p) => {
                           if (p.name === "Typical Range") return null;
                           return (
-                            <Text key={p.name} size="sm" c={p.color}>
+                            <Text key={p.name} size="sm" c={p.color === "var(--mantine-color-blue-4)" || p.color === "blue.4" ? "#00d346" : p.color}>
                               {p.name}:{" "}
                               {typeof p.value === "number"
                                 ? Math.round(p.value)
@@ -172,14 +174,14 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               dataKey="range"
               name="Typical Range"
               stroke="none"
-              fill="var(--mantine-color-dark-4)"
+              fill="rgba(0, 211, 70, 0.2)"
               type="monotone"
             />
 
             <Line
               dataKey="y"
               name="Average Trend"
-              stroke="var(--mantine-color-gray-6)"
+              stroke="#00d346"
               strokeWidth={2}
               dot={false}
               type="monotone"
@@ -190,15 +192,16 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               x={userTime}
               y={currentUser.accuracy}
               r={6}
-              fill="var(--mantine-color-blue-4)"
-              stroke="white"
+              fill="#00d346"
+              stroke="#151b25"
               strokeWidth={2}
               label={{
                 value: "You",
                 position: "top",
-                fill: "var(--mantine-color-blue-6)",
+                fill: "#00d346",
                 fontSize: 12,
                 fontWeight: 700,
+                fontFamily: '"Upheaval Pro", sans-serif',
               }}
             />
           </ComposedChart>

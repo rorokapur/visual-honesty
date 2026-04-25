@@ -205,12 +205,14 @@
   flex: 1 1 110px;
   min-width: 0;
   max-width: 100%;
+  position: relative;
+  box-shadow: 0 0 8px rgba(0, 211, 70, 0.4);
 }
 
 .btn:hover {
   background: transparent;
   color: #00d346;
-  box-shadow: 0 0 10px rgba(0, 211, 70, 0.45);
+  box-shadow: 0 0 15px rgba(0, 211, 70, 0.7);
 }
 
 .btn:active {
@@ -251,6 +253,7 @@
   min-width: 0;
   outline: none;
   caret-color: #00d346;
+  position: relative;
 }
 
 @media (max-width: 900px) {
@@ -277,25 +280,5 @@
 
 .textInput:focus {
   box-shadow: 0 0 8px rgba(0, 211, 70, 0.3);
-}
-
-/* ── Scanline overlay for extra CRT flavour ─────────────── */
-
-.scene::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%),
-    repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.18) 0px,
-      rgba(0, 0, 0, 0.18) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-  background-size: 100% 4px, 100% 4px;
-  z-index: 999;
-  opacity: 0.9;
 }
 

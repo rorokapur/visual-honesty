@@ -99,7 +99,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   const currentStep = STEPS[stepIndex];
 
   // Typing is enabled once we're in the "active" phase
-  const { displayedText, isTyping } = useTypewriter(currentStep.text, 30, {
+  const { displayedText, isTyping } = useTypewriter(currentStep.text, 15, {
     enabled: phase === "active",
   });
 

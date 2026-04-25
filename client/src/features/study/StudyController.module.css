@@ -3,3 +3,27 @@
   background: var(--mantine-color-dark-9);
   box-sizing: border-box;
 }
+
+.contentArea {
+  position: relative;
+}
+
+/* Static scanlines and vignette */
+.contentArea::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.2) 0px,
+      rgba(0, 0, 0, 0.2) 1.5px,
+      transparent 1.5px,
+      transparent 3px
+    ),
+    radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+  background-size: 100% 3px, 100% 100%;
+  z-index: var(--z-filter);
+  opacity: 0.85;
+}

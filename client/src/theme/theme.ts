@@ -3,6 +3,8 @@ import {
   Card,
   List,
   Paper,
+  Progress,
+  Select,
   Stepper,
   Text,
   Title,
@@ -63,6 +65,19 @@ export const theme = createTheme({
         separator: classes.stepperSeparator,
         stepIcon: classes.stepperStepIcon,
         stepCompletedIcon: classes.stepperStepCompletedIcon,
+      },
+    }),
+    Progress: Progress.extend({
+      classNames: {
+        root: classes.progressRoot,
+        section: classes.progressSection,
+      },
+    }),
+    Select: Select.extend({
+      classNames: {
+        input: classes.selectInput,
+        dropdown: classes.selectDropdown,
+        option: classes.selectOption,
       },
     }),
   },

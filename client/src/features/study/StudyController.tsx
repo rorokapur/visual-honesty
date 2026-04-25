@@ -203,9 +203,21 @@ export function StudyController() {
           Continue
         </Button>
       </Modal>
-      <Box pos="relative" w="100%" style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto" }}>
+      <Box
+        pos="relative"
+        w="100%"
+        className={classes.contentArea}
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+        }}
+      >
         <LoadingOverlay visible={loading} />
-        {page}
+        <Box style={{ flex: 1, overflowY: "auto", position: "relative" }}>
+          {page}
+        </Box>
       </Box>
     </Stack>
   );

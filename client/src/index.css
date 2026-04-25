@@ -10,6 +10,12 @@
   font-display: swap;
 }
 
+:root {
+  --z-base: 1;
+  --z-filter: 10;
+  --z-content: 20;
+}
+
 body {
   margin: 0;
 }
