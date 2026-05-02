@@ -108,7 +108,7 @@ export function Trial({ stimulus, onSelect }: TrialProps) {
             alt="Stimulus A"
             draggable={false}
             //TODO: Images are still selectable on Safari - need to investigate
-            style={{ userSelect: "none" }}
+            style={{ userSelect: "none", position: "relative", zIndex: "var(--z-content)" }}
           />
         </Card>
         <Card
@@ -122,7 +122,7 @@ export function Trial({ stimulus, onSelect }: TrialProps) {
             src={stimulus.right.image_url}
             alt="Stimulus B"
             draggable={false}
-            style={{ userSelect: "none" }}
+            style={{ userSelect: "none", position: "relative", zIndex: "var(--z-content)" }}
           />
         </Card>
       </SimpleGrid>

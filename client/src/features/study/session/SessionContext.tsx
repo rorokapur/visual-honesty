@@ -37,20 +37,24 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, [sessionId]);
 
   // Create a new session on the backend
-  const initializeSession = useCallback(async () => {
-    if (sessionId) return;
-    try {
-      const newId = await initializeParticipantSession("human", {});
-      localStorage.setItem("vh_session_id", newId);
-      setSessionId(newId);
-    } catch (err) {
-      console.error("Failed to initialize backend session:", err);
-      alert(
-        "Failed to connect to the backend database. Please ensure the server is active!",
-      );
-      throw err;
-    }
-  }, [sessionId]);
+  const initializeSession = useCallback(
+    async (demographics: object = {}) => {
+      if (sessionId) return;
+      try {
+        const newId = await initializeParticipantSession("human", demographics);
+        localStorage.setItem("vh_session_id", newId);
+        setSessionId(newId);
+        return newId;
+      } catch (err) {
+        console.error("Failed to initialize backend session:", err);
+        alert(
+          "Failed to connect to the backend database. Please ensure the server is active!",
+        );
+        throw err;
+      }
+    },
+    [sessionId],
+  );
 
   const value = useMemo(
     () => ({

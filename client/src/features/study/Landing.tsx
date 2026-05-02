@@ -3,7 +3,7 @@ import {
   Card,
   Center,
   Container,
-  Space,
+
   Stack,
   Text,
   Title,
@@ -33,7 +33,7 @@ export function Landing({ handleStart }: LandingProps) {
             every choice sharpens the force&apos;s defenses.
           </Text>
 
-          <Space h="xs" />
+
 
           <Card p="lg">
             <Stack gap="sm">
@@ -51,7 +51,7 @@ export function Landing({ handleStart }: LandingProps) {
             </Stack>
           </Card>
 
-          <Space h="sm" />
+
 
           <Center>
             <Button size="lg" radius={0} onClick={handleStart}>

@@ -5,7 +5,7 @@ interface StudyProgressProps {
   num_trials: number;
 
   /** Current stage or question number */
-  stage: "landing" | "results" | number;
+  stage: "landing" | "onboarding" | "results" | number;
 }
 
 /**
@@ -15,16 +15,18 @@ interface StudyProgressProps {
  */
 export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   let active;
-  if (typeof stage === "number") {
-    active = 1;
-  } else if (stage === "landing") {
+  if (stage === "landing") {
     active = 0;
-  } else {
+  } else if (stage === "onboarding") {
+    active = 1;
+  } else if (typeof stage === "number") {
     active = 2;
+  } else {
+    active = 3;
   }
 
   const questions = [];
-  questions.push(<Stepper.Step label="Tasks"></Stepper.Step>);
+  questions.push(<Stepper.Step label="Mission"></Stepper.Step>);
   for (let i = 1; i < num_trials; i++) {
     questions.push(<Stepper.Step></Stepper.Step>);
   }
@@ -49,6 +51,7 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
   return (
     <Box>
       <Stepper active={active} allowNextStepsSelect={false}>
+        <Stepper.Step label="Recruitment"></Stepper.Step>
         <Stepper.Step label="Briefing"></Stepper.Step>
         <Stepper.Step label="Mission"></Stepper.Step>
         <Stepper.Step label="Debrief"></Stepper.Step>

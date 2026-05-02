@@ -1,9 +1,9 @@
 .layout {
-  min-height: 100vh;
-  background: linear-gradient(
-    to bottom,
-    var(--mantine-color-dark-8),
-    var(--mantine-color-dark-9)
-  );
-  color: var(--mantine-color-gray-1);
+  background-color: #151b25;
+  color: #00d346;
 }
+
+.layout :global(.mantine-AppShell-main) {
+  padding: 0;
+}
+
