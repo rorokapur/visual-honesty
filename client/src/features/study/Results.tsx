@@ -98,6 +98,10 @@ export function Results() {
               </>
             )}
             <Text fw="bold" size="md">
+              Want to contribute some charts of your own?{" "}
+              <a href="/contribute">Submit them here!</a>
+            </Text>
+            <Text fw="bold" size="md">
               Still Curious? Here are some of the different kinds of deception
               you encountered:
             </Text>
