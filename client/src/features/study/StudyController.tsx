@@ -206,7 +206,7 @@ export function StudyController() {
       <Box
         pos="relative"
         w="100%"
-        className={classes.contentArea}
+        className={`${classes.contentArea} crt-effect`}
         style={{
           flex: 1,
           display: "flex",

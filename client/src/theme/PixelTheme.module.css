@@ -133,3 +133,28 @@
   color: #151b25 !important;
 }
 
+.label {
+  font-family: "Upheaval Pro", sans-serif;
+  text-transform: uppercase;
+  color: #00d346 !important;
+  margin-bottom: 4px;
+}
+
+.description {
+  font-family: "VCR OSD Mono", monospace;
+  color: rgba(0, 211, 70, 0.7) !important;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+
+.placeholder {
+  color: rgba(0, 211, 70, 0.4) !important;
+}
+
+.notification {
+  border: 2px solid #00d346 !important;
+  border-radius: 0 !important;
+  background: #151b25 !important;
+  color: #00d346 !important;
+}
+
