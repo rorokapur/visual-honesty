@@ -99,9 +99,10 @@ export interface StimulusImage {
 
 /**
  * A pair of stimuli with left/right ordering
- * Includes data about the number of remaining pairs after the current one.
+ * Includes data about the number of remaining trials after the current one.
  */
 export interface StimulusPair {
+  trial_type: "pair";
   trial_id: string;
   set_id: string;
   left: StimulusImage;
@@ -109,54 +110,72 @@ export interface StimulusPair {
   sets_remaining: number;
 }
 
+export interface StimulusSingle {
+  trial_type: "single";
+  trial_id: string;
+  set_id: string;
+  stimulus: StimulusImage;
+  sets_remaining: number;
+}
+
+export type StimulusTrial = StimulusPair | StimulusSingle;
+
 /**
- * Fetches the next StimulusPair from the backend for a given participant.
+ * Fetches the next StimulusTrial from the backend for a given participant.
  * @param sessionId - session UUID for this participant
- * @returns Promise<StimulusPair | null> - the next StimulusPair for the participant or null if none remain
+ * @returns Promise<StimulusTrial | null> - the next StimulusTrial for the participant or null if none remain
  */
-export const fetchNextPair = async (
+export const fetchNextTrial = async (
   sessionId: string,
-): Promise<StimulusPair | null> => {
+): Promise<StimulusTrial | null> => {
   const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
   const res = await fetch(`${apiUrl}/api/user/trial/next`, {
     headers: { "X-Session-ID": sessionId },
   });
   if (!res.ok) {
-    console.error("Error fetching stimulus pair:", await res.json());
+    console.error("Error fetching stimulus trial:", await res.json());
     return null;
   }
   const data = await res.json();
   if (data.sets_remaining === 0) return null;
-  return data as StimulusPair;
+  return data as StimulusTrial;
 };
 
 /**
- * Submits a participant response to a given StimuliPair (left/right selection)
+ * Submits a participant response to a given StimulusTrial
  * @param sessionId - session UUID of participant
- * @param stimulus - the StimulusPair that the user was shown
- * @param selectedSide - the side of the selected StimulusImage (left/right/none [ran out of time])
+ * @param stimulus - the StimulusTrial that the user was shown
+ * @param selectedSide - the choice or verdict selected
  * @param timeTaken - the amount of time the participant took to select an option
  */
 export const submitResponse = async (
   sessionId: string,
-  stimulus: StimulusPair,
-  selectedSide: "left" | "right" | "none",
+  stimulus: StimulusTrial,
+  selectedSide: "left" | "right" | "none" | boolean,
   timeTaken: number,
 ) => {
-  const choiceId =
-    selectedSide === "right" ? stimulus.right.id : stimulus.left.id;
   const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+  
+  let body: any = {
+    trialId: stimulus.trial_id,
+    frontendTime: Math.round(timeTaken),
+  };
+
+  if (stimulus.trial_type === "pair") {
+    const choiceId =
+      selectedSide === "right" ? stimulus.right.id : stimulus.left.id;
+    body.choice = selectedSide === "none" ? null : choiceId;
+  } else if (stimulus.trial_type === "single") {
+    body.verdict = selectedSide === "none" ? null : selectedSide;
+  }
+
   const res = await fetch(`${apiUrl}/api/user/trial/submit`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-Session-ID": sessionId,
     },
-    body: JSON.stringify({
-      trialId: stimulus.trial_id,
-      choice: selectedSide === "none" ? null : choiceId,
-      frontendTime: Math.round(timeTaken),
-    }),
+    body: JSON.stringify(body),
   });
   const errData = await res.json();
   if (!res.ok || !errData?.success) {
@@ -206,27 +225,4 @@ export const initializeParticipantSession = async (
   return data as string;
 };
 
-/**
- * Creates a new AI participant session.
- * Requires authentication.
- * @param category - currently used to store model name (e.g. "Gemini 3 Pro")
- * @param demographics - not currently used, unlikely to use in the future
- * @returns string - UUID for the created session
- */
-export const initializeAiSession = async (
-  category: string,
-  demographics: object = {},
-): Promise<string> => {
-  const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
-  const res = await fetch(`${apiUrl}/api/admin/agent/ai-participant`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ category, demographics }),
-  });
-  const data = await res.json();
-  if (!res.ok || !data.success || !data.participant_id) {
-    throw new Error(data.error || "Failed to create AI session");
-  }
-  return data.participant_id as string;
-};
+

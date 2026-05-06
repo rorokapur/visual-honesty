@@ -59,7 +59,7 @@ router.get('/results/benchmarks', async (req: Request, res: Response) => {
 
 router.get('/trial/next', requireParticipant, async (req: Request, res: Response) => {
   try {
-    const { rows } = await pool.query('SELECT get_random_unseen_pair($1) AS data', [req.sessionId]);
+    const { rows } = await pool.query('SELECT get_random_unseen_trial($1) AS data', [req.sessionId]);
     res.set('Vary', 'X-Session-ID'); // Inform caches that the response varies by session ID
     res.json(rows[0].data);
   } catch (err: any) { res.status(500).json({ error: err.message }); }
@@ -67,10 +67,10 @@ router.get('/trial/next', requireParticipant, async (req: Request, res: Response
 
 router.post('/trial/submit', requireParticipant, async (req: Request, res: Response) => {
   try {
-    const { trialId, choice, frontendTime } = req.body;
+    const { trialId, choice, verdict, frontendTime } = req.body;
     if (!trialId || !frontendTime) return res.status(400).json({ error: "Missing required fields" });
-    const { rows } = await pool.query('SELECT submit_response($1, $2, $3, $4) AS data',
-      [req.sessionId, trialId, choice, frontendTime]);
+    const { rows } = await pool.query('SELECT submit_response($1, $2, $3, $4, $5) AS data',
+      [req.sessionId, trialId, choice ?? null, verdict ?? null, frontendTime]);
     res.json(rows[0].data);
   } catch (err: any) { res.status(500).json({ error: err.message }); }
 });

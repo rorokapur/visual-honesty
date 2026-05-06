@@ -9,15 +9,16 @@ import {
 } from "@mantine/core";
 import { useRef, useState } from "react";
 import {
-  fetchNextPair,
+  fetchNextTrial,
   submitResponse,
-  type StimulusPair,
+  type StimulusTrial,
 } from "../../lib/participant";
 import { Landing } from "./Landing";
 import { Results } from "./Results";
 import { useSessionContext } from "./session/useSessionContext";
 import { StudyProgress } from "./StudyProgress";
-import { Trial } from "./Trial";
+import { PairTrial } from "./PairTrial";
+import { SingleTrial } from "./SingleTrial";
 import classes from "./StudyController.module.css";
 import { OnboardingGame } from "./OnboardingGame";
 
@@ -38,7 +39,7 @@ export function StudyController() {
   const trialStartTime = useRef<number | null>(null);
   const [trial, setTrial] = useState<number>(0);
   const [totalTrials, setTotalTrials] = useState<number>(0);
-  const [stimulus, setStimulus] = useState<StimulusPair | null>(null);
+  const [stimulus, setStimulus] = useState<StimulusTrial | null>(null);
   const [waitingContinue, setWaitingContinue] = useState(false);
   /**
    * Preloads an image into the browser cache
@@ -53,20 +54,25 @@ export function StudyController() {
     });
 
   /**
-   * Preloads the images for a stimulus pair
-   * @param pair - StimulusPair to preload
+   * Preloads the images for a stimulus trial
+   * @param stim - StimulusTrial to preload
    */
-  const preloadStimulus = (pair: StimulusPair) =>
-    Promise.all([
-      preloadImage(pair.left.image_url),
-      preloadImage(pair.right.image_url),
-    ]);
+  const preloadStimulus = (stim: StimulusTrial) => {
+    if (stim.trial_type === "pair") {
+      return Promise.all([
+        preloadImage(stim.left.image_url),
+        preloadImage(stim.right.image_url),
+      ]);
+    } else {
+      return preloadImage(stim.stimulus.image_url);
+    }
+  };
 
   /**
    * Processes user selection for the current trial and sends results to Supabase.
-   * @param {'left' | 'right' | 'none'} choice - the graph the user selected (as being deceptive)
+   * @param choice - the graph the user selected or the verdict
    */
-  const handleSelect = async (choice: "left" | "right" | "none") => {
+  const handleSelect = async (choice: "left" | "right" | "none" | boolean) => {
     setLoading(true);
     if (!stimulus) {
       throw new Error("cannot submit answer for invalid stimulus");
@@ -83,7 +89,7 @@ export function StudyController() {
       setWaitingContinue(true);
     } else {
       if (trial < totalTrials) {
-        const next = await fetchNextPair(sessionId);
+        const next = await fetchNextTrial(sessionId);
         if (next) {
           await preloadStimulus(next);
           setStimulus(next);
@@ -112,14 +118,14 @@ export function StudyController() {
       const currentSessionId =
         newSessionId || localStorage.getItem("vh_session_id") || "";
 
-      const nextPair = await fetchNextPair(currentSessionId);
-      if (nextPair) {
-        await preloadStimulus(nextPair);
-        setStimulus(nextPair);
+      const nextTrial = await fetchNextTrial(currentSessionId);
+      if (nextTrial) {
+        await preloadStimulus(nextTrial);
+        setStimulus(nextTrial);
         setStage("survey");
         setTrial(1);
         setTotalTrials(
-          nextPair.sets_remaining > 20 ? 20 : nextPair.sets_remaining,
+          nextTrial.sets_remaining > 20 ? 20 : nextTrial.sets_remaining,
         );
         trialStartTime.current = performance.now();
       } else {
@@ -144,7 +150,7 @@ export function StudyController() {
     setWaitingContinue(false);
     setLoading(true);
     if (trial < totalTrials) {
-      const next = await fetchNextPair(sessionId);
+      const next = await fetchNextTrial(sessionId);
       if (next) {
         await preloadStimulus(next);
         setStimulus(next);
@@ -169,11 +175,19 @@ export function StudyController() {
     page = (
       <Box style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <Container w="100%">
-          <Trial
-            key={stimulus.trial_id}
-            stimulus={stimulus}
-            onSelect={handleSelect}
-          ></Trial>
+          {stimulus.trial_type === "pair" ? (
+            <PairTrial
+              key={stimulus.trial_id}
+              stimulus={stimulus}
+              onSelect={handleSelect as any}
+            />
+          ) : (
+            <SingleTrial
+              key={stimulus.trial_id}
+              stimulus={stimulus}
+              onSelect={handleSelect as any}
+            />
+          )}
         </Container>
       </Box>
     );
