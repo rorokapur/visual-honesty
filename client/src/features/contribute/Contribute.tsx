@@ -59,7 +59,8 @@ export default function Contribute() {
 
       setStatus({
         type: "success",
-        message: "Successfully uploaded! Your contribution has been queued for review.",
+        message:
+          "Successfully uploaded! Your contribution has been queued for review.",
       });
       setSetName("");
       setHonestFile(null);
@@ -82,7 +83,13 @@ export default function Contribute() {
                 Intel Submission
               </Title>
               <Text ta="center" size="sm">
-                Found a chart that twists the truth? Submit it to the Data Defense Force.
+                Have a chart that twists the truth? Submit it to the Data
+                Defense Force!
+              </Text>
+              <Text ta="center" size="sm">
+                Please read the{" "}
+                <a href="/contribute">Contribution Guidelines</a> before
+                submitting.
               </Text>
             </Stack>
 
@@ -99,8 +106,8 @@ export default function Contribute() {
                 )}
 
                 <TextInput
-                  label="Mission Name"
-                  description="A descriptive title for this stimuli pair"
+                  label="Name"
+                  description="A descriptive title for this pair of charts"
                   placeholder="e.g. Truncated Axis - Q3 Revenue"
                   value={setName}
                   onChange={(e) => setSetName(e.currentTarget.value)}
@@ -109,7 +116,7 @@ export default function Contribute() {
 
                 <NativeSelect
                   label="Classification"
-                  description="Choose an appropriate category for this deception"
+                  description="Choose an appropriate category for this deception (see contribution guidelines)"
                   data={categories}
                   value={category}
                   onChange={(e) => setCategory(e.currentTarget.value)}
@@ -119,7 +126,7 @@ export default function Contribute() {
 
                 <FileInput
                   label="Honest Baseline"
-                  description="Upload the accurate visualization"
+                  description="Upload the honest visualization"
                   placeholder="Click to select file"
                   value={honestFile}
                   onChange={setHonestFile}
@@ -142,7 +149,9 @@ export default function Contribute() {
                   size="lg"
                   loading={loading}
                   onClick={handleUpload}
-                  disabled={!honestFile || !deceptiveFile || !setName || !category}
+                  disabled={
+                    !honestFile || !deceptiveFile || !setName || !category
+                  }
                 >
                   Transmit Intel
                 </Button>
