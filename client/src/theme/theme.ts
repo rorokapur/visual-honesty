@@ -1,12 +1,16 @@
 import {
   Button,
   Card,
+  FileInput,
   List,
+  NativeSelect,
+  Notification,
   Paper,
   Progress,
   Select,
   Stepper,
   Text,
+  TextInput,
   Title,
   createTheme,
 } from "@mantine/core";
@@ -78,6 +82,35 @@ export const theme = createTheme({
         input: classes.selectInput,
         dropdown: classes.selectDropdown,
         option: classes.selectOption,
+      },
+    }),
+    TextInput: TextInput.extend({
+      classNames: {
+        input: classes.selectInput,
+        label: classes.label,
+        description: classes.description,
+      },
+    }),
+    NativeSelect: NativeSelect.extend({
+      classNames: {
+        input: classes.selectInput,
+        label: classes.label,
+        description: classes.description,
+      },
+    }),
+    FileInput: FileInput.extend({
+      classNames: {
+        input: classes.selectInput,
+        label: classes.label,
+        description: classes.description,
+        placeholder: classes.placeholder,
+      },
+    }),
+    Notification: Notification.extend({
+      classNames: {
+        root: classes.notification,
+        title: classes.label,
+        description: classes.copy,
       },
     }),
   },

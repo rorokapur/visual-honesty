@@ -98,39 +98,50 @@ export function Results() {
               </>
             )}
             <Text fw="bold" size="md">
-              Still Curious? Here are some of the kinds of deception you
-              encountered:
+              Want to contribute some charts of your own?{" "}
+              <a href="/contribute">Submit them here!</a>
+            </Text>
+            <Text fw="bold" size="md">
+              Still Curious? Here are some of the different kinds of deception
+              you encountered:
             </Text>
             <List>
               <ListItem>
-                <b>Axis Truncation: </b>
-                By changing the start and end points of the x and y axes on
-                graphs, designers can make small fluctuations in data look very
-                large and make small differences between values look signficant.
+                <b>Statistics: </b>
+                Common statistical techniques like binning and smoothing can be
+                strategically used to conceal or fabricate trends in data. For
+                example, when splitting data into time ranges, a designer could
+                but a break right in the middle of a concentrated group of data
+                points, gerrymandering into two bins and hiding the peak.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
-                <b>3D Distortion: </b>
-                By displaying tradionally 2D charts in 3D, designers can distort
-                visualizations, making some regions seem bigger than others.
-                While this is accurate from a 3D perspective, when seen from a
-                single viewpoint in 2D it misrepresents the data.
+                <b>Container: </b>
+                By manipulating the parameters of the container on which data is
+                drawn (axes, scales, etc.), chart designers can create charts
+                that are techniucally correct, but portary an inaccurate picture
+                of the data at first glance. For example, by changing the start
+                and end points of the x and y axes on graphs, designers can make
+                small fluctuations in data look very large and make small
+                differences between values look signficant.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
-                <b>Area vs Radius Encoding: </b>
-                When using the size of cirlces to display differences in data
-                values, mapping the data to radius instead of area can make
-                smaller differences seem more pronoucned, since the area is
-                being squared relative to the data.
+                <b>Encoding: </b>
+                By tampering with the ways that data is visually encoded on a
+                chart, designers can over- or under-emphasize trends. For
+                example, a common technique is mapping a value to the radius of
+                a circle rather than area, making an increase look quadratically
+                bigger.
               </ListItem>
               <Space h="sm"></Space>
               <ListItem>
-                <b>Cherry Picking: </b>
-                Using some of the techniques above (particularly x-axis
-                truncation), designers can hide sections of data. While the data
-                visualized on its own may still be accurate, it might be
-                interpreted incorrectly since there is missing context.
+                <b>Styling: </b>
+                By following (or breaking) common style patterns, chart
+                designers can change the emphasis and perception of data. For
+                example, colors like red and green can be used to subtly steer
+                viewers towards postiive or negative associations regarless of
+                the underlying data reality.
               </ListItem>
               <Space h="xl"></Space>
             </List>

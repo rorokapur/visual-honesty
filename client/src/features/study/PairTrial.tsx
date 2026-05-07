@@ -11,7 +11,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { StimulusPair } from "../../lib/participant";
 
-interface TrialProps {
+export interface PairTrialProps {
   /** The pair of images to display for this trial */
   stimulus: StimulusPair;
 
@@ -23,10 +23,10 @@ interface TrialProps {
 }
 
 /**
- * A component containing an individual trial of the Visual Honesty survey
+ * A component containing an individual pair trial of the Visual Honesty survey
  * @component
  */
-export function Trial({ stimulus, onSelect }: TrialProps) {
+export function PairTrial({ stimulus, onSelect }: PairTrialProps) {
   const [progress, setProgress] = useState(100);
   const [timeLeftMs, setTimeLeftMs] = useState(10000);
   const onSelectRef = useRef(onSelect);
@@ -40,7 +40,6 @@ export function Trial({ stimulus, onSelect }: TrialProps) {
 
   // Kick off the visual timer and countdown text whenever a new trial loads.
   useEffect(() => {
-    // requestAnimationFrame avoids React’s warning about synchronous setState in effects.
     const resetProgressFrame = window.requestAnimationFrame(() =>
       setProgress(100),
     );
@@ -102,12 +101,12 @@ export function Trial({ stimulus, onSelect }: TrialProps) {
           radius="lg"
           onClick={() => onSelect("left")}
           className="panels"
+          style={{ cursor: "pointer" }}
         >
           <Image
             src={stimulus.left.image_url}
             alt="Stimulus A"
             draggable={false}
-            //TODO: Images are still selectable on Safari - need to investigate
             style={{ userSelect: "none", position: "relative", zIndex: "var(--z-content)" }}
           />
         </Card>
@@ -117,6 +116,7 @@ export function Trial({ stimulus, onSelect }: TrialProps) {
           radius="lg"
           onClick={() => onSelect("right")}
           className="panels"
+          style={{ cursor: "pointer" }}
         >
           <Image
             src={stimulus.right.image_url}

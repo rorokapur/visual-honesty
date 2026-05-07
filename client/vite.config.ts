@@ -8,7 +8,7 @@ const enforceTrailingSlashPlugin = () => {
     name: "enforce-trailing-slash",
     configureServer(server: any) {
       server.middlewares.use((req: any, res: any, next: any) => {
-        if (req.url === "/admin" || req.url === "/ai-agent" || req.url === "/contribute") {
+        if (req.url === "/admin" || req.url === "/contribute") {
           res.writeHead(301, { Location: req.url + "/" });
           res.end();
           return;
@@ -49,7 +49,6 @@ export default defineConfig(({ mode }) => {
         input: {
           main: resolve(__dirname, "index.html"),
           admin: resolve(__dirname, "admin/index.html"),
-          "ai-agent": resolve(__dirname, "ai-agent/index.html"),
           contribute: resolve(__dirname, "contribute/index.html"),
         },
       },

@@ -1,11 +1,13 @@
 import {
   AppShell,
   Button,
+  Card,
   Container,
   FileInput,
   NativeSelect,
   Notification,
   Stack,
+  Text,
   TextInput,
   Title,
 } from "@mantine/core";
@@ -18,8 +20,6 @@ import {
 
 /**
  * A page for interested participants to contribute their own stimuli pairs.
- *
- * TODO: Write contribution instructions, decide on allowed image formats
  * @component
  */
 export default function Contribute() {
@@ -35,7 +35,6 @@ export default function Contribute() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch categories
     fetchPublicCategories()
       .then((data) => {
         setCategories(data);
@@ -60,7 +59,8 @@ export default function Contribute() {
 
       setStatus({
         type: "success",
-        message: "Successfully uploaded!",
+        message:
+          "Successfully uploaded! Your contribution has been queued for review.",
       });
       setSetName("");
       setHonestFile(null);
@@ -75,68 +75,88 @@ export default function Contribute() {
 
   return (
     <AppShell className={layoutClasses.layout}>
-      <AppShell.Main>
-        <Container size="sm" mt={50}>
-          <Title order={2} ta="center" mb="lg">
-            Contribute Stimuli
-          </Title>
-          <Stack>
-            {status && (
-              <Notification
-                color={status.type === "error" ? "red" : "green"}
-                onClose={() => setStatus(null)}
-              >
-                {status.message}
-              </Notification>
-            )}
+      <AppShell.Main className="crt-effect" style={{ minHeight: "100vh" }}>
+        <Container size="sm" py={50}>
+          <Stack gap="xl">
+            <Stack gap="xs">
+              <Title order={1} ta="center">
+                Intel Submission
+              </Title>
+              <Text ta="center" size="sm">
+                Have a chart that twists the truth? Submit it to the Data
+                Defense Force!
+              </Text>
+              <Text ta="center" size="sm">
+                Please read the{" "}
+                <a href="/contribute">Contribution Guidelines</a> before
+                submitting.
+              </Text>
+            </Stack>
 
-            <TextInput
-              label="Set Name"
-              description="A descriptive title for this stimuli pair"
-              placeholder="e.g. X-Axis Trunction - Company Revenue"
-              value={setName}
-              onChange={(e) => setSetName(e.currentTarget.value)}
-              required
-            />
+            <Card p="xl">
+              <Stack gap="md">
+                {status && (
+                  <Notification
+                    color={status.type === "error" ? "red" : "green"}
+                    onClose={() => setStatus(null)}
+                    withCloseButton
+                  >
+                    {status.message}
+                  </Notification>
+                )}
 
-            <NativeSelect
-              label="Category"
-              description="Choose an appropriate category from the list below"
-              data={categories}
-              value={category}
-              onChange={(e) => setCategory(e.currentTarget.value)}
-              required
-              disabled={categories.length === 0}
-            />
+                <TextInput
+                  label="Name"
+                  description="A descriptive title for this pair of charts"
+                  placeholder="e.g. Truncated Axis - Q3 Revenue"
+                  value={setName}
+                  onChange={(e) => setSetName(e.currentTarget.value)}
+                  required
+                />
 
-            <FileInput
-              label="Honest Image"
-              description="Upload the honest visualization"
-              placeholder="Click to select honest image file"
-              value={honestFile}
-              onChange={setHonestFile}
-              accept="image/png,image/jpeg,image/webp"
-              required
-            />
+                <NativeSelect
+                  label="Classification"
+                  description="Choose an appropriate category for this deception (see contribution guidelines)"
+                  data={categories}
+                  value={category}
+                  onChange={(e) => setCategory(e.currentTarget.value)}
+                  required
+                  disabled={categories.length === 0}
+                />
 
-            <FileInput
-              label="Deceptive Image"
-              description="Upload the deceptive visualization."
-              placeholder="Click to select deceptive image file"
-              value={deceptiveFile}
-              onChange={setDeceptiveFile}
-              accept="image/png,image/jpeg,image/webp"
-              required
-            />
+                <FileInput
+                  label="Honest Baseline"
+                  description="Upload the honest visualization"
+                  placeholder="Click to select file"
+                  value={honestFile}
+                  onChange={setHonestFile}
+                  accept="image/png,image/jpeg,image/webp"
+                  required
+                />
 
-            <Button
-              mt="md"
-              loading={loading}
-              onClick={handleUpload}
-              disabled={!honestFile || !deceptiveFile || !setName || !category}
-            >
-              Submit Stimuli Pair
-            </Button>
+                <FileInput
+                  label="Deceptive Variant"
+                  description="Upload the deceptive visualization"
+                  placeholder="Click to select file"
+                  value={deceptiveFile}
+                  onChange={setDeceptiveFile}
+                  accept="image/png,image/jpeg,image/webp"
+                  required
+                />
+
+                <Button
+                  mt="md"
+                  size="lg"
+                  loading={loading}
+                  onClick={handleUpload}
+                  disabled={
+                    !honestFile || !deceptiveFile || !setName || !category
+                  }
+                >
+                  Transmit Intel
+                </Button>
+              </Stack>
+            </Card>
           </Stack>
         </Container>
       </AppShell.Main>
