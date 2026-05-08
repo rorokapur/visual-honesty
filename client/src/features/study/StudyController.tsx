@@ -20,7 +20,7 @@ import { StudyProgress } from "./StudyProgress";
 import { PairTrial } from "./PairTrial";
 import { SingleTrial } from "./SingleTrial";
 import classes from "./StudyController.module.css";
-import { OnboardingGame } from "./OnboardingGame";
+import { Onboarding } from "./Onboarding";
 
 /**
  * Main Visual Honesty survey component.
@@ -170,7 +170,7 @@ export function StudyController() {
   if (stage === "landing") {
     page = <Landing handleStart={handleStart} />;
   } else if (stage === "onboarding") {
-    page = <OnboardingGame onComplete={handleCompleteOnboarding} />;
+    page = <Onboarding onComplete={handleCompleteOnboarding} />;
   } else if (stage === "survey" && stimulus) {
     page = (
       <Box style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>

@@ -32,7 +32,7 @@
   gap: 8px;
   max-width: 820px;
   width: 100%;
-  height: 500px; /* Total stable height */
+  min-height: 500px; /* Total stable height */
   position: relative;
   min-width: 0;
   margin: auto;
@@ -230,6 +230,22 @@
   color: #151b25;
   box-shadow: 0 0 10px rgba(255, 77, 77, 0.45);
 }
+
+.btnSecondary {
+  background: transparent;
+  color: #00d346;
+  opacity: 0.6;
+  border-color: rgba(0, 211, 70, 0.4);
+}
+
+.btnSecondary:hover {
+  background: rgba(0, 211, 70, 0.1);
+  color: #00d346;
+  opacity: 1;
+  border-color: #00d346;
+  box-shadow: 0 0 10px rgba(0, 211, 70, 0.3);
+}
+
 
 /* ── Text Input ─────────────────────────────────────────── */
 

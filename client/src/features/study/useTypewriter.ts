@@ -22,25 +22,14 @@ export function useTypewriter(
 
   /* ── Reset when the source text changes (new step) ──── */
   useEffect(() => {
-    let resetTimer: ReturnType<typeof setTimeout> | null = null;
-
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
 
-    // Defer state updates to avoid synchronous setState calls inside effect
-    resetTimer = setTimeout(() => {
-      setDisplayedText("");
-      setIsTyping(false);
-      indexRef.current = 0;
-    }, 0);
-
-    return () => {
-      if (resetTimer) {
-        clearTimeout(resetTimer);
-      }
-    };
+    setDisplayedText("");
+    setIsTyping(false);
+    indexRef.current = 0;
   }, [text]);
 
   /* ── Start typing when enabled becomes true ─────────── */

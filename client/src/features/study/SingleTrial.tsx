@@ -97,7 +97,17 @@ export function SingleTrial({ stimulus, onSelect }: SingleTrialProps) {
             src={stimulus.stimulus.image_url}
             alt="Stimulus"
             draggable={false}
-            style={{ userSelect: "none", position: "relative", zIndex: "var(--z-content)" }}
+            fit="contain"
+            style={{ 
+              userSelect: "none", 
+              position: "relative", 
+              zIndex: "var(--z-content)",
+              maxHeight: "50vh",
+              maxWidth: "100%",
+              width: "auto",
+              height: "auto",
+              margin: "0 auto"
+            }}
           />
         </Card>
       </Center>

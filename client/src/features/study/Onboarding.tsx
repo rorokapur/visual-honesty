@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "./OnboardingGame.module.css";
+import styles from "./Onboarding.module.css";
 import { useSessionContext } from "./session/useSessionContext";
 import { useTypewriter } from "./useTypewriter";
 
@@ -11,14 +11,14 @@ import SpeechSprite from "../../assets/SpeechSprite.png";
 
 interface DemographicPayload {
   agreed_to_consent: boolean;
-  age_range: string;
+  education_level: string;
   academic_background: string;
   data_viz_skill: number;
 }
 
 /* ── Step definitions ───────────────────────────────────── */
 
-type StepId = "consent" | "age" | "major" | "skill" | "finish" | "returning";
+type StepId = "consent" | "skill" | "finish" | "returning";
 
 interface DialogueStep {
   id: StepId;
@@ -28,19 +28,11 @@ interface DialogueStep {
 const STEPS: DialogueStep[] = [
   {
     id: "consent",
-    text: "Incoming transmission...\n\nBefore we grant you access to the command center, we need your agreement. All data collected is anonymous and used for research purposes only.\n\nDo you consent to this operation?",
-  },
-  {
-    id: "age",
-    text: "Acknowledged, operative.\n\nFirst — how many cycles have you been active?",
-  },
-  {
-    id: "major",
-    text: "Noted. Now tell me...\n\nWhat sector do you hail from? Enter your academic background below.",
+    text: "Incoming transmission...\n\nBy playing this game, you are contributing to an academic study on data visualization. We track your answers, reaction times, and anonymous session data to understand how humans perceive charts. Your data will be anonymized and may be published in open research datasets. \n\nDo you consent to this operation?",
   },
   {
     id: "skill",
-    text: "Almost there, recruit.\n\nOn a scale of 1 to 5, how would you rate your skill at decrypting visual data?",
+    text: "Acknowledged, operative.\n\nOn a scale of 1 to 5, how would you rate your skill at decrypting visual data?",
   },
   {
     id: "finish",
@@ -52,7 +44,6 @@ const STEPS: DialogueStep[] = [
   },
 ];
 
-const AGE_RANGES = ["18-24", "25-34", "35-44", "45-54", "55+"];
 
 /** Duration of one loop of SpeechGif.gif (measured from binary: 860ms) */
 const SPEECH_GIF_DURATION_MS = 860;
@@ -71,19 +62,16 @@ type Phase = "entering" | "active" | "exiting";
 
 /* ── Component ──────────────────────────────────────────── */
 
-interface OnboardingGameProps {
+interface OnboardingProps {
   onComplete?: (payload: DemographicPayload) => void;
 }
 
-export function OnboardingGame({ onComplete }: OnboardingGameProps) {
+export function Onboarding({ onComplete }: OnboardingProps) {
   const [stepIndex, setStepIndex] = useState(0);
-  const [majorInput, setMajorInput] = useState("");
   const [phase, setPhase] = useState<Phase>("entering");
 
   // Collected answers
   const [consent, setConsent] = useState<boolean | null>(null);
-  const [ageRange, setAgeRange] = useState("");
-  const [major, setMajor] = useState("");
   const [skill, setSkill] = useState(0);
 
 
@@ -118,14 +106,14 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
       const timer = setTimeout(() => {
         onComplete?.({
           agreed_to_consent: consent ?? true, // Assume true if returning
-          age_range: ageRange,
-          academic_background: major,
+          education_level: "",
+          academic_background: "",
           data_viz_skill: skill,
         });
       }, SPEECH_GIF_DURATION_MS);
       return () => clearTimeout(timer);
     }
-  }, [phase, onComplete, consent, ageRange, major, skill]);
+  }, [phase, onComplete, consent, skill]);
 
   /* ── Handlers ───────────────────────────────────────── */
 
@@ -136,17 +124,6 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
     if (agreed) advance();
   };
 
-  const handleAge = (range: string) => {
-    setAgeRange(range);
-    advance();
-  };
-
-  const handleMajorSubmit = () => {
-    const value = majorInput.trim();
-    if (!value) return;
-    setMajor(value);
-    advance();
-  };
 
   const handleSkill = (level: number) => {
     setSkill(level);
@@ -166,7 +143,7 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
   /* ── Step-specific controls ─────────────────────────── */
 
   const renderControls = () => {
-    if (isTyping || phase !== "active") return null;
+    if (isTyping || phase !== "active" || displayedText !== currentStep.text) return null;
 
     switch (currentStep.id) {
       case "consent":
@@ -184,38 +161,6 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
           </div>
         );
 
-      case "age":
-        return (
-          <div className={styles.controls}>
-            {AGE_RANGES.map((r) => (
-              <button
-                key={r}
-                className={styles.btn}
-                onClick={() => handleAge(r)}
-              >
-                {r}
-              </button>
-            ))}
-          </div>
-        );
-
-      case "major":
-        return (
-          <div className={styles.inputRow}>
-            <input
-              className={styles.textInput}
-              type="text"
-              placeholder="e.g. Computer Science"
-              value={majorInput}
-              onChange={(e) => setMajorInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleMajorSubmit()}
-              autoFocus
-            />
-            <button className={styles.btn} onClick={handleMajorSubmit}>
-              Submit
-            </button>
-          </div>
-        );
 
       case "skill":
         return (
@@ -229,6 +174,12 @@ export function OnboardingGame({ onComplete }: OnboardingGameProps) {
                 {n}
               </button>
             ))}
+            <button
+              className={`${styles.btn} ${styles.btnSecondary}`}
+              onClick={advance}
+            >
+              Skip
+            </button>
           </div>
         );
 

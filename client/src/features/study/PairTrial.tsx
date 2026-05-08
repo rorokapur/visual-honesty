@@ -107,7 +107,17 @@ export function PairTrial({ stimulus, onSelect }: PairTrialProps) {
             src={stimulus.left.image_url}
             alt="Stimulus A"
             draggable={false}
-            style={{ userSelect: "none", position: "relative", zIndex: "var(--z-content)" }}
+            fit="contain"
+            style={{ 
+              userSelect: "none", 
+              position: "relative", 
+              zIndex: "var(--z-content)",
+              maxHeight: "50vh",
+              maxWidth: "100%",
+              width: "auto",
+              height: "auto",
+              margin: "0 auto"
+            }}
           />
         </Card>
         <Card
@@ -122,7 +132,17 @@ export function PairTrial({ stimulus, onSelect }: PairTrialProps) {
             src={stimulus.right.image_url}
             alt="Stimulus B"
             draggable={false}
-            style={{ userSelect: "none", position: "relative", zIndex: "var(--z-content)" }}
+            fit="contain"
+            style={{ 
+              userSelect: "none", 
+              position: "relative", 
+              zIndex: "var(--z-content)",
+              maxHeight: "50vh",
+              maxWidth: "100%",
+              width: "auto",
+              height: "auto",
+              margin: "0 auto"
+            }}
           />
         </Card>
       </SimpleGrid>
