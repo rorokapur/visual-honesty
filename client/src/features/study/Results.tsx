@@ -68,7 +68,9 @@ export function Results() {
       <header>
         <Container px="md">
           <Center style={{ paddingBottom: "1rem" }}>
-            <Title ta="center">Mission Complete</Title>
+            <Title ta="center" order={1} fz={{ base: "24px", sm: "36px" }}>
+              Mission Complete
+            </Title>
           </Center>
         </Container>
       </header>
@@ -81,8 +83,8 @@ export function Results() {
             <Center
               style={{
                 width: "100%",
-                aspectRatio: "2 / 1",
               }}
+              h={{ base: 300, sm: 420 }}
             >
               <CategoryRadarChart data={categoryStats ? categoryStats : []} />
             </Center>

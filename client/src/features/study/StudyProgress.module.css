@@ -1,0 +1,16 @@
+.desktopOnly {
+  display: block;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 48em) {
+  .desktopOnly {
+    display: none;
+  }
+  .mobileOnly {
+    display: block;
+  }
+}

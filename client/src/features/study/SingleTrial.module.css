@@ -1,0 +1,21 @@
+.trialImage {
+  user-select: none;
+  position: relative;
+  z-index: var(--z-content);
+  max-height: 40vh;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (min-width: 48em) {
+  .trialImage {
+    max-height: 50vh;
+  }
+}
+
+.btn {
+  font-size: clamp(11px, 4.5vw, 24px) !important;
+}
+

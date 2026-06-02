@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import type { StimulusPair } from "../../lib/participant";
+import classes from "./PairTrial.module.css";
 
 export interface PairTrialProps {
   /** The pair of images to display for this trial */
@@ -90,10 +91,10 @@ export function PairTrial({ stimulus, onSelect }: PairTrialProps) {
         }}
       />
       <Center>
-        <Text size="xl">Select the deceptive visualization below</Text>
+        <Text size="xl" ta="center">Select the deceptive visualization below</Text>
       </Center>
       <Space h="xl" />
-      <SimpleGrid cols={2} spacing="xl">
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={{ base: "md", sm: "xl" }}>
         <Card
           shadow="sm"
           padding="lg"
@@ -108,16 +109,7 @@ export function PairTrial({ stimulus, onSelect }: PairTrialProps) {
             alt="Stimulus A"
             draggable={false}
             fit="contain"
-            style={{ 
-              userSelect: "none", 
-              position: "relative", 
-              zIndex: "var(--z-content)",
-              maxHeight: "50vh",
-              maxWidth: "100%",
-              width: "auto",
-              height: "auto",
-              margin: "0 auto"
-            }}
+            className={classes.trialImage}
           />
         </Card>
         <Card
@@ -133,19 +125,11 @@ export function PairTrial({ stimulus, onSelect }: PairTrialProps) {
             alt="Stimulus B"
             draggable={false}
             fit="contain"
-            style={{ 
-              userSelect: "none", 
-              position: "relative", 
-              zIndex: "var(--z-content)",
-              maxHeight: "50vh",
-              maxWidth: "100%",
-              width: "auto",
-              height: "auto",
-              margin: "0 auto"
-            }}
+            className={classes.trialImage}
           />
         </Card>
       </SimpleGrid>
     </>
   );
 }
+

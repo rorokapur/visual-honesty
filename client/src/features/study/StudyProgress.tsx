@@ -1,4 +1,5 @@
-import { Box, Stepper } from "@mantine/core";
+import { Box, Group, Progress, Stepper, Text } from "@mantine/core";
+import classes from "./StudyProgress.module.css";
 
 interface StudyProgressProps {
   /** Total number of trials the participant will complete */
@@ -14,7 +15,7 @@ interface StudyProgressProps {
  * @component
  */
 export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
-  let active;
+  let active: number;
   if (stage === "landing") {
     active = 0;
   } else if (stage === "onboarding") {
@@ -25,16 +26,49 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
     active = 3;
   }
 
+  const stageLabels = ["Recruitment", "Briefing", "Mission", "Debrief"];
+  const activeLabel = stageLabels[active] || "Recruitment";
+
   const questions = [];
-  questions.push(<Stepper.Step label="Mission"></Stepper.Step>);
+  questions.push(
+    <Stepper.Step key="mission-start" label="Mission"></Stepper.Step>,
+  );
   for (let i = 1; i < num_trials; i++) {
-    questions.push(<Stepper.Step></Stepper.Step>);
+    questions.push(<Stepper.Step key={`step-${i}`}></Stepper.Step>);
   }
 
-  // Show individual question numbers when in the trials phase
-  if (typeof stage === "number" && questions.length > 0) {
-    return (
-      <Box>
+  // Mobile layouts
+  const mobileProgress =
+    typeof stage === "number" ? (
+      <Box className={classes.mobileOnly} px="xs" py="4px">
+        <Group justify="space-between" mb={4}>
+          <Text size="xs" fw="bold" tt="uppercase" c="#00d346">
+            Mission Progress
+          </Text>
+          <Text size="xs" fw="bold" c="#00d346">
+            Round {stage} of {num_trials}
+          </Text>
+        </Group>
+        <Progress value={(stage / num_trials) * 100} size="sm" />
+      </Box>
+    ) : (
+      <Box className={classes.mobileOnly} px="xs" py="4px">
+        <Group justify="space-between" mb={4}>
+          <Text size="xs" fw="bold" c="#00d346">
+            Phase {active + 1} of 4
+          </Text>
+          <Text size="xs" fw="bold" tt="uppercase" c="#00d346">
+            {activeLabel}
+          </Text>
+        </Group>
+        <Progress value={((active + 1) / 4) * 100} size="sm" />
+      </Box>
+    );
+
+  // Desktop layouts
+  const desktopProgress =
+    typeof stage === "number" && questions.length > 0 ? (
+      <Box className={classes.desktopOnly}>
         <Stepper
           active={stage - 1}
           allowNextStepsSelect={false}
@@ -44,18 +78,21 @@ export function StudyProgress({ num_trials, stage }: StudyProgressProps) {
           {questions}
         </Stepper>
       </Box>
+    ) : (
+      <Box className={classes.desktopOnly}>
+        <Stepper active={active} allowNextStepsSelect={false}>
+          <Stepper.Step label="Recruitment"></Stepper.Step>
+          <Stepper.Step label="Briefing"></Stepper.Step>
+          <Stepper.Step label="Mission"></Stepper.Step>
+          <Stepper.Step label="Debrief"></Stepper.Step>
+        </Stepper>
+      </Box>
     );
-  }
 
-  // Otherwise show progress of overall flow
   return (
-    <Box>
-      <Stepper active={active} allowNextStepsSelect={false}>
-        <Stepper.Step label="Recruitment"></Stepper.Step>
-        <Stepper.Step label="Briefing"></Stepper.Step>
-        <Stepper.Step label="Mission"></Stepper.Step>
-        <Stepper.Step label="Debrief"></Stepper.Step>
-      </Stepper>
-    </Box>
+    <>
+      {desktopProgress}
+      {mobileProgress}
+    </>
   );
 }

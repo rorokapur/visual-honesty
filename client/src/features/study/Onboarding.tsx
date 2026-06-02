@@ -28,22 +28,21 @@ interface DialogueStep {
 const STEPS: DialogueStep[] = [
   {
     id: "consent",
-    text: "Incoming transmission...\n\nBy playing this game, you are contributing to an academic study on data visualization. We track your answers, reaction times, and anonymous session data to understand how humans perceive charts. Your data will be anonymized and may be published in open research datasets. \n\nDo you consent to this operation?",
+    text: "Incoming transmission...\n\nBy playing this game, you are contributing to an academic study on data visualization. We track your answers, reaction times, and anonymous session data to understand how humans perceive charts. Your data will be anonymized and may be published in open datasets. \n\nDo you consent to this operation?",
   },
   {
     id: "skill",
-    text: "Acknowledged, operative.\n\nOn a scale of 1 to 5, how would you rate your skill at decrypting visual data?",
+    text: "Acknowledged.\n\nOn a scale of 1 to 5, how would you rate your skill at reading charts and graphs?",
   },
   {
     id: "finish",
-    text: "All intel received. Your profile is locked in.\n\nThe command center awaits you, operative. Good luck out there.",
+    text: "Intel received. Your profile is complete.\n\nThe command center awaits you. Good luck out there.",
   },
   {
     id: "returning",
-    text: "Welcome back, operative. Your credentials have been verified.\n\nReady to rejoin the mission?",
+    text: "Welcome back. Your credentials have been verified.\n\nReady to rejoin the mission?",
   },
 ];
-
 
 /** Duration of one loop of SpeechGif.gif (measured from binary: 860ms) */
 const SPEECH_GIF_DURATION_MS = 860;
@@ -74,17 +73,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   const [consent, setConsent] = useState<boolean | null>(null);
   const [skill, setSkill] = useState(0);
 
-
   const { sessionId } = useSessionContext();
 
-  useEffect(() => {
-    // If user already has a session, jump to the "returning" step (last in array)
-    if (sessionId && phase === "entering") {
-      setStepIndex(STEPS.length - 1);
-    }
-  }, [sessionId, phase]);
-
-  const currentStep = STEPS[stepIndex];
+  const currentStep = STEPS[sessionId ? STEPS.length - 1 : stepIndex];
 
   // Typing is enabled once we're in the "active" phase
   const { displayedText, isTyping } = useTypewriter(currentStep.text, 15, {
@@ -95,10 +86,13 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
   // Phase transitions
   useEffect(() => {
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 600;
+    const delay = isMobile ? 0 : SPEECH_GIF_DURATION_MS;
+
     if (phase === "entering") {
       const timer = setTimeout(
         () => setPhase("active"),
-        SPEECH_GIF_DURATION_MS,
+        delay,
       );
       return () => clearTimeout(timer);
     }
@@ -110,7 +104,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           academic_background: "",
           data_viz_skill: skill,
         });
-      }, SPEECH_GIF_DURATION_MS);
+      }, delay);
       return () => clearTimeout(timer);
     }
   }, [phase, onComplete, consent, skill]);
@@ -123,7 +117,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     setConsent(agreed);
     if (agreed) advance();
   };
-
 
   const handleSkill = (level: number) => {
     setSkill(level);
@@ -143,7 +136,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   /* ── Step-specific controls ─────────────────────────── */
 
   const renderControls = () => {
-    if (isTyping || phase !== "active" || displayedText !== currentStep.text) return null;
+    if (isTyping || phase !== "active" || displayedText !== currentStep.text)
+      return null;
 
     switch (currentStep.id) {
       case "consent":
@@ -160,7 +154,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             </button>
           </div>
         );
-
 
       case "skill":
         return (
@@ -203,33 +196,40 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   if (consent === false) {
     return (
       <div className={styles.scene}>
-      <div className={styles.scrollArea}>
-        <div className={styles.dialogueArea}>
-          <div className={styles.bubbleRow}>
-            <div
-              className={styles.character}
-              style={{ "--char-sprite": `url(${CharacterSprite})` } as any}
-            />
-            <div className={styles.speechWrapper}>
+        <div className={styles.scrollArea}>
+          <div className={styles.dialogueArea}>
+            <div className={styles.bubbleRow}>
               <div
-                className={`${styles.speechBox} ${styles.isActive}`}
-                style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
-              >
-                <p className={styles.dialogueText}>
-                  Understood. Transmission terminated.
-                  {"\n\n"}You may close this window, operative.
-                </p>
+                className={styles.character}
+                style={
+                  {
+                    "--char-sprite": `url(${CharacterSprite})`,
+                  } as React.CSSProperties
+                }
+              />
+              <div className={styles.speechWrapper}>
+                <div
+                  className={`${styles.speechBox} ${styles.isActive}`}
+                  style={
+                    {
+                      "--speech-sprite": `url(${SpeechSprite})`,
+                    } as React.CSSProperties
+                  }
+                >
+                  <p className={styles.dialogueText}>
+                    Understood. Transmission terminated.
+                    {"\n\n"}You may close this window, operative.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      </div>
     );
   }
 
   /* ── Main render ────────────────────────────────────── */
-
 
   return (
     <div className={styles.scene}>
@@ -239,7 +239,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           <div className={styles.bubbleRow}>
             <div
               className={styles.character}
-              style={{ "--char-sprite": `url(${characterSrc})` } as any}
+              style={
+                {
+                  "--char-sprite": `url(${characterSrc})`,
+                } as React.CSSProperties
+              }
             />
 
             <div className={styles.speechWrapper}>
@@ -252,7 +256,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                       ? styles.isExiting
                       : styles.isActive
                 }`}
-                style={{ "--speech-sprite": `url(${SpeechSprite})` } as any}
+                style={
+                  {
+                    "--speech-sprite": `url(${SpeechSprite})`,
+                  } as React.CSSProperties
+                }
               >
                 {phase === "active" && (
                   <p className={styles.dialogueText}>

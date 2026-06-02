@@ -158,3 +158,25 @@
   color: #00d346 !important;
 }
 
+@media (max-width: 48em) {
+  h1.title {
+    font-size: 1.8rem !important;
+  }
+  h2.title {
+    font-size: 1.6rem !important;
+  }
+  h3.title {
+    font-size: 1.4rem !important;
+  }
+  h4.title {
+    font-size: 1.2rem !important;
+  }
+  .copy {
+    font-size: 0.9rem !important;
+  }
+  .description {
+    font-size: 0.75rem !important;
+  }
+}
+
+

@@ -1,5 +1,5 @@
 import { RadarChart } from "@mantine/charts";
-import { ColorSwatch, Group, Paper, Select, Stack, Text } from "@mantine/core";
+import { Box, ColorSwatch, Group, Paper, Select, Stack, Text } from "@mantine/core";
 import { useState } from "react";
 import type { CategoryStats } from "../../lib/participant";
 
@@ -62,24 +62,32 @@ export function CategoryRadarChart({ data }: CategoryRadarChartProps) {
 
   return (
     <Paper p="md" withBorder radius="md" h="100%" w="100%" pos="relative">
-      <Select
-        pos="absolute"
-        top={10}
-        right={10}
-        size="xs"
-        w={100}
-        data={[
-          { value: "average", label: "Players" },
-          { value: "ai", label: "AI" },
-        ]}
-        value={comparisonGroup}
-        onChange={(val) => val && setComparisonGroup(val as "ai" | "average")}
-        allowDeselect={false}
-      />
       <Stack gap="xs" align="center" h="100%" w="100%">
-        <Text fw={600} size="sm" c="rgba(0, 211, 70, 0.5)" tt="uppercase" ta="center">
-          Threat Detection
-        </Text>
+        <Group justify="space-between" align="center" w="100%" wrap="nowrap">
+          <Box visibleFrom="sm" w={100} />
+          <Text
+            fw={600}
+            size="sm"
+            c="rgba(0, 211, 70, 0.5)"
+            tt="uppercase"
+            ta={{ base: "left", sm: "center" }}
+            style={{ flex: 1, minWidth: 0 }}
+          >
+            Threat Detection
+          </Text>
+          <Select
+            size="xs"
+            w={100}
+            data={[
+              { value: "average", label: "Players" },
+              { value: "ai", label: "AI" },
+            ]}
+            value={comparisonGroup}
+            onChange={(val) => val && setComparisonGroup(val as "ai" | "average")}
+            allowDeselect={false}
+            style={{ flexShrink: 0 }}
+          />
+        </Group>
         <Group gap="lg">
           <Group gap={6}>
             <ColorSwatch color="#00d346" size={10} />

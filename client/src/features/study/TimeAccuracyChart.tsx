@@ -80,7 +80,7 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
         <ResponsiveContainer width="100%" height={300}>
           <ComposedChart
             data={chartData}
-            margin={{ top: 20, right: 30, bottom: 20, left: 0 }}
+            margin={{ top: 20, right: 30, bottom: 45, left: 15 }}
           >
             <CartesianGrid
               strokeDasharray="3 3"
@@ -101,14 +101,14 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               allowDataOverflow={false}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#00d346", fontSize: 12, fontFamily: '"VCR OSD Mono", monospace' }}
+              tick={{ fill: "#00d346", fontSize: 10, fontFamily: '"VCR OSD Mono", monospace' }}
               dy={10}
               label={{
                 value: "Avg. time per task (s)",
                 position: "bottom",
-                offset: 0,
+                offset: 20,
                 fill: "#00d346",
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: '"VCR OSD Mono", monospace',
               }}
             />
@@ -118,13 +118,14 @@ export function TimeAccuracyChart({ data, currentUser }: TAChartProps) {
               domain={[0, 100]}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#00d346", fontSize: 12, fontFamily: '"VCR OSD Mono", monospace' }}
+              tick={{ fill: "#00d346", fontSize: 10, fontFamily: '"VCR OSD Mono", monospace' }}
               label={{
                 value: "Accuracy (%)",
                 angle: -90,
                 position: "insideLeft",
+                offset: 5,
                 fill: "#00d346",
-                fontSize: 12,
+                fontSize: 11,
                 style: { textAnchor: "middle" },
                 fontFamily: '"VCR OSD Mono", monospace',
               }}

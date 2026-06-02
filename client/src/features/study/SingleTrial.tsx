@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import type { StimulusSingle } from "../../lib/participant";
+import classes from "./SingleTrial.module.css";
 
 export interface SingleTrialProps {
   stimulus: StimulusSingle;
@@ -81,7 +82,7 @@ export function SingleTrial({ stimulus, onSelect }: SingleTrialProps) {
         }}
       />
       <Center>
-        <Text size="xl">Is this visualization deceptive or honest?</Text>
+        <Text size="xl" ta="center">Is this visualization deceptive or honest?</Text>
       </Center>
       <Space h="xl" />
       <Center>
@@ -98,28 +99,20 @@ export function SingleTrial({ stimulus, onSelect }: SingleTrialProps) {
             alt="Stimulus"
             draggable={false}
             fit="contain"
-            style={{ 
-              userSelect: "none", 
-              position: "relative", 
-              zIndex: "var(--z-content)",
-              maxHeight: "50vh",
-              maxWidth: "100%",
-              width: "auto",
-              height: "auto",
-              margin: "0 auto"
-            }}
+            className={classes.trialImage}
           />
         </Card>
       </Center>
       <Space h="xl" />
-      <SimpleGrid cols={2} spacing="xl">
+      <SimpleGrid cols={2} spacing={{ base: "md", sm: "xl" }}>
         <Button
           size="xl"
           color="teal"
           variant="light"
           onClick={() => onSelect(false)}
-          className="panels"
-          style={{ height: 80, fontSize: 24 }}
+          className={`panels ${classes.btn}`}
+          h={{ base: 60, sm: 80 }}
+          px={{ base: 8, sm: 16 }}
         >
           Honest
         </Button>
@@ -128,8 +121,9 @@ export function SingleTrial({ stimulus, onSelect }: SingleTrialProps) {
           color="red"
           variant="light"
           onClick={() => onSelect(true)}
-          className="panels"
-          style={{ height: 80, fontSize: 24 }}
+          className={`panels ${classes.btn}`}
+          h={{ base: 60, sm: 80 }}
+          px={{ base: 8, sm: 16 }}
         >
           Deceptive
         </Button>
@@ -137,3 +131,4 @@ export function SingleTrial({ stimulus, onSelect }: SingleTrialProps) {
     </>
   );
 }
+

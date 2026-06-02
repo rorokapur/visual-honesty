@@ -62,7 +62,7 @@
   z-index: 2;
   margin-left: -20px; /* Small overlap to connect the corners */
   order: 2;
-  
+
   background-image: var(--char-sprite);
   background-size: 100% 400%;
   background-repeat: no-repeat;
@@ -70,8 +70,12 @@
 }
 
 @keyframes playChar {
-  from { background-position-y: 0%; }
-  to { background-position-y: 100%; }
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 100%;
+  }
 }
 
 /* ── Speech area wrapper (holds both GIF and static box) ────── */
@@ -84,7 +88,7 @@
   min-width: 0;
   align-self: flex-end;
   /* Lift bubble so its bottom aligns with character's top (~148px height) */
-  margin-bottom: 140px; 
+  margin-bottom: 140px;
 }
 
 /* ── Speech Bubble (static frame — shown after GIF finishes) ── */
@@ -133,10 +137,13 @@
 }
 
 @keyframes playSprite {
-  from { background-position-y: 0%; }
-  to { background-position-y: 100%; }
+  from {
+    background-position-y: 0%;
+  }
+  to {
+    background-position-y: 100%;
+  }
 }
-
 
 .dialogueText {
   font-family: "VCR OSD Mono", monospace;
@@ -201,7 +208,10 @@
   padding: 7px 12px;
   cursor: pointer;
   image-rendering: pixelated;
-  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    box-shadow 0.15s;
   flex: 1 1 110px;
   min-width: 0;
   max-width: 100%;
@@ -246,7 +256,6 @@
   box-shadow: 0 0 10px rgba(0, 211, 70, 0.3);
 }
 
-
 /* ── Text Input ─────────────────────────────────────────── */
 
 .inputRow {
@@ -278,15 +287,67 @@
   }
 
   .speechWrapper {
-    width: clamp(340px, 72vw, 620px);
-    flex-basis: clamp(340px, 72vw, 620px);
-    height: clamp(220px, 40vw, 300px);
+    width: clamp(280px, 72vw, 620px);
+    flex-basis: clamp(280px, 72vw, 620px);
   }
 
   .character {
     width: 132px;
     min-width: 132px;
     margin-left: -10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .scrollArea {
+    padding: 1rem;
+  }
+
+  .dialogueArea {
+    min-height: auto;
+    margin: 1rem auto 2rem;
+  }
+
+  .bubbleRow {
+    flex-direction: row;
+    align-items: flex-end;
+    min-height: 220px;
+    height: auto;
+    gap: 12px;
+  }
+
+  .character {
+    width: 90px;
+    min-width: 90px;
+    margin-left: 0;
+    order: 2;
+    align-self: flex-end;
+  }
+
+  .speechWrapper {
+    flex: 1;
+    min-width: 0;
+    width: auto;
+    margin-bottom: 0;
+    order: 1;
+    align-self: flex-end;
+  }
+
+  .speechBox {
+    min-height: auto;
+    padding: 16px;
+    border: 2px solid #00d346;
+    background-color: rgba(21, 27, 37, 0.9);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 211, 70, 0.2);
+  }
+
+  .speechBox::before {
+    content: none;
+  }
+
+  .dialogueText {
+    font-size: 0.95rem;
   }
 }
 
@@ -297,4 +358,3 @@
 .textInput:focus {
   box-shadow: 0 0 8px rgba(0, 211, 70, 0.3);
 }
-
