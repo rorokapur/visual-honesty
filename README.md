@@ -1,5 +1,7 @@
 # Visual Honesty
 
+A platform for investigating deception in data visualizations. For agent prototypes, see [vh-agent](https://github.com/rorokapur/vh-agent).
+
 ## Quick Start
 
 **1. Initial Setup**
